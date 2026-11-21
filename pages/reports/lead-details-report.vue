@@ -166,103 +166,22 @@
               </p>
             </v-card-text>
 
-            <v-expansion-panels
-              class="ldr-expansion-panels"
-              v-model="panel"
-              v-if="loaded"
-            >
-              <v-expansion-panel :key="0">
-                <v-expansion-panel-header>
-                  Lead Summary
-                </v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <v-card-text v-if="loaded" id="LDR--summary">
-                    <v-row>
-                      <v-col cols="3">
-                      </v-col>
-                      <v-col cols="3">
-                        <h3 class="my-2">Lead Summary</h3>
-                        <LDRSummary :summary="summary" />
-                      </v-col>
-                      <v-col cols="3">
-                        <h3 class="my-2">Aggregate</h3>
-                        <LDRAnalytics
-                          :analytics="
-                            computedReport && computedReport.lead_analytics
-                          "
-                          :summary="summary"
-                        ></LDRAnalytics>
-                      </v-col>
-                    </v-row>
-                    <v-row>
-                      <v-col cols="3">
-                      </v-col>
-                      <v-col cols="3">
-                        <h3 class="my-2">Facebook</h3>
-                        <LDRAnalyticsFacebook
-                          :analytics="
-                            computedReport && computedReport.lead_analytics
-                          "
-                        ></LDRAnalyticsFacebook>
-                      </v-col>
-                      <v-col cols="3">
-                        <h3 class="my-2">Adwords</h3>
-                        <LDRAnalyticsAdwords
-                          :analytics="
-                            computedReport && computedReport.lead_analytics
-                          "
-                        ></LDRAnalyticsAdwords>
-                      </v-col>
-                    </v-row>
-                  </v-card-text>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-              <v-expansion-panel :key="1">
-                <v-expansion-panel-header>
-                  Summary by Source
-                </v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <v-card-text v-if="loaded" id="LDR--summary">
-                    <v-row>
-                      <v-col cols="3">
-                      </v-col>
-                      <v-col cols="6">
-                        <h1 class="my-2" style="text-align: center;">ADWORDS</h1>
-                        <LDRSummaryGOOGLE :summaryGOOGLE=
-                          "computedReport" />
-                      </v-col>
-                    </v-row>
-                    <v-row>
-                      <v-col cols="3">
-                      </v-col>
-                      <v-col cols="6">
-                        <h1 style="text-align: center" class="my-2">FACEBOOK</h1>
-                        <LDRSummaryFACEBOOK :summaryFACEBOOK="computedReport" />
-                      </v-col>
-                    </v-row>
-                    <v-row>
-                      <v-col cols="3">
-                      </v-col>
-                      <v-col cols="6">
-                        <h1 style="text-align: center" class="my-2">SEO</h1>
-                        <LDRSummarySEO :summarySEO="computedReport" />
-                      </v-col>
-                    </v-row>
-                  </v-card-text>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-              <v-expansion-panel :key="2">
-                <v-expansion-panel-header>
-                  Lead Details
-                </v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <v-tabs
-                    class="mt-5"
-                    :background-color="
-                      $vuetify.theme.dark ? 'rgb(18 18 18)' : '#f1f1f1'
-                    "
-                    v-model="tab"
-                  >
+            <div v-if="loaded" class="lead-report-sections">
+              <v-tabs v-model="activeSection" class="lead-section-tabs" hide-slider>
+                <v-tab><v-icon left small>mdi-chart-box-outline</v-icon>Lead Summary</v-tab>
+                <v-tab><v-icon left small>mdi-chart-donut</v-icon>Summary by Source</v-tab>
+                <v-tab><v-icon left small>mdi-format-list-bulleted</v-icon>Lead Details</v-tab>
+              </v-tabs>
+
+              <v-tabs-items v-model="activeSection" class="lead-section-content" touchless>
+                <v-tab-item>
+                  <LeadReportOverview :summary="summary" :analytics="computedReport.lead_analytics" />
+                </v-tab-item>
+                <v-tab-item>
+                  <LeadSourceSummary :report="computedReport" />
+                </v-tab-item>
+                <v-tab-item class="lead-detail-panel">
+                  <v-tabs v-model="tab" class="lead-detail-tabs" show-arrows>
                     <v-tab key="all">All</v-tab>
                     <!-- <v-tab key="calls">Calls</v-tab> -->
                     <v-tab key="adwords_calls">Calls-ppc</v-tab>
@@ -422,10 +341,9 @@
                       </div>
                     </v-tab-item>
                   </v-tabs-items>
-                  <!-- full details -->
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-            </v-expansion-panels>
+                </v-tab-item>
+              </v-tabs-items>
+            </div>
           </v-card>
         </v-expand-transition>
       </v-col>
@@ -522,13 +440,6 @@ import {
 } from '@nuxtjs/composition-api'
 import { get, sortBy } from 'lodash'
 import moment from 'moment-timezone'
-import LDRSummary from '~/components/LDR/LDRSummary.vue'
-import LDRAnalytics from '~/components/LDR/LDRAnalytics.vue'
-import LDRAnalyticsAdwords from '~/components/LDR/LDRAnalyticsAdwords.vue'
-import LDRAnalyticsFacebook from '~/components/LDR/LDRAnalyticsFacebook.vue'
-import LDRSummaryGOOGLE from '~/components/LDR/LDRSummary-GOOGLE.vue'
-import LDRSummaryFACEBOOK from '~/components/LDR/LDRSummary-FACEBOOK.vue'
-import LDRSummarySEO from '~/components/LDR/LDRSummary-SEO.vue'
 import useAxios from '~/plugins/useAxios'
 import { IBreadcrumbs } from '~/store'
 import ldrEmails from '~/components/LDR/Emails.vue'
@@ -549,6 +460,8 @@ import generateLeadDetailsReport from '~/utils/reports-upload/ldr'
 import LocationPicker from '~/components/forms/LocationPicker.vue'
 
 import LDRAllReports from '~/components/LDR/AllReports.vue'
+import LeadReportOverview from '~/components/LDR/LeadReportOverview.vue'
+import LeadSourceSummary from '~/components/LDR/LeadSourceSummary.vue'
 // import LDRCalls from '~/components/LDR/Calls.vue'
 import LDRCallsPPC from '~/components/LDR/Calls-PPC.vue'
 import LDRCallsFB from '~/components/LDR/Calls-FB.vue'
@@ -570,11 +483,8 @@ import { callAudio } from '~/plugins/callAudio'
 
 export default defineComponent({
   components: {
-    LDRSummary,
-    LDRSummaryGOOGLE,
-    LDRSummaryFACEBOOK,
-    LDRSummarySEO,
-    LDRAnalytics,
+    LeadReportOverview,
+    LeadSourceSummary,
     ldrEmails,
     FormattedDate,
     DatesAndDiff,
@@ -583,8 +493,6 @@ export default defineComponent({
 
     ClientPicker,
     LocationPicker,
-    LDRAnalyticsAdwords,
-    LDRAnalyticsFacebook,
     LDRAllReports,
     // LDRCalls,
     LDRCallsPPC,
@@ -624,8 +532,8 @@ export default defineComponent({
     const previousDay = moment().subtract(1, 'days').endOf('day').format('MMM DD, YYYY')
 
     const allReportsList = ref([])
-    const tab = ref('mixed')
-    const panel = ref(0)
+    const tab = ref(0)
+    const activeSection = ref(0)
     const LDRReport: any = ref({})
     const LDRReportLoading = ref(false)
     const isCopied = ref(false)
@@ -869,7 +777,7 @@ export default defineComponent({
           if (data) {
             LDRReport.value = data
             loaded.value = true
-            panel.value = 0
+            activeSection.value = 0
 
             setallReportsList()
           }
@@ -1579,7 +1487,7 @@ export default defineComponent({
       LDRReportLoading,
       summary,
       tab,
-      panel,
+      activeSection,
       allReportsList,
       currentEmail,
       emailDialog,
