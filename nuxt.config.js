@@ -62,7 +62,7 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: ['~/assets/notification-style-fix.css'],
+  css: ['~/assets/notification-style-fix.css', '~/assets/workspace.css'],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
@@ -150,6 +150,7 @@ export default {
     theme: {
       dark: false,
       themes: {
+        light: { primary: '#2457D6', secondary: '#087D73', accent: '#6449C7', success: '#147354', error: '#B92E46' },
         dark: {
           primary: colors.blue.darken2,
           accent: colors.grey.darken3,

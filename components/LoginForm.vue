@@ -3,7 +3,10 @@
     <v-text-field
       v-model="email"
       type="email"
-      label="E-mail"
+      label="Email address"
+      autocomplete="username"
+      outlined
+      dense
       name="email"
       :rules="emailRules"
       @blur="clearErrorsOnEmptyForm"
@@ -14,6 +17,9 @@
       type="password"
       name="password"
       label="Password"
+      autocomplete="current-password"
+      outlined
+      dense
       :rules="passwordRules"
       @blur="clearErrorsOnEmptyForm"
       @keypress.enter="formValid && logIn()"
@@ -29,21 +35,22 @@
       <v-icon left>mdi-login</v-icon> {{ $t('buttons.logIn') }}
     </v-btn>
     <v-btn
-      color="error"
+      color="primary"
+      outlined
       class="mt-2"
       block
       :loading="formBusy"
       @click="logInWithGoogle()"
     >
-      <v-icon color="secondary" left>mdi-google</v-icon> LOG IN WITH GOOGLE
+      <v-icon left>mdi-google</v-icon> Log in with Google
     </v-btn>
     
     <v-btn
       block
       plain
       text
-      color="default"
-      x-small
+      color="primary"
+      small
       class="mt-2"
       :disabled="formBusy"
       @click="showPWReset = !showPWReset"

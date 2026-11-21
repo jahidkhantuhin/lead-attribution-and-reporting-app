@@ -2,23 +2,16 @@
   <v-expand-transition>
     <v-app-bar
       v-show="showBar"
-      :color="!darkMode ? `#43a047` : `light-blue darken-3`"
-      dense
-      dark
-      class="dont-print"
+      flat
+      height="68"
+      class="workspace-topbar dont-print"
     >
-      <template v-slot:img="{ props }">
-        <v-img
-          v-bind="props"
-          gradient="to top right, rgba(55,236,186,.7), rgba(25,32,72,.7)"
-        ></v-img>
-      </template>
-      <v-app-bar-title>{{ pageTitle }}</v-app-bar-title>
+      <h1 class="workspace-page-title">{{ pageTitle }}</h1>
       <v-spacer></v-spacer>
 
       <v-tooltip v-for="(item, index) in appbarItems" :key="index" bottom>
         <template #activator="{ on, attrs }">
-          <v-btn icon v-bind="attrs" :to="item.link" v-on="on">
+          <v-btn icon v-bind="attrs" :to="item.link" :aria-label="item.title" v-on="on">
             <v-icon>{{ item.icon }}</v-icon>
           </v-btn>
         </template>
@@ -29,6 +22,7 @@
         <template #activator="{ on, attrs }">
           <v-app-bar-nav-icon
             v-bind="attrs"
+            aria-label="Toggle navigation"
             @click.stop="toggleNavbar()"
             v-on="on"
           ></v-app-bar-nav-icon>
@@ -52,7 +46,7 @@ import AppbarItems from '@/shared/AppbarItems'
 import { ISidebarItem } from '~/shared/SidebarItems'
 
 export default defineComponent({
-  setup(_props, { emit, root }) {
+  setup(_props, { emit }) {
     const store = useStore<IMainState>()
 
     const pageTitle = computed(() => store.state.pageTitle)
@@ -63,8 +57,6 @@ export default defineComponent({
 
     // this handles the appbar appearance animation
     const showBar = ref(false)
-
-    const darkMode = computed(() => (root as any).$vuetify.theme.dark)
 
     onMounted(() => {
       setTimeout(() => {
@@ -77,7 +69,6 @@ export default defineComponent({
       toggleNavbar,
       appbarItems,
       showBar,
-      darkMode,
     }
   },
 })

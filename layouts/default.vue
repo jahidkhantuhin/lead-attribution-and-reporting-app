@@ -1,5 +1,5 @@
 <template>
-  <v-app dark>
+  <v-app class="workspace-app">
     <!-- Left sidebar -->
     <Sidebar
       :open="sidebarOpen"
@@ -10,12 +10,11 @@
 
     <!-- the main conent -->
     <v-main>
-      <v-container fluid>
-        <!-- The app bar -->
-        <AppBar @toggle="changeSidebar" />
+      <AppBar @toggle="changeSidebar" />
+      <v-container fluid class="workspace-content">
         <v-breadcrumbs
           class="pb-3"
-          divider="➡"
+          divider="/"
           :items="breadcrumbs"
         ></v-breadcrumbs>
 
@@ -93,7 +92,9 @@ export default defineComponent({
     const breadcrumbs = computed<IBreadcrumbs>(() => store.state.breadcrumbs)
 
     // controls the left sidebar
-    const sidebarOpen = ref<boolean>(true)
+    const desktop = computed(() => Boolean((root as any).$vuetify.breakpoint.lgAndUp))
+    const sidebarOpen = ref(false)
+    watch(desktop, value => { sidebarOpen.value = value }, { immediate: true })
     const fetchingUser = ref<boolean>(true)
 
     const changeSidebar = (val?: boolean | null | undefined) => {

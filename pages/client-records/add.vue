@@ -35,7 +35,7 @@ export default defineComponent({
       },
     ]
     const store = useStore()
-    const pageTitle = `Cilent Records`
+    const pageTitle = `Add client`
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
   },
   head: {

@@ -2,18 +2,24 @@
   <v-navigation-drawer
     v-model="syncOpen"
     app
-    :expand-on-hover="$vuetify.breakpoint.lgAndUp"
-    right
-    class="dont-print"
+    dark
+    :temporary="!$vuetify.breakpoint.lgAndUp"
+    :mobile-breakpoint="1264"
+    :width="248"
+    class="workspace-sidebar dont-print"
   >
     <!-- User's avatar and details -->
     <template #prepend>
-      <v-list-item two-line class="px-2">
+      <nuxt-link to="/" class="workspace-brand">
+        <span class="workspace-brand-mark"><v-icon small>mdi-chart-box-outline</v-icon></span>
+        Foundation
+      </nuxt-link>
+      <v-list-item two-line class="workspace-identity">
           <v-icon
             v-if="!$store.getters['users/userProfilePicture']"
             color="primary"
-            style="position: relative;left:-5px"
-            size="50"
+            class="mr-3"
+            size="34"
           >
             mdi-account-circle
           </v-icon>
@@ -55,6 +61,7 @@
           link
           nuxt
           :to="item.link"
+          :exact="item.link === '/'"
         >
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
@@ -118,10 +125,10 @@ import useAxios from '~/plugins/useAxios'
 import UserProfilePicture from '../UserProfilePicture.vue'
 
 export default defineComponent({
-  components: {},
+  components: { UserProfilePicture },
   props: {
     open: {
-      UserProfilePicturetype: Boolean,
+      type: Boolean,
       default: true,
     },
     items: {

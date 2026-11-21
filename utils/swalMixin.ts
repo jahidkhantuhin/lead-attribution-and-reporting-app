@@ -38,7 +38,7 @@ export const showToast = (SwalInstance: any, options: ToastInterface) => {
     icon: options.icon || 'success',
     title: options.title || '',
     animation: options.animation || false,
-    position: options.position || 'bottom',
+    position: options.position || 'top-end',
     showConfirmButton: options.showConfirmButton || false,
     timer: options.timer || 3000,
     timerProgressBar: options.timerProgressBar || true,
@@ -56,7 +56,7 @@ export const showConfirmDialog = (
     showCancelButton: options.showCancelButton || true,
     confirmButtonText: options.confirmButtonText || `Yes, I'm Sure`,
     cancelButtonText: options.cancelButtonText || 'Cancel',
-    cancelButtonColor: options.cancelButtonColor || '#1976d2',
-    confirmButtonColor: options.confirmButtonColor || '#fb8c00',
+    cancelButtonColor: options.cancelButtonColor || '#52627A',
+    confirmButtonColor: options.confirmButtonColor || '#2457D6',
   })
 }

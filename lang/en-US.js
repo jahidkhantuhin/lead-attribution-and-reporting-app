@@ -11,7 +11,7 @@ export default {
     uploadingToGoogleDrive:
       'Report uploading to Google drive, Please stand by.',
     loginFormTitle: `Please login with your email and password below.`,
-    pwResetTitle: `Password Rcovery`,
+    pwResetTitle: `Password recovery`,
     pwRecoverFormTitle: `Please enter your email address below. If an account exists with it, further instructions will be sent to that email.`,
     pwRecoveryInstruction:
       'Please enter your new password twice and submit the form.',

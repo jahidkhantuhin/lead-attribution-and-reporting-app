@@ -1,10 +1,21 @@
 <template>
-  <v-row class="mt-12">
+  <v-row class="workspace-dashboard">
+    <v-col v-if="!nonAccountManagerUserRole" cols="12">
+      <section class="workspace-overview" aria-label="Lead activity summary">
+        <div class="workspace-overview-heading"><h2>Lead activity</h2><p>{{ reportPeriod }}</p></div>
+        <dl class="workspace-metrics" :aria-busy="reportsLoading">
+          <div v-for="metric in leadMetrics" :key="metric.label" class="workspace-metric">
+            <dt>{{ metric.label }}</dt>
+            <dd>{{ reportsLoading ? '—' : metric.value }}</dd>
+          </div>
+        </dl>
+      </section>
+    </v-col>
     <v-col cols="12" md="12" v-if="!nonAccountManagerUserRole">
       <v-card :loading="reportsLoading">
-        <v-card-title>
-          Lead Summary
-          <v-spacer></v-spacer>
+        <v-card-title class="workspace-chart-heading">
+          <span>Lead trends</span>
+          <div class="workspace-period-controls">
           <v-btn
             x-small
             class="mr-3"
@@ -41,6 +52,7 @@
             @click="setFilters('this_month')"
             >This Month</v-btn
           >
+          </div>
         </v-card-title>
         <v-card-text>
           <!-- Graph -->
@@ -55,7 +67,8 @@
       </v-card>
     </v-col>
     <v-col sm="12" class="my-5">
-      <ReportsList justify="left" />
+      <h2 class="workspace-section-title">Browse reports</h2>
+      <ReportsList justify="start" />
     </v-col>
   </v-row>
 </template>
@@ -136,16 +149,26 @@ export default defineComponent({
     // graph data
     const graphOptions = computed(() => {
       return {
+        colors: ['#3E6BE8', '#11A597', '#876BDB'],
+        plotOptions: { bar: { columnWidth: '58%', borderRadius: 4 } },
+        legend: { position: 'top', horizontalAlign: 'left' },
         dataLabels: {
           enabled: false,
         },
         chart: {
           id: 'vuechart-leadsummary',
+          animations: { enabled: false },
           toolbar: {
             show: false,
           },
         },
+        grid: { strokeDashArray: 4 },
+        responsive: [{
+          breakpoint: 600,
+          options: { xaxis: { labels: { formatter: (value: string) => moment(value, 'YYYY-MM-DD', true).format('D') } } },
+        }],
         xaxis: {
+          labels: { formatter: (value: string) => moment(value, 'YYYY-MM-DD', true).format('MMM D') },
           categories:
             reports &&
             reports.value.map((c: any) => {
@@ -183,6 +206,16 @@ export default defineComponent({
         },
       ]
     })
+
+    const reportPeriod = computed(() => {
+      const { date_start, date_end } = reportsFilters.value
+      return moment(date_start).format('MMM D') + ' – ' + moment(date_end).format('MMM D, YYYY')
+    })
+
+    const leadMetrics = computed(() => graphSeries.value.map(series => ({
+      label: series.name,
+      value: series.data.reduce((total: number, count: number) => total + (Number(count) || 0), 0).toLocaleString('en-US'),
+    })))
 
     const setFilters = (val: string) => {
       if (val === 'this_week') {
@@ -240,6 +273,8 @@ export default defineComponent({
       userFullName,
       graphOptions,
       graphSeries,
+      reportPeriod,
+      leadMetrics,
       reportsLoading,
       currentReport,
       moment,

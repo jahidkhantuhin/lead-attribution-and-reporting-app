@@ -127,7 +127,7 @@ import useAxios from '~/plugins/useAxios'
 import Datepicker from '~/components/forms/DatePickerForStatistics.vue'
 import FormattedDate from '~/components/FormattedDate.vue'
 import { callColors } from '~/shared/callColors'
-import { dates as showcaseDates } from '~/showcase/fixtures'
+import { date as showcaseDate } from '~/showcase/fixtures'
 import generateStatisticsReport from '~/utils/reports-upload/statistic-report'
 import swalMixin, { showToast } from '~/utils/swalMixin'
 import UnauthorizedUser from '~/components/UnauthorizedUser.vue'
@@ -307,6 +307,8 @@ export default defineComponent({
           },
         ],
         options: {
+          colors: ['#3263DE', '#098779', '#7458C7', '#C05C30', '#2679A4', '#A34473', '#53652A', '#865C39', '#50658E'],
+          legend: { position: 'top', horizontalAlign: 'left' },
           chart: {
             height: 500,
             zoom: {
@@ -322,13 +324,9 @@ export default defineComponent({
 
           stroke: {
             curve: 'straight',
+            width: 2,
           },
-          grid: {
-            row: {
-              colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-              opacity: 0.5,
-            },
-          },
+          grid: { strokeDashArray: 4 },
           xaxis: {
             categories: keys,
           },
@@ -486,7 +484,7 @@ export default defineComponent({
 
     onMounted(() => {
       if (process.env.SHOWCASE_MODE === 'true') {
-        filters.value.dates = showcaseDates()
+        filters.value.dates = [showcaseDate(-150), showcaseDate()]
         fetchGraph()
       }
     })

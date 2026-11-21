@@ -1,13 +1,13 @@
 <template>
   <v-row :justify="justify">
     <v-col v-for="(report, index) in testingReports" :key="index" cols="12" md="4">
-      <v-card color="#e6f0ff" hover link nuxt :to="report.link">
-        <v-toolbar color="#e6ffff" flat>
-          <v-toolbar-title class="display-1 text--primary font-weight-medium">
+      <v-card class="workspace-report-card" hover link nuxt :to="report.link">
+        <v-toolbar flat>
+          <v-toolbar-title class="text--primary font-weight-bold">
             {{ report.title }}
           </v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-icon v-if="report.icon">{{ report.icon }}</v-icon>
+          <span v-if="report.icon" class="workspace-report-icon"><v-icon small>{{ report.icon }}</v-icon></span>
         </v-toolbar>
         <v-card-text class="text--primary min-height">{{
           report.details
@@ -15,10 +15,9 @@
         <v-card-actions>
           <v-list-item class="grow">
             <v-row justify="end">
-              <v-btn color="#668cff" nuxt link :to="report.link">
-                <v-icon v-if="report.icon" left>{{ report.icon }}</v-icon>
-                View
-              </v-btn>
+              <span class="workspace-report-action">
+                Open report
+              </span>
             </v-row>
           </v-list-item>
         </v-card-actions>

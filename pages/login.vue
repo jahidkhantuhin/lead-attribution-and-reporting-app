@@ -95,13 +95,3 @@ export default defineComponent({
   },
 })
 </script>
-<style lang="scss" scoped>
-#loginPage {
-  background: url('https://source.unsplash.com/collection/58951836/1920x1080');
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  transition: background-image 0.2s ease-in-out;
-  height: 100vh;
-}
-</style>

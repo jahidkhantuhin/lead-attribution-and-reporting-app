@@ -358,6 +358,10 @@ export default defineComponent({
     // graph data
     const graphOptions = computed(() => {
       return {
+        colors: ['#3263DE', '#098779', '#7458C7', '#C05C30', '#2679A4', '#A34473', '#53652A'],
+        plotOptions: { bar: { columnWidth: '66%', borderRadius: 3 } },
+        legend: { position: 'top', horizontalAlign: 'left' },
+        grid: { strokeDashArray: 4 },
         dataLabels: {
           enabled: false,
         },

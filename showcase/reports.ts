@@ -127,10 +127,11 @@ export function statistics(query: Record<string, any>) {
     const month = day.slice(0, 7)
     if (result[month]) continue
     const month_year = new Date(month + '-15T12:00:00Z').toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' })
+    const trend = [0, 7, 4, 11, 8, 15][Object.keys(result).length % 6]
     result[month] = [
-      ['call', 'booked', 163], ['call', 'not booked', 41], ['call', 'irrelevant', 14],
-      ['call', 'missed', 32], ['call', 'unscored', 18], ['call', null, 268],
-      ['chat', null, 81], ['email', null, 62],
+      ['call', 'booked', 163 + trend * 2], ['call', 'not booked', 41 + trend], ['call', 'irrelevant', 14],
+      ['call', 'missed', 32 + (trend % 5)], ['call', 'unscored', 18], ['call', null, 268 + trend * 5],
+      ['chat', null, 81 + trend * 2], ['email', null, 62 + trend],
     ].map(([lead_type, conversion_status, total_leads]) => ({ month_year, lead_type, conversion_status, total_leads }))
   }
   return result

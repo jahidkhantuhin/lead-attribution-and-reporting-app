@@ -1,16 +1,10 @@
 <template>
-  <v-navigation-drawer
-    v-model="syncShow"
-    persistent
-    absolute
-    :width="`100%`"
-    clipped
-  >
+  <v-dialog v-model="syncShow" width="460">
     <v-card flat>
-      <v-toolbar color="warning" rounded="0">
+      <v-toolbar flat>
         <v-toolbar-title>{{ $t(`message.pwResetTitle`) }}</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn icon @click="syncShow = false">
+        <v-btn icon aria-label="Close password reset" @click="syncShow = false">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-toolbar>
@@ -33,7 +27,7 @@
           <v-btn
             class="mt-3"
             :loading="busy"
-            color="warning"
+            color="primary"
             block
             :disabled="!valid || busy"
             @click="submit"
@@ -44,7 +38,7 @@
         </v-form>
       </v-card-text>
     </v-card>
-  </v-navigation-drawer>
+  </v-dialog>
 </template>
 
 <script lang="ts">
@@ -68,7 +62,6 @@ export default defineComponent({
     },
   },
   setup(props, { emit, root, refs, parent }) {
-    const { show } = props
     const $axios = useAxios()
     const $swal = swalMixin((parent as any).$swal as any)
 
@@ -94,12 +87,12 @@ export default defineComponent({
       email.value = ''
       busy.value = false
       valid.value = false
-      ;(refs.pwResetForm as any).resetValidation()
+      const form = refs.pwResetForm as typeof refs.pwResetForm & { resetValidation?: () => void }
+      form?.resetValidation?.()
     }
 
-    // reset the errors and the form upon the disalog being closed
-    watch(syncShow, (_oldVal, newVal) => {
-      if (!newVal) {
+    watch(syncShow, isOpen => {
+      if (!isOpen) {
         reset()
       }
     })
