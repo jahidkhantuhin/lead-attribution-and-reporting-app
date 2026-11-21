@@ -44,6 +44,7 @@ let timeout: any
 
 export default defineComponent({
   props: {
+    value: [String, Number],
     URLQueryParam: {
       type: String,
       default: 'client',
@@ -78,9 +79,9 @@ export default defineComponent({
       }, 300)
     }
 
-    const fetchSelectedClient = () => {
+    const fetchSelectedClient = (id: string | number) => {
       clientsListLoading.value = true
-      clientById(router.currentRoute.query[URLQueryParam] as string | number)
+      clientById(id)
         .then((resp) => {
           const fetchedClient = omit(resp.data.data, [
             'locations',
@@ -89,7 +90,7 @@ export default defineComponent({
             'account_manager',
           ])
           clientsList.value = [fetchedClient as any]
-          inputValue.value = +router.currentRoute.query[URLQueryParam]
+          inputValue.value = +id
         })
         .finally(() => {
           clientsListLoading.value = false
@@ -97,10 +98,15 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      if (router.currentRoute.query[URLQueryParam]) {
-        fetchSelectedClient()
-      }
+      const id = router.currentRoute.query[URLQueryParam]
+      if (typeof id === 'string' && id) fetchSelectedClient(id)
     })
+
+    if (process.env.SHOWCASE_MODE === 'true') {
+      watch(() => props.value, id => {
+        if (id && Number(id) !== inputValue.value) fetchSelectedClient(id)
+      }, { immediate: true })
+    }
 
     const onChange = () => {
       const client = clientsList.value.find(

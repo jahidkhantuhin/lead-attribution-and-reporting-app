@@ -233,7 +233,7 @@ export default defineComponent({
 
             // formData.value['status'] = 1
 
-            formData.value.status = data?.status?.key
+            formData.value.status = typeof data.status === 'string' ? data.status : data.status?.key
 
             emit('onFetchClient', data)
           })

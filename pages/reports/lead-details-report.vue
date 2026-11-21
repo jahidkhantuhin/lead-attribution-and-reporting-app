@@ -545,6 +545,7 @@ import VuetifyColorsPallete from '~/shared/VuetifyColorsPallete'
 import getColorForScoredCall, {
   isDateWeekend,
 } from '~/utils/getColorForScoredCall'
+import { dates as showcaseDates } from '~/showcase/fixtures'
 import generateLeadDetailsReport from '~/utils/reports-upload/ldr'
 
 import LocationPicker from '~/components/forms/LocationPicker.vue'
@@ -1545,7 +1546,12 @@ export default defineComponent({
 
       const query = router.currentRoute.query
 
-      if (query.client && query.dates) {
+      if (process.env.SHOWCASE_MODE === 'true') {
+        if (!query.client) filters.value.client = 1
+        if (!query.location_ids) filters.value.location_ids = [1]
+        if (!query.dates) filters.value.dates = showcaseDates()
+        fetchLDRReport()
+      } else if (query.client && query.dates) {
         fetchLDRReport()
       }
       setTimeout(() => {

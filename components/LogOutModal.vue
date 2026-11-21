@@ -53,6 +53,11 @@ export default defineComponent({
 
     const logOut = async () => {
       busy.value = true
+      if (process.env.SHOWCASE_MODE === 'true') {
+        open.value = false
+        busy.value = false
+        return
+      }
       await root.$auth.logout()
       showToast($swal, {
         title: root.$t(`alert.success.logout`) as String,

@@ -1,6 +1,8 @@
 import colors from 'vuetify/es5/util/colors'
 import en from './lang/en-US'
 
+const showcase = process.env.SHOWCASE_MODE !== 'false'
+
 let API_URL
 
 if (process.env.NODE_ENV === 'development') {
@@ -10,6 +12,8 @@ if (process.env.NODE_ENV === 'development') {
 } else if (process.env.NODE_ENV === 'production') {
   API_URL = process.env.BASE_URL_PRODUCTION
 }
+
+if (showcase) API_URL = 'https://showcase.example.test'
 
 console.log(`Building for ${process.env.NODE_ENV} with base URL of ${API_URL}`)
 
@@ -27,6 +31,7 @@ export default {
 
   env: {
     baseUrl: API_URL,
+    SHOWCASE_MODE: showcase ? 'true' : 'false',
   },
 
   // server: {
@@ -60,7 +65,10 @@ export default {
   css: ['~/assets/notification-style-fix.css'],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: ['~/plugins/usPhone', '~/plugins/truncateText'],
+  plugins: [
+    '~/plugins/usPhone', '~/plugins/truncateText',
+    ...(showcase ? ['~/plugins/showcase'] : []),
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -86,7 +94,21 @@ export default {
   // being generated to allow for any async functions to resolve,
   // if you are pre-generating any of your pages:
   generate: {
-    interval: 2000,
+    interval: showcase ? 0 : 2000,
+    ...(showcase ? { concurrency: 1 } : {}),
+    routes: showcase ? [
+      ...[1, 2, 3].flatMap(id => [
+        '/client-records/' + id, '/client-records/' + id + '/edit',
+        '/client-records/' + id + '/locations/add',
+        '/client-records/' + id + '/locations/' + id,
+        '/client-records/' + id + '/locations/' + id + '/edit',
+        '/client-records/' + id + '/staff/add',
+        '/client-records/' + id + '/staff/' + id,
+        '/client-records/' + id + '/staff/' + id + '/edit',
+      ]),
+      '/client-records/1/locations/4', '/client-records/1/locations/4/edit',
+      ...[1, 2, 3, 4].flatMap(id => ['/site-records/' + id, '/users/' + id + '/edit']),
+    ] : [],
   },
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -95,7 +117,7 @@ export default {
     '@nuxtjs/axios',
     // https://i18n.nuxtjs.org/setup
     'nuxt-i18n',
-    '@nuxtjs/auth-next',
+    ...(!showcase ? ['@nuxtjs/auth-next'] : []),
     // "@nuxtjs/auth",
     'vue-sweetalert2/nuxt',
     // ['vue-social-auth/nuxt', { 

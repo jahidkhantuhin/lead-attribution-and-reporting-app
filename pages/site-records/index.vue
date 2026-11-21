@@ -352,7 +352,7 @@ export default defineComponent({
           reportItem.siteURL = reportItem.url ? reportItem.url : ''
           reportItem.clientName = reportItem?.location?.client?.name || ''
           reportItem.status = reportItem?.status || ''
-          reportItem.accountManager = reportItem?.location?.client?.account_manager_id || ''
+          reportItem.accountManager = reportItem.accountManager || reportItem?.location?.client?.account_manager_id || ''
         const item = {
             ...reportItem,
           }

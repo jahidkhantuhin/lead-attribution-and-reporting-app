@@ -58,6 +58,7 @@ import {
   onMounted,
 } from '@nuxtjs/composition-api'
 import Datepicker from '~/components/forms/DatePicker.vue'
+import { dates as showcaseDates } from '~/showcase/fixtures'
 import useUsers from '~/services/useUsers'
 import { CALL_SCORER_ROLE } from '~/utils/UserEnums'
 import moment from 'moment'
@@ -104,6 +105,9 @@ export default defineComponent({
       if (query && query.user_id && query.dates) {
         query.user_id = +query.user_id
         filters.value = query
+        emit('search', filters.value)
+      } else if (process.env.SHOWCASE_MODE === 'true') {
+        filters.value = { user_id: 3, dates: showcaseDates() }
         emit('search', filters.value)
       }
     }

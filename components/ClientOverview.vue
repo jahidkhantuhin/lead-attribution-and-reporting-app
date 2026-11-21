@@ -861,8 +861,7 @@ import generateComparingSeoCorColumnsReport, {
   comparingSeoCorColumns,
 } from '~/utils/reports-upload/comparingSeoCor'
 
-import corTestingReport from '~/report/cor-testing-report'
-import corCompTestingReport from '~/report/cor-comp-testing-report'
+import { dates as showcaseDates } from '~/showcase/fixtures'
 import UnauthorizedUser from '~/components/UnauthorizedUser.vue'
 
 
@@ -936,8 +935,6 @@ export default defineComponent({
   const compMonthPicker = ref()
 
   const reportCompare = ref(false)
-  const corReport = corTestingReport
-  const corCompReport = corCompTestingReport
   const selectedComputedReport = computed(() => {
     return reportCompare.value ? requiredFormattedReport.value : computedReport.value
   })
@@ -1559,11 +1556,9 @@ export default defineComponent({
             }
             if (reportCompare.value) {
               comparedReport.value = resp.data?.data
-            // comparedReport.value = corCompReport
             }
             else {
               report.value = resp.data?.data
-              // report.value = corReport
             }
             loadedReport.value = true
           })
@@ -1638,7 +1633,10 @@ export default defineComponent({
       // if (query.status && query.dates || query.ref_month_dates && query.comp_month_dates) {
       //   fetchReport()
       // }
-      if (query.status && query.dates || query.ref_month && query.comp_month) {
+      if (process.env.SHOWCASE_MODE === 'true' && !query.dates) {
+        filters.value.dates = showcaseDates()
+      }
+      if (process.env.SHOWCASE_MODE === 'true' || query.status && query.dates || query.ref_month && query.comp_month) {
         fetchReport()
       }
     })
@@ -1748,9 +1746,7 @@ export default defineComponent({
       dateDifference,
       totalMonth,
       //New COR Start
-      corReport,
       comparedReport,
-      corCompReport,
       computedAllTogetherReport,
       requiredFormattedReport,
       reportCompare,

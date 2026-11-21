@@ -127,6 +127,7 @@ import useAxios from '~/plugins/useAxios'
 import Datepicker from '~/components/forms/DatePickerForStatistics.vue'
 import FormattedDate from '~/components/FormattedDate.vue'
 import { callColors } from '~/shared/callColors'
+import { dates as showcaseDates } from '~/showcase/fixtures'
 import generateStatisticsReport from '~/utils/reports-upload/statistic-report'
 import swalMixin, { showToast } from '~/utils/swalMixin'
 import UnauthorizedUser from '~/components/UnauthorizedUser.vue'
@@ -484,7 +485,10 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      // fetchGraph()
+      if (process.env.SHOWCASE_MODE === 'true') {
+        filters.value.dates = showcaseDates()
+        fetchGraph()
+      }
     })
 
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })

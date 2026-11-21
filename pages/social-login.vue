@@ -67,6 +67,11 @@ export default defineComponent({
 
 
     onBeforeMount(async () => {
+      if (process.env.SHOWCASE_MODE === 'true') {
+        fetchingUser.value = false
+        showForm.value = true
+        return
+      }
       await $axios
         .get(
           '/social-login-direct',

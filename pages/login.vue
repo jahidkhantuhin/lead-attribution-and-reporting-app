@@ -58,6 +58,11 @@ export default defineComponent({
     const fetchingUser = ref(true)
 
     onBeforeMount(async () => {
+      if (process.env.SHOWCASE_MODE === 'true') {
+        fetchingUser.value = false
+        showForm.value = true
+        return
+      }
       await $axios
         .get('/sanctum/csrf-cookie', {
           headers: {

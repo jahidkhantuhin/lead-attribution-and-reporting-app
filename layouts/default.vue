@@ -80,7 +80,7 @@ import { IBreadcrumbs } from '~/store'
 
 export default defineComponent({
   components: { Sidebar, LogOutModal, Version, AppBar },
-  middleware: 'auth',
+  middleware: process.env.SHOWCASE_MODE === 'true' ? 'isAuthenticated' : 'auth',
   setup(_props, { root, parent }) {
     // register the toast plugin
 
@@ -140,6 +140,10 @@ export default defineComponent({
     })
 
     const fetchUser = async () => {
+      if (process.env.SHOWCASE_MODE === 'true') {
+        fetchingUser.value = false
+        return
+      }
       // $axios
       //   .get('/sanctum/csrf-cookie', {
       //     headers: {

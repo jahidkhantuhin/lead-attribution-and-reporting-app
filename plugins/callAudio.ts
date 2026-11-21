@@ -1,6 +1,8 @@
 import Vue from 'vue'
 
 export const callAudio = (val: string) => {
+  if (process.env.SHOWCASE_MODE === 'true') return undefined
+
   if (val && val.includes('drive.google')) {
     return val
   }

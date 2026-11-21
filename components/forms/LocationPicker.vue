@@ -92,21 +92,24 @@ export default defineComponent({
       clientLocations(props.client)
         .then((res) => {
           locationList.value = res.data?.data?.result
-          let alphabeticalOption = (locationList.value.sort((a: any, b: any) =>
+          if (!locationList.value.length) {
+            inputValue.value = props.multiple ? [] : null
+            onChange()
+            return
+          }
+          const firstOption = (locationList.value.sort((a: any, b: any) =>
             a.name.localeCompare(b.name)
           )[0] as any).id
-          let firstOption = (locationList.value[0] as any).id
-          let location_ids = router.currentRoute.query.location_ids as Array<string>
-          let locationFromUrl = location_ids.map((item) => +item) as Array<
-            string | number
-          >
+          const selected = router.currentRoute.query.location_ids ?? inputValue.value
+          const locationFromUrl = (Array.isArray(selected) ? selected : [selected])
+            .filter(Boolean).map(item => Number(item))
           if (locationList.value.length === 1) {
             inputValue.value = props.multiple ? [firstOption] : firstOption
             onChange()
           } else if (locationList.value.length > 1) {
             inputValue.value = props.multiple
               ? locationFromUrl
-              : alphabeticalOption
+              : firstOption
             onChange()
             // selectAll()
           }
@@ -133,7 +136,7 @@ export default defineComponent({
       } else {
         inputValue.value = router.currentRoute.query.location_ids as string
       }
-      // fetchLocations()
+      if (process.env.SHOWCASE_MODE === 'true' && props.client) fetchLocations()
     })
 
     watch(

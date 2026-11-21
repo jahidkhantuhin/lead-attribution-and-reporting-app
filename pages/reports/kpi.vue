@@ -173,6 +173,7 @@ import moment from 'moment'
 import { extendMoment } from 'moment-range'
 const MomentRange = extendMoment(moment as any)
 import KPIDaily from '~/components/KPI/daily.vue'
+import { dates as showcaseDates } from '~/showcase/fixtures'
 import KPIMonthly from '~/components/KPI/month.vue'
 import UnauthorizedUser from '~/components/UnauthorizedUser.vue'
 
@@ -538,6 +539,9 @@ export default defineComponent({
     }
 
     onMounted(() => {
+      if (process.env.SHOWCASE_MODE === 'true') {
+        filters.value = { ...filters.value, client_id: 1, location_ids: [1], dates: showcaseDates() }
+      }
       loadFiltersFromURL()
       handleViewChange()
     })
