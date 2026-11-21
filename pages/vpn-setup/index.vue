@@ -136,6 +136,9 @@
                 }"
                 :server-items-length="pagination.total"
               >
+              <template v-slot:item.user.status="{ item }">
+                <workspace-badge :value="item.user && item.user.status" />
+              </template>
               <template #item.user.first_name="{ item }">
                   <span>
                     {{ item.user.first_name }} {{ item.user.last_name }}

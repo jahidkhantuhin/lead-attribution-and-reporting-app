@@ -6,9 +6,7 @@
           <h3 class="text-capitalize client-name">
             {{ !busy ? clientData.name : 'Loading...' }}
           </h3>
-          <h5 v-if="clientData.status" class="ml-4"> 
-            {{ clientData.status }} 
-          </h5>
+          <workspace-badge v-if="clientData.status" :value="clientData.status" class="ml-4" />
           <h5 v-if="clientData.email" class="ml-4">
             {{ clientData.email }}
           </h5>

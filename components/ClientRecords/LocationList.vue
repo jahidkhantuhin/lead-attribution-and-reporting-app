@@ -24,7 +24,7 @@
         </span>
       </template>
       <template #item.status="{ item }">
-        {{ item.status ? 'Active' : 'Inactive' }}
+        <workspace-badge :value="item.status" />
       </template> 
       <template #item.name="{ item }">
         <nuxt-link class="client-link" :to="`/client-records/${clientID}/locations/${item.id}`">

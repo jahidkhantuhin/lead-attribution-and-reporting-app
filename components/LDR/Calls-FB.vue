@@ -85,11 +85,7 @@
         ></formatted-date>
       </template>
       <template v-slot:item.call_status="props">
-        <v-chip
-        x-small
-        >
-        {{ props.item.call_status }}
-        </v-chip>
+        <workspace-badge :value="props.item.call_status" />
       </template>
     </v-data-table>
   </div>

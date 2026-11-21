@@ -9,7 +9,7 @@
       v-if="!nonAccountManagerUserRole"
     >
       <v-col cols="12" md="12" lg="12">
-        <v-card color="default" rounded elevation="1">
+        <v-card color="default" rounded elevation="1" class="workspace-filter-panel">
           <v-card-title>{{ $t('message.filters') }}</v-card-title>
           <v-switch
             class="ml-4"

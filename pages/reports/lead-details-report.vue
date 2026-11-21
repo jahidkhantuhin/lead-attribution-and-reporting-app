@@ -13,7 +13,7 @@
         <!-- <v-alert class="mb-5" type="info" dismissible v-if="sectionProgressAlert">
           {{ $t('message.wip') }}
         </v-alert> -->
-        <v-card color="default" rounded elevation="1">
+        <v-card color="default" rounded elevation="1" class="workspace-filter-panel">
           <v-card-title>{{ $t('message.filters') }}</v-card-title>
           <v-card-text>
             <v-row>

@@ -128,32 +128,20 @@
                       </td>
                     </tr>
                     <tbody>
-                      <template>
-                        <tr>
-                          <td><strong>Theme Name</strong></td>
-                          <td>
-                            <tr>
-                              <td ><strong>Version</strong></td>
-                              <td style="padding-left: 100px"><strong>Update Available</strong></td>
-                              <!-- <td style="padding-left: 100px"><strong>Status</strong></td> -->
-                            </tr>
-                          </td>
-                        </tr>
-                      </template>
-                    </tbody>
-                    <tbody v-for="(item, index) in siteData.themes" :key="index">
-                      <template>
-                        <tr>
-                          <td>{{ item.name }}</td>
-                          <td>
-                            <tr>
-                              <td>{{ item.version }}</td>
-                              <td style="padding-left: 130px">{{ item.is_update_available === 1 ? 'Yes' : 'No' }} ({{ item.status === 1 ? 'Active' : 'Not Active' }})</td>
-                              <!-- <td style="padding-left: 200px">{{ item.status === 1 ? 'Active' : 'Not Active' }}</td> -->
-                            </tr>
-                          </td>
-                        </tr>
-                      </template>
+                      <tr>
+                        <th scope="col">Theme</th>
+                        <th scope="col">Version and status</th>
+                      </tr>
+                      <tr v-for="item in siteData.themes" :key="item.name">
+                        <td>{{ item.name }}</td>
+                        <td>
+                          <div class="workspace-table-values">
+                            <span>{{ item.version }}</span>
+                            <workspace-badge :value="item.status" />
+                            <workspace-badge :value="item.is_update_available === 1 ? 'update_available' : 'up_to_date'" />
+                          </div>
+                        </td>
+                      </tr>
                     </tbody>
                   </template>
                 </v-simple-table>
@@ -181,8 +169,8 @@
                         <tr>
                           <td>{{ item.name }}</td>
                           <td>{{ item.version }}</td>
-                          <td>{{ item.is_update_available === 1 ? 'Yes' : 'No' }}</td>
-                          <td>{{ item.status === 1 ? 'Active' : 'Not Active' }}</td>
+                          <td><workspace-badge :value="item.is_update_available === 1 ? 'update_available' : 'up_to_date'" /></td>
+                          <td><workspace-badge :value="item.status" /></td>
                         </tr>
                       </template>
                     </tbody>

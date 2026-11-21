@@ -5,7 +5,7 @@
     </div>
     <div v-if="!nonAccountManagerUserRole"> 
       <v-card :loading="loading">
-        <v-card-title class="statistics-filters">
+        <v-card-title class="statistics-filters workspace-filter-inline">
           <span>Statistics</span>
           <Datepicker
             class="statistics-date"

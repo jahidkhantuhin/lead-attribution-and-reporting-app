@@ -9,10 +9,11 @@
       v-if="!nonAccountManagerUserRole"
     >
       <v-col  md="12">
-        <v-card>
-          <v-col md="6"><v-card-text>
+        <v-card class="workspace-filter-panel">
+          <v-card-title>Filters</v-card-title>
+          <v-card-text class="workspace-filter-search">
             <v-text-field
-              label="Search"
+              label="Search locations"
               append-icon="mdi-magnify"
               clearable
               v-model="filters.name"
@@ -20,9 +21,10 @@
               maxlength="250"
               >
             </v-text-field>
-          </v-card-text></v-col>
-        <v-col md="6"></v-col>
-          
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="primary" @click="handleFilterApply">Apply</v-btn>
+          </v-card-actions>
         </v-card>
       </v-col>
       <v-col md="12">
@@ -43,6 +45,9 @@
             }"
             :server-items-length="pagination.total"
           >
+            <template #item.status="{ item }">
+              <workspace-badge :value="item.status" />
+            </template>
             <template #item.created_at="{ item }">
               <formatted-date :date="item.created_at"></formatted-date>
             </template>

@@ -17,7 +17,7 @@
             <tr>
               <td> </td>
               <td> {{ locationData.name }}  </td>
-              <td> {{ locationData.status }} </td>
+              <td> <workspace-badge :value="locationData.status" /> </td>
               <td> 
                 <formatted-date :date="locationData.updated_at"> 
                   {{ locationData.updated_at }} 

@@ -5,7 +5,7 @@
     </div>
     <div v-if="!nonAccountManagerUserRole">
       <!-- Filters -->
-      <v-card elevation="1" :loading="busy">
+      <v-card elevation="1" :loading="busy" class="workspace-filter-panel">
         <v-card-title>{{ $t('message.filters') }}</v-card-title>
         <v-card-text>
           <v-row>

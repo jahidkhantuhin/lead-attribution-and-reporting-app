@@ -54,7 +54,7 @@
           <tr v-if="staffData.designation">
             <th>Role</th>
             <td>
-              {{ staffData.designation }}
+              <workspace-badge :value="staffData.designation" kind="role" />
 
               &nbsp;
               <a @click="copy(staffData.designation)">
@@ -129,13 +129,29 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 table {
+  width: 100%;
+  border: 1px solid var(--workspace-border);
+  border-radius: 11px;
+  border-spacing: 0;
+
   td,
   th {
     text-align: left;
-    padding: 5px 10px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--workspace-border);
+    overflow-wrap: anywhere;
   }
+
   th {
-    padding-right: 20px;
+    width: 32%;
+    color: var(--workspace-muted);
+    background: var(--workspace-subtle);
+    font-weight: 650;
+  }
+
+  tr:last-child td,
+  tr:last-child th {
+    border-bottom: 0;
   }
 }
 </style>

@@ -1,9 +1,9 @@
 <template>
-  <v-card elevation="0">
+  <div>
     <v-card-text>
       <v-autocomplete
         :loading="callScorersLoading"
-        placeholder="Select a call scorer"
+        label="Call scorer"
         item-value="id"
         v-model="filters['user_id']"
         clearable
@@ -42,7 +42,7 @@
         {{ loading ? 'Loading...' : 'Apply' }}
       </v-btn>
     </v-card-actions>
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">

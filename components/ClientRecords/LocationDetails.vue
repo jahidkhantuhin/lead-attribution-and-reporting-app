@@ -44,12 +44,7 @@
                         <tr>
                           <td><strong>Status</strong></td>
                           <td> 
-                            <v-chip
-                            :color="`${statusChipColor}`"
-                            v-if="locationData.status"
-                            > 
-                            {{ statusChipName }} 
-                            </v-chip> 
+                            <workspace-badge :value="locationData.status" />
                           </td>
 
                           
@@ -311,7 +306,6 @@ import {
   defineComponent,
   ref,
   onMounted,
-  computed,
 } from '@nuxtjs/composition-api'
 import LocationNameAndStatus from '~/components/ClientRecords/LocationNameAndStatus.vue'
 import LocationAddress from '~/components/ClientRecords/LocationAddress.vue'
@@ -338,22 +332,14 @@ export default defineComponent({
 
     },
   },
-  setup(props) {
+  setup() {
     const panel = ref(0)
-    const statusChipColor = computed(() => {
-      return props.locationData.status === 'paying_client' ? 'green' : props.locationData.status === 'ex_client' ? 'primary' : props.locationData.status === 'trial_client' ? 'orange' : ''
-    })
-    const statusChipName = computed(() => {
-      return props.locationData.status === 'paying_client' ? 'Paying Client' : props.locationData.status === 'ex_client' ? 'Ex Client' : props.locationData.status === 'trial_client' ? 'Trial Client' : ''
-    })
 
     onMounted(() => {
     })
 
     return {
       panel,
-      statusChipColor,
-      statusChipName,
     }
   },
 })

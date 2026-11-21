@@ -2,7 +2,7 @@
   <v-row class="my-6">
     <!-- Filters -->
     <v-col cols="12" md="3">
-      <v-card>
+      <v-card class="workspace-filter-panel">
         <v-form @submit.prevent="">
           <v-card-title>
             <v-icon left>mdi-filter</v-icon>
@@ -16,13 +16,13 @@
               :item-text="(item) => item.name.toUpperCase()"
               :item-value="(item) => item.name"
               :loading="loadingRoles"
-              label="Type"
+              label="Role"
               v-model="filters.role"
               clearable
             ></v-select>
             <!-- Search Term -->
             <v-text-field
-              label="Search Term (Email, name, phone etc.)"
+              label="Search users"
               v-model="filters.search"
               clearable
               maxlength="250"
@@ -92,7 +92,10 @@
             <span class="user-name">{{ item.fullname }}</span>
           </template>
           <template #item.role="{ item }">
-            {{ item.role.toUpperCase() }}
+            <workspace-badge :value="item.role" kind="role" />
+          </template>
+          <template #item.status="{ item }">
+            <workspace-badge :value="item.status" />
           </template>
           <template #item.actions="{ item }">
             <v-menu
@@ -348,6 +351,7 @@ export default defineComponent({
         sortable: false,
         value: `role`,
       },
+      { text: 'Status', value: 'status', sortable: false },
       {
         text: `Actions`,
         align: `middle`,

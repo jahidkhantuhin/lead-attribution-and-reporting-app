@@ -19,7 +19,7 @@
             <tr>
               <td> </td>
               <td> </td>
-              <td > {{ locationData.status ? 'Active' : 'Inactive' }} </td>
+              <td > <workspace-badge :value="locationData.status" /> </td>
               <td> {{ locationData.reporting_mail }}  </td>
               <td> {{ locationData && locationData.client ?  locationData.client.phone_number : '' }}  </td>
               <td> 

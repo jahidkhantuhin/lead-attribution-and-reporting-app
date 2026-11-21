@@ -24,7 +24,7 @@
                 />
               </v-col>
               <v-col md="8">
-                <span class="overline">{{ userData.role }}</span>
+                <workspace-badge :value="userData.role" kind="role" />
                 <p class="display-1">{{ userData.fullName }}</p>
                 <p>
                   <v-icon left>mdi-email</v-icon>

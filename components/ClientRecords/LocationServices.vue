@@ -26,7 +26,7 @@
                   <li> {{ !locationData.has_apex && !locationData.has_ppc && !locationData.has_seo ? 'No service available' : '' }} </li>
                 </ul>
               </td>
-              <td > {{ locationData.status ? 'Active' : 'Inactive' }} </td>
+              <td > <workspace-badge :value="locationData.status" /> </td>
               <td> {{ locationData.reporting_mail }}  </td>
               <td> 
                 <ul style="list-style: none; margin-left: -30px">

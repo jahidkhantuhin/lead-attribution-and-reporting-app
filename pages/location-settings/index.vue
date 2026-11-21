@@ -27,6 +27,9 @@
               'items-per-page-options': itemsPerPageOptions,
             }"
           >
+            <template #item.status="{ item }">
+              <workspace-badge :value="item.status" />
+            </template>
           <template #item.created_at="{ item }">
               <formatted-date :date="item.created_at"></formatted-date>
             </template>

@@ -9,7 +9,7 @@
         v-if="!nonAccountManagerUserRole"
         >
       <v-col cols="12" md="12">
-        <v-card>
+        <v-card class="workspace-filter-panel">
           <v-form @submit.prevent="">
             <v-card-title>
               <v-icon left>mdi-filter</v-icon>
@@ -81,22 +81,22 @@
                     <template v-slot:prepend>
                       <v-text-field
                         :value="filters.speed_score[0]"
-                        class="mt-0 pt-0"
+                        class="mt-0 pt-0 workspace-score-bound"
                         hide-details
                         single-line
                         type="number"
-                        style="width: 60px"
+                        aria-label="Minimum speed score"
                         @change="$set(filters.speed_score, 0, $event)"
                       ></v-text-field>
                     </template>
                     <template v-slot:append>
                       <v-text-field
                         :value="filters.speed_score[1]"
-                        class="mt-0 pt-0"
+                        class="mt-0 pt-0 workspace-score-bound"
                         hide-details
                         single-line
                         type="number"
-                        style="width: 60px"
+                        aria-label="Maximum speed score"
                         @change="$set(filters.speed_score, 1, $event)"
                       ></v-text-field>
                     </template>
@@ -169,7 +169,7 @@
               </nuxt-link>
             </template>
             <template #item.status="{ item }">
-                  {{ item.status === 1 ? 'Active' : 'Inactive' }}
+                  <workspace-badge :value="item.status" />
             </template>
             <template #item.accountManager="{ item }">
                   {{ item.accountManager }}

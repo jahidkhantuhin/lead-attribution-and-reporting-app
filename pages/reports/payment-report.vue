@@ -6,7 +6,7 @@
     <div v-if="!nonAccountManagerUserRole">
       <v-row class="my-5">
         <v-col cols="12" md="12" lg="3">
-          <v-card color="default" rounded class="min-h-300">
+          <v-card color="default" rounded class="workspace-filter-panel">
             <v-card-title>{{ $t('message.filters') }}</v-card-title>
             <payment-report-filters
               :callScorersLoading="callScorersLoading"
