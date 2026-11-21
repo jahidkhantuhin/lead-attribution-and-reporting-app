@@ -89,6 +89,7 @@ import VueApexCharts from 'vue-apexcharts'
 import ReportsList from '~/components/ReportsList.vue'
 import useApi from '~/services/useApi'
 import moment from 'moment'
+import { formatDateRange } from '~/utils/dateFormat'
 
 export default defineComponent({
   components: {
@@ -209,7 +210,8 @@ export default defineComponent({
 
     const reportPeriod = computed(() => {
       const { date_start, date_end } = reportsFilters.value
-      return moment(date_start).format('MMM D') + ' – ' + moment(date_end).format('MMM D, YYYY')
+      const range = formatDateRange(date_start, date_end)
+      return range ? [range.startLabel, range.endLabel].filter(Boolean).join('–') : ''
     })
 
     const leadMetrics = computed(() => graphSeries.value.map(series => ({

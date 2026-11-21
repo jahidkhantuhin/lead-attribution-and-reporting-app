@@ -155,15 +155,9 @@
               />
             </v-card-text>
 
-            <v-card-text>
-              <p class="body-2 mb-2">
-                Last updated at
-                <!-- <formatted-date
-                  :timezone="false"
-                  :date="computedReport.cache && computedReport.cache.created_at"
-                ></formatted-date> -->
-                {{previousDay}} @ 1 AM EST
-              </p>
+            <v-card-text v-if="reportUpdatedAt" class="workspace-date-meta">
+              <span>Last updated</span>
+              <formatted-date :date="reportUpdatedAt" />
             </v-card-text>
 
             <div v-if="loaded" class="lead-report-sections">
@@ -529,12 +523,11 @@ export default defineComponent({
       client: null,
     })
 
-    const previousDay = moment().subtract(1, 'days').endOf('day').format('MMM DD, YYYY')
-
     const allReportsList = ref([])
     const tab = ref(0)
     const activeSection = ref(0)
     const LDRReport: any = ref({})
+    const reportUpdatedAt = computed(() => LDRReport.value?.cache?.created_at ?? LDRReport.value?.cache?.cache?.created_at)
     const LDRReportLoading = ref(false)
     const isCopied = ref(false)
 
@@ -1502,7 +1495,7 @@ export default defineComponent({
       unAuthorizedToPullReport,
       sessionExpired,
       isAllowed,
-      previousDay,
+      reportUpdatedAt,
     }
   },
   head: {

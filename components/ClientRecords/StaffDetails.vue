@@ -76,7 +76,7 @@
           <tr v-if="staffData.updated_at">
             <th>Last Updated</th>
             <td>
-              {{ lastUpdated }}
+              <formatted-date :date="staffData.updated_at" />
             </td>
           </tr>
         </thead>

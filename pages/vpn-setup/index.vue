@@ -136,6 +136,9 @@
                 }"
                 :server-items-length="pagination.total"
               >
+              <template #item.expiry_date="{ item }">
+                <formatted-date :date="item.expiry_date" />
+              </template>
               <template v-slot:item.user.status="{ item }">
                 <workspace-badge :value="item.user && item.user.status" />
               </template>

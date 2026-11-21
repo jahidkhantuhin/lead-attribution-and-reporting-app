@@ -38,6 +38,9 @@
           :date="item.created_at"
         ></formatted-date>
       </template>
+      <template #item.updated_at="{ item }">
+        <formatted-date :date="item.updated_at" />
+      </template>
       <template #item.actions="{ item }">
         <v-menu>
           <template v-slot:activator="{ on, attrs }">

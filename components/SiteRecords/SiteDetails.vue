@@ -360,6 +360,8 @@ export default defineComponent({
           },
         },
         xaxis: {
+          labels: { formatter: (value: string) => moment(value, 'YYYY-MM-DD', true).isValid()
+            ? moment(value, 'YYYY-MM-DD', true).format('MMM D') : value },
           categories:
             reports &&
             reports.value.map((c: any) => {

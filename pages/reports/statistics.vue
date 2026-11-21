@@ -14,20 +14,8 @@
             v-model="filters['dates']"
           ></Datepicker>
         </v-card-title>
-        <v-card-text>
-          <span>
-            Showing reports from
-            <formatted-date
-              :timezone="false"
-              :date="filters.dates[0]"
-            ></formatted-date>
-            to
-            <formatted-date
-              :timezone="false"
-              :date="filters.dates[1]"
-            ></formatted-date
-            >.
-          </span>
+        <v-card-text v-if="filters.dates.length">
+          <dates-and-diff :start="filters.dates[0]" :end="filters.dates[1] || filters.dates[0]" />
         </v-card-text>
         <!-- <p> {{ testingValue }} </p> -->
         <!-- <p> {{ testingValueTwo }} </p> -->
@@ -122,7 +110,8 @@ import { IBreadcrumbs } from '~/store'
 import VueApexCharts from 'vue-apexcharts'
 import useAxios from '~/plugins/useAxios'
 import Datepicker from '~/components/forms/DatePickerForStatistics.vue'
-import FormattedDate from '~/components/FormattedDate.vue'
+import DatesAndDiff from '~/components/DatesAndDiff.vue'
+import { formatMonthLabel } from '~/utils/dateFormat'
 import { callColors } from '~/shared/callColors'
 import { date as showcaseDate } from '~/showcase/fixtures'
 import generateStatisticsReport from '~/utils/reports-upload/statistic-report'
@@ -134,7 +123,7 @@ export default defineComponent({
   components: {
     apexchart: VueApexCharts,
     Datepicker,
-    FormattedDate,
+    DatesAndDiff,
     UnauthorizedUser,
   },
   // middleware: 'isAuthenticated',
@@ -326,6 +315,7 @@ export default defineComponent({
           grid: { strokeDashArray: 4 },
           xaxis: {
             categories: keys,
+            labels: { formatter: formatMonthLabel },
           },
         },
       }

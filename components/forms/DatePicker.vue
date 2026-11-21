@@ -54,6 +54,7 @@ import {
   watch,
 } from '@nuxtjs/composition-api'
 import moment from 'moment'
+import { formatDateRange } from '~/utils/dateFormat'
 import { datePickerHelperButtons } from '~/utils/datepicker'
 export default defineComponent({
   props: {
@@ -134,9 +135,9 @@ export default defineComponent({
         if (props.kpi && dates.value.length === 0) {
           return 'All'
         } else {
-          return dates.value
-            .map((d) => moment(d).format('DD MMM YY'))
-            .join(' to ')
+          if (!dates.value.length) return ''
+          const range = formatDateRange(dates.value[0], dates.value[1])
+          return range ? [range.startLabel, range.endLabel].filter(Boolean).join('–') : ''
         }
       },
       set: (v) => {

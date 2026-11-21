@@ -428,3 +428,62 @@ body:has(.v-application.theme--dark) .swal2-popup { background: #192438; color: 
 .v-application.workspace-app .workspace-filter-panel .workspace-score-bound > .v-input__control > .v-input__slot {
   padding-inline: 6px;
 }
+
+.workspace-date,
+.workspace-date-range,
+.workspace-date-meta {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.workspace-date-clock,
+.workspace-date-empty,
+.workspace-date-meta > span:first-child {
+  color: var(--workspace-muted);
+}
+
+.workspace-date-clock {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.workspace-date-zone {
+  display: inline-block;
+  padding: 1px 6px;
+  border: 1px solid var(--workspace-border);
+  border-radius: 6px;
+  background: var(--workspace-subtle);
+  color: var(--workspace-muted);
+  font-size: .75rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.workspace-date-range {
+  max-width: 100%;
+  padding: 4px 8px;
+  border: 1px solid var(--workspace-border);
+  border-radius: 8px;
+  background: var(--workspace-surface);
+  color: var(--workspace-ink);
+}
+
+.workspace-date-range .v-icon {
+  color: var(--workspace-blue);
+}
+
+.workspace-duration {
+  color: var(--workspace-ink);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.v-application.workspace-app .workspace-date-meta {
+  width: auto;
+}

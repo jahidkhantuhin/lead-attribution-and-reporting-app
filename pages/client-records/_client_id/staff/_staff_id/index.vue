@@ -13,11 +13,9 @@ import {
   useStore,
   ref,
   onMounted,
-  computed,
 } from '@nuxtjs/composition-api'
 import useClientRecords from '~/services/useClientRecords'
 import useClientStaff from '~/services/useClientStaff'
-import moment from 'moment'
 import StaffDetails from '~/components/ClientRecords/StaffDetails.vue'
 
 export default defineComponent({
@@ -82,9 +80,6 @@ export default defineComponent({
         })
     }
 
-    const lastUpdated = computed(() => {
-      return moment((staffData.value as any).updated_at).fromNow()
-    })
 
     onMounted(() => {
       fetchStaff()
@@ -95,7 +90,6 @@ export default defineComponent({
       busy,
       clientId,
       staffID,
-      lastUpdated,
     }
   },
 })

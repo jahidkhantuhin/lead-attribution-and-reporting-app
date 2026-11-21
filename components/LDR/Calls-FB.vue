@@ -42,6 +42,9 @@
           </a>
         </span>
       </template>
+      <template #item.call_duration="{ item }">
+        <formatted-duration :value="item.call_duration" />
+      </template>
       <template v-slot:item.day="props">
         <formatted-date
           :date="props.item.call_start"

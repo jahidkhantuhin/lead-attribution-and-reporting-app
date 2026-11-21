@@ -13,14 +13,20 @@
         :hide-default-footer="true"
         :disable-sort="true"
         class="elevation-1 mb-3"
-      ></v-data-table>
+      >
+        <template #item.total_call_duration="{ item }">
+          <formatted-duration :value="item.total_call_duration" />
+        </template>
+        <template #item.total_rating_time="{ item }">
+          <formatted-duration :value="item.total_rating_time" />
+        </template>
+      </v-data-table>
     </v-card-text>
   </div>
 </template>
 <script>
 import { defineComponent, ref, computed } from '@vue/composition-api'
 import { PaymentReportColumns } from '~/utils/reports-upload/payment-report'
-import secondsToHHMMSS from './../utils/secondsToHHMMSS'
 
 export default defineComponent({
   props: {
@@ -31,7 +37,6 @@ export default defineComponent({
   setup(props) {
     return {
       headers: PaymentReportColumns(),
-      secondsToHHMMSS,
     }
   },
 })
