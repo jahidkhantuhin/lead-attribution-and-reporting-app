@@ -5,6 +5,9 @@
         <v-form ref="form">
           <v-text-field
             v-model="data['first_name']"
+            :label="scope === 'profile' ? 'First name' : undefined"
+            :outlined="scope === 'profile'"
+            :dense="scope === 'profile'"
             placeholder="First name"
             counter="50"
             max="50"
@@ -15,6 +18,9 @@
           <v-text-field
             v-model="data['last_name']"
             :rules="rules.last_name"
+            :label="scope === 'profile' ? 'Last name' : undefined"
+            :outlined="scope === 'profile'"
+            :dense="scope === 'profile'"
             placeholder="Last name"
             :disabled="loading"
             counter="50"
@@ -25,6 +31,9 @@
             :rules="rules.email"
             v-model="data['email']"
             :disabled="loading || scope === 'profile'"
+            :label="scope === 'profile' ? 'Email address' : undefined"
+            :outlined="scope === 'profile'"
+            :dense="scope === 'profile'"
             placeholder="E-mail"
           ></v-text-field>
 
@@ -33,6 +42,10 @@
             v-if="isEditing && isEditingOtherUser === false"
             type="password"
             :rules="rules.old_password"
+            :label="scope === 'profile' ? 'Current password' : undefined"
+            :outlined="scope === 'profile'"
+            :dense="scope === 'profile'"
+            autocomplete="current-password"
             placeholder="Old password"
             :disabled="loading"
           ></v-text-field>
@@ -42,6 +55,10 @@
             type="password"
             :disabled="loading"
             :rules="rules.password"
+            :label="scope === 'profile' ? 'New password' : undefined"
+            :outlined="scope === 'profile'"
+            :dense="scope === 'profile'"
+            autocomplete="new-password"
             placeholder="Enter new password"
           ></v-text-field>
 
@@ -49,6 +66,10 @@
             v-model="data['password_confirmation']"
             type="password"
             :rules="rules.password_confirmation"
+            :label="scope === 'profile' ? 'Confirm new password' : undefined"
+            :outlined="scope === 'profile'"
+            :dense="scope === 'profile'"
+            autocomplete="new-password"
             placeholder="Enter new password again"
             :disabled="loading"
           ></v-text-field>
@@ -81,7 +102,8 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          :color="isEditing ? 'primary' : 'normal'"
+          :text="scope === 'profile'"
+          :color="scope === 'profile' ? undefined : (isEditing ? 'primary' : 'normal')"
           :disabled="loading || loadingRoles"
           @click="$emit('cancel')"
           >Cancel</v-btn
@@ -89,9 +111,9 @@
         <v-btn
           :disabled="loading || loadingRoles"
           :loading="loading"
-          :color="isEditing ? 'warning' : 'primary'"
+          :color="isEditing && scope !== 'profile' ? 'warning' : 'primary'"
           @click="submit"
-          >{{ isEditing ? 'Update' : 'Create' }}</v-btn
+          >{{ scope === 'profile' ? 'Save changes' : (isEditing ? 'Update' : 'Create') }}</v-btn
         >
       </v-card-actions>
 

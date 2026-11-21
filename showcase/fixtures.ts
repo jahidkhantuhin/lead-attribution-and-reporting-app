@@ -21,7 +21,7 @@ export const roles = [
   { id: 4, name: 'admin' }, { id: 5, name: 'user' },
 ]
 export const users = [
-  user(1, 'Avery', 'Morgan', 'super admin', 1),
+  user(1, 'Jahid', 'Khan', 'super admin', 1),
   user(2, 'Jordan', 'Lee', 'account manager', 2),
   user(3, 'Taylor', 'Reed', 'call scorer', 3),
   user(4, 'Morgan', 'Patel', 'account manager', 2),
