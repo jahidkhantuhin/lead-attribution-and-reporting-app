@@ -3,7 +3,6 @@
     <v-menu
       v-model="showDatePicker"
       :close-on-content-click="false"
-      :nudge-right="40"
       transition="scale-transition"
       offset-y
       min-width="auto"
@@ -13,7 +12,7 @@
         <v-text-field
           v-model="displayedDates"
           clearable
-          label=""
+          label="Date or date range"
           prepend-icon="mdi-calendar"
           readonly
           v-bind="attrs"
@@ -22,7 +21,7 @@
           @click:clear="handleClickClear"
         ></v-text-field>
       </template>
-      <v-card style="width: 290px">
+      <v-card style="width: 290px; max-width: calc(100vw - 24px)">
         <v-date-picker
           v-model="dates"
           range

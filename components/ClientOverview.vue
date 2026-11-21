@@ -204,7 +204,7 @@
                 <v-icon>mdi-upload</v-icon>
               </v-btn>
             </v-toolbar>
-            <v-toolbar elevation="0">
+            <div class="client-report-controls">
               <!-- <div v-if="!reportCompare">
                 <p class="body-2 mb-2">Last updated at {{ lastUpdatedTime }}</p>
                 <DatesAndDiff
@@ -214,10 +214,8 @@
                   :end="report.date.date_end"
                 />
               </div> -->
-              <v-spacer></v-spacer>
               <v-btn 
               v-if="!seoReport && !ppcOnlyReport"
-              class="mr-4" 
               color="primary"
               @click="searchHandler"
               @change="push"
@@ -226,7 +224,6 @@
               </v-btn>
               <v-btn 
               v-if="seoReport || ppcOnlyReport"
-              class="mr-4" 
               color="primary"
               @click="searchAllReport"
               @change="push"
@@ -235,7 +232,6 @@
               </v-btn>
               <v-btn 
               v-if="!ppcOnlyReport && !reportCompare || seoReport && !reportCompare"
-              class="mr-4" 
               color="primary"
               @click="searchPPCReport"
               @change="push"
@@ -246,7 +242,7 @@
                 v-model="search"
                 append-icon="mdi-magnify"
                 label="Search clients"
-                style="width: 150px"
+                class="client-report-search"
                 single-line
                 hide-details
                 clearable
@@ -254,7 +250,7 @@
                 @click:clear="searchAllReport"
               >
               </v-text-field>
-            </v-toolbar>
+            </div>
 
             <v-card-text>
               <v-data-table

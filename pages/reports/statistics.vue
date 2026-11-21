@@ -5,18 +5,15 @@
     </div>
     <div v-if="!nonAccountManagerUserRole"> 
       <v-card :loading="loading">
-        <v-card-title>
-          <span> Statistics </span>
+        <v-card-title class="statistics-filters">
+          <span>Statistics</span>
           <Datepicker
-            class="ml-8"
+            class="statistics-date"
             :dateHelpButtons="['thisYear', 'lastYear', 'last2Years', 'last5Years']"
             @change="fetchGraph"
             v-model="filters['dates']"
           ></Datepicker>
         </v-card-title>
-        <v-card-text style="margin-left: 150px; margin-top: -30px;">
-          <span >Date or Date Range</span>
-        </v-card-text>
         <v-card-text>
           <span>
             Showing reports from

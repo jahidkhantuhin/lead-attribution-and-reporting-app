@@ -18,7 +18,7 @@
             <v-card-text>
               <v-row>
                 
-                <v-col cols="3">
+                <v-col cols="12" sm="6" md="3">
                   <v-text-field
                     label="Search by name"
                     clearable
@@ -26,7 +26,7 @@
                     maxlength="250"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="3">
+                <v-col cols="12" sm="6" md="3">
                   <v-autocomplete
                   v-model="filters.plugin"
                   :items="pluginOptions"
@@ -37,7 +37,7 @@
                   >
                   </v-autocomplete>
                 </v-col>
-                <v-col cols="3">
+                <v-col cols="12" sm="6" md="3">
                   <v-autocomplete
                   v-model="filters.theme"
                   :items="themeOptions"
@@ -48,7 +48,7 @@
                   >
                   </v-autocomplete>
                 </v-col>
-                <v-col cols="3">
+                <v-col cols="12" sm="6" md="3">
                   <v-select
                     label="Status"
                     :items="statusOptions"
@@ -56,7 +56,7 @@
                     clearable
                   ></v-select>
                 </v-col>
-                <v-col cols="3">
+                <v-col cols="12" sm="6" md="3">
                   <Datepicker
                     v-model="filters['date']"
                     :dateHelpButtons="[
@@ -69,8 +69,8 @@
                     ]"
                   ></Datepicker>
                 </v-col>
-                <v-col cols="3">
-                  <v-subheader>Min and max speed score</v-subheader>
+                <v-col cols="12" md="6">
+                  <v-subheader class="px-0">Min and max speed score</v-subheader>
                   <v-range-slider
                   v-model="filters.speed_score"
                   :max="max"

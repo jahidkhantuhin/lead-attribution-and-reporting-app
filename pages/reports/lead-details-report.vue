@@ -53,13 +53,12 @@
                   v-model="filters.dates"
                 ></Datepicker>
               </v-col>
-              <v-col cols="12" xl="2" lg="2" md="2" sm="12" xs="12">
-                <div class="text-lg-center">
+              <v-col cols="12" md="2">
                   <v-btn
                     :loading="LDRReportLoading"
                     color="primary"
                     class="my-2"
-                    style="width: 250px"
+                    block
                     :disabled="
                       !filters.client ||
                       !(filters.location_ids && !!filters.location_ids.length) ||
@@ -70,7 +69,6 @@
                     <v-icon left>mdi-check</v-icon>
                     Apply
                   </v-btn>
-                </div>
               </v-col>
             </v-row>
             <v-form> </v-form>

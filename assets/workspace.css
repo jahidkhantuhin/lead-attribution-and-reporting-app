@@ -265,3 +265,32 @@ body:has(.v-application.theme--dark) .swal2-popup { background: #192438; color: 
 .v-application.workspace-app .workspace-period-controls .v-btn { font-size: .8125rem; }
 .v-application.workspace-app .workspace-report-card .v-card__text { padding-top: 0; }
 .v-application.workspace-app .workspace-content .v-card__actions { flex-wrap: wrap; }
+
+.statistics-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 24px;
+}
+.statistics-date {
+  flex: 0 1 320px;
+  min-width: 0;
+  max-width: 100%;
+}
+.client-report-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+}
+.client-report-controls .client-report-search {
+  flex: 0 1 240px;
+  min-width: 180px;
+  max-width: 100%;
+}
+@media (max-width: 599px) {
+  .client-report-controls { justify-content: flex-start; }
+  .client-report-controls .client-report-search { flex-basis: 100%; }
+}
