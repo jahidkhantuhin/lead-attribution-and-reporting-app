@@ -58,3 +58,7 @@ npx --no-install nuxt-ts dev
 ```
 
 This restores the existing Nuxt Auth module with its Laravel Sanctum and Google strategies and sends Axios traffic to the configured backend. The matching backend and OAuth configuration are required for connected mode. Use `BASE_URL_PRODUCTION` for a production build and set the environment variables before running the build. To switch back, remove `SHOWCASE_MODE` or set it to `true`, then restart or rebuild.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
