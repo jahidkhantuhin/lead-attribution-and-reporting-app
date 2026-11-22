@@ -4,7 +4,7 @@
       SERVICES
       <v-spacer></v-spacer>
     </v-card-title>
-  <v-card-text>
+    <v-card-text>
       <v-simple-table>
         <template #default>
           <tbody>
@@ -17,28 +17,39 @@
               <td><strong>Last Updated</strong></td>
             </tr>
             <tr>
-              <td> </td>
+              <td></td>
               <td>
                 <ul style="list-style: none; margin-left: -25px">
-                  <li> {{ locationData.has_apex ? 'APEX' : '' }} </li>
-                  <li> {{ locationData.has_ppc ? 'PPC' : '' }} </li>
-                  <li> {{ locationData.has_seo ? 'SEO' : '' }} </li>
-                  <li> {{ !locationData.has_apex && !locationData.has_ppc && !locationData.has_seo ? 'No service available' : '' }} </li>
+                  <li>{{ locationData.has_apex ? 'APEX' : '' }}</li>
+                  <li>{{ locationData.has_ppc ? 'PPC' : '' }}</li>
+                  <li>{{ locationData.has_seo ? 'SEO' : '' }}</li>
+                  <li>
+                    {{
+                      !locationData.has_apex &&
+                      !locationData.has_ppc &&
+                      !locationData.has_seo
+                        ? 'No service available'
+                        : ''
+                    }}
+                  </li>
                 </ul>
               </td>
-              <td > <workspace-badge :value="locationData.status" /> </td>
-              <td> {{ locationData.reporting_mail }}  </td>
-              <td> 
+              <td><workspace-badge :value="locationData.status" /></td>
+              <td>{{ locationData.reporting_mail }}</td>
+              <td>
                 <ul style="list-style: none; margin-left: -30px">
-                    <li v-for="(item, index) in locationData.phone_numbers" :key="index">
-                      {{ item }}
-                    </li>
-                  </ul>
-                </td>
-              <td> 
-                <formatted-date :date="locationData.updated_at"> 
-                  {{ locationData.updated_at }} 
-                </formatted-date> 
+                  <li
+                    v-for="(item, index) in locationData.phone_numbers"
+                    :key="index"
+                  >
+                    {{ item }}
+                  </li>
+                </ul>
+              </td>
+              <td>
+                <formatted-date :date="locationData.updated_at">
+                  {{ locationData.updated_at }}
+                </formatted-date>
               </td>
             </tr>
           </tbody>
@@ -49,12 +60,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  ref,
-  useRoute,
-} from '@nuxtjs/composition-api'
+import { defineComponent, ref } from '@nuxtjs/composition-api'
 import FormattedDate from '~/components/FormattedDate.vue'
 
 export default defineComponent({
@@ -64,15 +70,13 @@ export default defineComponent({
   props: {
     locationData: {
       type: Object,
-        default() {
-            return {}
-        }
+      default() {
+        return {}
+      },
     },
-    },
+  },
   setup() {
     const busy = ref(false)
-    const route = useRoute()
-
 
     return {
       busy,

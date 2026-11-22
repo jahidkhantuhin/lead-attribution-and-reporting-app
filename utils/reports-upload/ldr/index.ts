@@ -8,16 +8,16 @@ import {
 import {
   ldrAllColumns,
   // ldrCallsColumns,
-  ldr_PPC_CallsColumns,
-  ldr_FB_CallsColumns,
-  ldr_SEO_CallsColumns,
+  ldrPpcCallsColumns,
+  ldrFbCallsColumns,
+  ldrSeoCallsColumns,
   // ldrChatsColumns,
-  ldr_PPC_ChatsColumns,
-  ldr_FB_ChatsColumns,
-  ldr_SEO_ChatsColumns,
-  ldr_FB_FormsColumns,
-  ldr_PPC_FormsColumns,
-  ldr_SEO_FormsColumns,
+  ldrPpcChatsColumns,
+  ldrFbChatsColumns,
+  ldrSeoChatsColumns,
+  ldrFbFormsColumns,
+  ldrPpcFormsColumns,
+  ldrSeoFormsColumns,
 } from './columns'
 
 const generateLeadDetailsReport = (
@@ -1018,9 +1018,9 @@ const generateLeadDetailsReport = (
       // },
       {
         title: 'CALLS-PPC',
-        headings: generateHeadersFromColumns(ldr_PPC_CallsColumns()),
+        headings: generateHeadersFromColumns(ldrPpcCallsColumns()),
         content: generateDataFromColumnsAndData({
-          columns: ldr_PPC_CallsColumns(),
+          columns: ldrPpcCallsColumns(),
           data: computedReport?.value?.details?.adwords_calls || [],
           rowStyle: (item: any) => {
             return {
@@ -1031,9 +1031,9 @@ const generateLeadDetailsReport = (
       },
       {
         title: 'CALLS-FB',
-        headings: generateHeadersFromColumns(ldr_FB_CallsColumns()),
+        headings: generateHeadersFromColumns(ldrFbCallsColumns()),
         content: generateDataFromColumnsAndData({
-          columns: ldr_FB_CallsColumns(),
+          columns: ldrFbCallsColumns(),
           data: computedReport?.value?.details?.facebook_calls || [],
           rowStyle: (item: any) => {
             return {
@@ -1044,9 +1044,9 @@ const generateLeadDetailsReport = (
       },
       {
         title: 'CALLS-SEO',
-        headings: generateHeadersFromColumns(ldr_SEO_CallsColumns()),
+        headings: generateHeadersFromColumns(ldrSeoCallsColumns()),
         content: generateDataFromColumnsAndData({
-          columns: ldr_SEO_CallsColumns(),
+          columns: ldrSeoCallsColumns(),
           data: computedReport?.value?.details?.seo_calls || [],
           rowStyle: (item: any) => {
             return {
@@ -1074,9 +1074,9 @@ const generateLeadDetailsReport = (
 
       {
         title: 'CHATS-PPC',
-        headings: generateHeadersFromColumns(ldr_PPC_ChatsColumns()),
+        headings: generateHeadersFromColumns(ldrPpcChatsColumns()),
         content: generateDataFromColumnsAndData({
-          columns: ldr_PPC_ChatsColumns(),
+          columns: ldrPpcChatsColumns(),
           data: computedReport?.value?.details?.adwords_chats || [],
           rowStyle: (item: any) => {
             var isWeekend = item.chat_date
@@ -1091,9 +1091,9 @@ const generateLeadDetailsReport = (
 
       {
         title: 'CHATS-FB',
-        headings: generateHeadersFromColumns(ldr_FB_ChatsColumns()),
+        headings: generateHeadersFromColumns(ldrFbChatsColumns()),
         content: generateDataFromColumnsAndData({
-          columns: ldr_FB_ChatsColumns(),
+          columns: ldrFbChatsColumns(),
           data: computedReport?.value?.details?.facebook_chats || [],
           rowStyle: (item: any) => {
             var isWeekend = item.chat_date
@@ -1108,9 +1108,9 @@ const generateLeadDetailsReport = (
 
       {
         title: 'CHATS-SEO',
-        headings: generateHeadersFromColumns(ldr_SEO_ChatsColumns()),
+        headings: generateHeadersFromColumns(ldrSeoChatsColumns()),
         content: generateDataFromColumnsAndData({
-          columns: ldr_SEO_ChatsColumns(),
+          columns: ldrSeoChatsColumns(),
           data: computedReport?.value?.details?.seo_chats || [],
           rowStyle: (item: any) => {
             var isWeekend = item.chat_date
@@ -1125,9 +1125,9 @@ const generateLeadDetailsReport = (
 
       {
         title: 'FORMS-PPC',
-        headings: generateHeadersFromColumns(ldr_PPC_FormsColumns()),
+        headings: generateHeadersFromColumns(ldrPpcFormsColumns()),
         content: generateDataFromColumnsAndData({
-          columns: ldr_PPC_FormsColumns(),
+          columns: ldrPpcFormsColumns(),
           data: computedReport?.value?.details?.emails || [],
           rowStyle: (item: any) => {
             var isWeekend = item.created
@@ -1142,18 +1142,18 @@ const generateLeadDetailsReport = (
 
       {
         title: 'FORMS-FB',
-        headings: generateHeadersFromColumns(ldr_FB_FormsColumns()),
+        headings: generateHeadersFromColumns(ldrFbFormsColumns()),
         content: generateDataFromColumnsAndData({
-          columns: ldr_FB_FormsColumns(),
+          columns: ldrFbFormsColumns(),
           data: computedReport?.value?.details?.facebook_leads || [],
         }),
       },
 
       {
         title: 'FORMS-SEO',
-        headings: generateHeadersFromColumns(ldr_SEO_FormsColumns()),
+        headings: generateHeadersFromColumns(ldrSeoFormsColumns()),
         content: generateDataFromColumnsAndData({
-          columns: ldr_SEO_FormsColumns(),
+          columns: ldrSeoFormsColumns(),
           data: computedReport?.value?.details?.seo_emails || [],
         }),
       },

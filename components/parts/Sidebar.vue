@@ -11,26 +11,28 @@
     <!-- User's avatar and details -->
     <template #prepend>
       <nuxt-link to="/" class="workspace-brand">
-        <span class="workspace-brand-mark"><v-icon small>mdi-chart-box-outline</v-icon></span>
+        <span class="workspace-brand-mark"
+          ><v-icon small>mdi-chart-box-outline</v-icon></span
+        >
         Foundation
       </nuxt-link>
       <v-list-item two-line class="workspace-identity">
-          <v-icon
-            v-if="!$store.getters['users/userProfilePicture']"
-            color="primary"
-            class="mr-3"
-            size="34"
-          >
-            mdi-account-circle
-          </v-icon>
-          <user-profile-picture
-            v-else
-            :height="40"
-            :width="40"
-            class="mr-1"
-            radius="50%"
-            :src="$store.getters['users/userProfilePicture']"
-          />
+        <v-icon
+          v-if="!$store.getters['users/userProfilePicture']"
+          color="primary"
+          class="mr-3"
+          size="34"
+        >
+          mdi-account-circle
+        </v-icon>
+        <user-profile-picture
+          v-else
+          :height="40"
+          :width="40"
+          class="mr-1"
+          radius="50%"
+          :src="$store.getters['users/userProfilePicture']"
+        />
         <v-list-item-content>
           <v-list-item-title>{{ userFullname }}</v-list-item-title>
           <v-list-item-subtitle>
@@ -121,8 +123,8 @@ import {
   useContext,
 } from '@nuxtjs/composition-api'
 import { ISidebarItem } from '@/shared/SidebarItems'
-import useAxios from '~/plugins/useAxios'
 import UserProfilePicture from '../UserProfilePicture.vue'
+import useAxios from '~/plugins/useAxios'
 
 export default defineComponent({
   components: { UserProfilePicture },

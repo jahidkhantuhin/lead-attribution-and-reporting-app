@@ -1,5 +1,8 @@
 <template>
-  <section class="directory-detail" :aria-label="isClient ? 'Selected client' : 'Selected location'">
+  <section
+    class="directory-detail"
+    :aria-label="isClient ? 'Selected client' : 'Selected location'"
+  >
     <header class="directory-detail-heading">
       <h2>{{ displayName }}</h2>
       <workspace-badge :value="data.status" />
@@ -20,7 +23,9 @@
       <h3>Locations</h3>
       <ul v-if="locations.length" class="directory-related">
         <li v-for="location in locations" :key="location.id">
-          <nuxt-link :to="recordPath + '/locations/' + location.id">{{ location.name }}</nuxt-link>
+          <nuxt-link :to="recordPath + '/locations/' + location.id">{{
+            location.name
+          }}</nuxt-link>
           <workspace-badge :value="location.status" />
         </li>
       </ul>
@@ -29,22 +34,42 @@
       <h3>Staff</h3>
       <ul v-if="staff.length" class="directory-related">
         <li v-for="member in staff" :key="member.id">
-          <nuxt-link :to="recordPath + '/staff/' + member.id">{{ member.name }}</nuxt-link>
+          <nuxt-link :to="recordPath + '/staff/' + member.id">{{
+            member.name
+          }}</nuxt-link>
           <span v-if="member.designation">{{ member.designation }}</span>
         </li>
       </ul>
       <p v-else>No staff linked.</p>
     </template>
     <div class="directory-detail-actions">
-      <v-btn v-if="recordPath" text color="primary" :to="recordPath">{{ isClient ? 'Open full client record' : 'Open full location record' }}</v-btn>
-      <v-btn v-else text color="primary" :to="{ path: '/location-settings/add', query: { id: record.id, name: displayName } }">Assign to client</v-btn>
-      <v-btn v-if="isClient" text color="primary" :to="recordPath + '/edit'">Edit client</v-btn>
+      <v-btn v-if="recordPath" text color="primary" :to="recordPath">{{
+        isClient ? 'Open full client record' : 'Open full location record'
+      }}</v-btn>
+      <v-btn
+        v-else
+        text
+        color="primary"
+        :to="{
+          path: '/location-settings/add',
+          query: { id: record.id, name: displayName },
+        }"
+        >Assign to client</v-btn
+      >
+      <v-btn v-if="isClient" text color="primary" :to="recordPath + '/edit'"
+        >Edit client</v-btn
+      >
     </div>
   </section>
 </template>
 
 <script>
-import { computed, defineComponent, onMounted, ref } from '@nuxtjs/composition-api'
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  ref,
+} from '@nuxtjs/composition-api'
 import useClientRecords from '~/services/useClientRecords'
 import useClientLocations from '~/services/useClientLocations'
 
@@ -55,37 +80,67 @@ export default defineComponent({
   },
   setup(props) {
     const isClient = props.kind === 'client'
-    const fetch = isClient ? useClientRecords().clientById : useClientLocations().locationById
+    const fetch = isClient
+      ? useClientRecords().clientById
+      : useClientLocations().locationById
     const detail = ref({})
     const loading = ref(true)
     const failed = ref(false)
     const data = computed(() => ({ ...props.record, ...detail.value }))
-    const displayName = computed(() => data.value.name || [data.value.first_name, data.value.last_name].filter(Boolean).join(' ') || 'Unnamed record')
+    const displayName = computed(
+      () =>
+        data.value.name ||
+        [data.value.first_name, data.value.last_name]
+          .filter(Boolean)
+          .join(' ') ||
+        'Unnamed record'
+    )
     const recordPath = computed(() => {
       if (isClient) return '/client-records/' + props.record.id
       const clientId = data.value.client?.id || data.value.client_id
-      return clientId ? '/client-records/' + clientId + '/locations/' + props.record.id : ''
+      return clientId
+        ? '/client-records/' + clientId + '/locations/' + props.record.id
+        : ''
     })
     const fields = computed(() => {
       const record = data.value
       const client = record.client
       const manager = record.account_manager
       const clientName = typeof client === 'string' ? client : client?.name
-      const managerName = typeof manager === 'string' ? manager : manager?.fullname || [manager?.first_name, manager?.last_name].filter(Boolean).join(' ')
-      const address = [record.address, [record.city, record.state].filter(Boolean).join(', '), record.zipcode || record.zip].filter(Boolean).join(' · ')
+      const managerName =
+        typeof manager === 'string'
+          ? manager
+          : manager?.fullname ||
+            [manager?.first_name, manager?.last_name].filter(Boolean).join(' ')
+      const address = [
+        record.address,
+        [record.city, record.state].filter(Boolean).join(', '),
+        record.zipcode || record.zip,
+      ]
+        .filter(Boolean)
+        .join(' · ')
 
       return [
         !isClient && { label: 'Client', value: clientName || 'Unassigned' },
         { label: 'Account manager', value: managerName },
-        { label: 'Email', value: isClient ? record.email : record.reporting_mail || record.email },
+        {
+          label: 'Email',
+          value: isClient
+            ? record.email
+            : record.reporting_mail || record.email,
+        },
         { label: 'Phone', value: record.phone_number },
         { label: 'Address', value: address },
         { label: 'Website', value: record.website || record.personal_website },
         !isClient && { label: 'Source', value: record.source },
-      ].filter(field => field && field.value)
+      ].filter((field) => field && field.value)
     })
-    const locations = computed(() => Array.isArray(data.value.locations) ? data.value.locations : [])
-    const staff = computed(() => Array.isArray(data.value.staff) ? data.value.staff : [])
+    const locations = computed(() =>
+      Array.isArray(data.value.locations) ? data.value.locations : []
+    )
+    const staff = computed(() =>
+      Array.isArray(data.value.staff) ? data.value.staff : []
+    )
 
     onMounted(async () => {
       try {
@@ -98,7 +153,17 @@ export default defineComponent({
       }
     })
 
-    return { isClient, data, displayName, recordPath, fields, locations, staff, loading, failed }
+    return {
+      isClient,
+      data,
+      displayName,
+      recordPath,
+      fields,
+      locations,
+      staff,
+      loading,
+      failed,
+    }
   },
 })
 </script>
@@ -127,7 +192,7 @@ export default defineComponent({
 }
 .directory-detail-fields > div {
   display: grid;
-  grid-template-columns: minmax(95px, .65fr) minmax(0, 1fr);
+  grid-template-columns: minmax(95px, 0.65fr) minmax(0, 1fr);
   gap: 8px;
   padding: 8px 0;
   border-bottom: 1px solid var(--workspace-border);

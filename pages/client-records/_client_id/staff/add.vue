@@ -12,7 +12,6 @@
 <script>
 import {
   defineComponent,
-  onMounted,
   useRoute,
   useRouter,
   useStore,
@@ -28,7 +27,7 @@ export default defineComponent({
     const router = useRouter()
     const route = useRoute()
     const store = useStore()
-    const id = route.value.params.staff_id
+
     const clientId = route.value.params.client_id
 
     const handleCancel = () => {

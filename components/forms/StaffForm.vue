@@ -4,40 +4,40 @@
       <v-card-title> {{ title }} </v-card-title>
       <v-card-text>
         <v-text-field
+          v-model="formData.name"
           label="Person's name *"
           clearable
           maxlength="50"
           counter="50"
-          v-model="formData.name"
           :rules="rules.name"
           max="50"
         >
         </v-text-field>
         <v-text-field
-          :rules="rules.phone_number"
           v-model="formData.phone_number"
+          :rules="rules.phone_number"
           label="Person's phone number"
           clearable
           maxlength="250"
         >
         </v-text-field>
         <v-text-field
+          v-model="formData.email"
           label="Person's E-mail *"
           :rules="rules.email"
-          v-model="formData.email"
           clearable
           maxlength="250"
         >
         </v-text-field>
         <v-combobox
-          :rules="rules.designation"
           v-model="formData.designation"
+          :rules="rules.designation"
           hint="Press enter to add custom designation"
           :items="designationItems"
           placeholder="Role"
-          @keydown.enter="handleAddNewDesignation"
           :search-input.sync="designationInput"
           persistent-hint
+          @keydown.enter="handleAddNewDesignation"
         ></v-combobox>
       </v-card-text>
       <v-card-actions>
@@ -73,6 +73,7 @@ export default defineComponent({
   props: {
     id: {
       type: [String, Number],
+      default: undefined,
     },
   },
   setup(_props, { parent, emit }) {
@@ -91,15 +92,14 @@ export default defineComponent({
     const handleAddNewDesignation = () => {
       setTimeout(() => {
         const find = designationItems.value.find((str: string) => {
-          console.log(str, designationInput.value)
           return str.toLowerCase() === designationInput.value.toLowerCase()
         })
 
         if (!find) {
-          designationItems.value.push(find ? find : designationInput.value)
+          designationItems.value.push(find || designationInput.value)
         }
 
-        ;(formData.value as any)['designation'] = designationInput.value
+        ;(formData.value as any).designation = designationInput.value
       }, 10)
     }
 
@@ -167,7 +167,7 @@ export default defineComponent({
             // @ts-ignore
             formData.value.client_id = formData.value?.client?.id
 
-            delete (formData as any).value['client']
+            delete (formData as any).value.client
 
             fetchClient()
           })

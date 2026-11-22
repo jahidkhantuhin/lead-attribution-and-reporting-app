@@ -1,30 +1,34 @@
 <template>
   <div>
-    <UnauthorizedUser v-if="nonAccountManagerUserRole"/>
+    <UnauthorizedUser v-if="nonAccountManagerUserRole" />
     <v-row
+      v-if="!nonAccountManagerUserRole"
       :class="{
         'my-6': true,
         'client-records': true,
       }"
-      v-if="!nonAccountManagerUserRole"
     >
-      <v-col  md="12">
+      <v-col md="12">
         <v-card class="workspace-filter-panel">
           <v-card-title>Find locations</v-card-title>
           <v-card-text class="workspace-filter-search">
             <v-text-field
+              v-model="filters.name"
               label="Search locations"
               append-icon="mdi-magnify"
               clearable
-              v-model="filters.name"
-              @keydown.enter.prevent="handleFilterApply(true)"
               maxlength="250"
-              >
+              @keydown.enter.prevent="handleFilterApply(true)"
+            >
             </v-text-field>
           </v-card-text>
           <v-card-actions>
-            <v-btn color="primary" @click="handleFilterApply(true)">Apply</v-btn>
-            <v-chip v-if="appliedName" small close @click:close="clearSearch">Search: {{ appliedName }}</v-chip>
+            <v-btn color="primary" @click="handleFilterApply(true)"
+              >Apply</v-btn
+            >
+            <v-chip v-if="appliedName" small close @click:close="clearSearch"
+              >Search: {{ appliedName }}</v-chip
+            >
           </v-card-actions>
         </v-card>
       </v-col>
@@ -33,26 +37,44 @@
           <v-toolbar flat class="directory-toolbar">
             <v-toolbar-title>All Active Locations</v-toolbar-title>
             <v-spacer />
-            <v-btn text small @click="tableView = !tableView">{{ tableView ? 'Inspector' : 'View table' }}</v-btn>
+            <v-btn text small @click="tableView = !tableView">{{
+              tableView ? 'Inspector' : 'View table'
+            }}</v-btn>
           </v-toolbar>
           <template v-if="!tableView">
-            <v-card-text class="pb-0">{{ pagination.total }} locations</v-card-text>
-            <record-inspector :records="items" :loading="busy" title="Location inspector">
+            <v-card-text class="pb-0"
+              >{{ pagination.total }} locations</v-card-text
+            >
+            <record-inspector
+              :records="items"
+              :loading="busy"
+              title="Location inspector"
+            >
               <template #name="{ record }">{{ record.name }}</template>
-              <template #subtitle="{ record }">{{ record.city || record.website || '' }}</template>
+              <template #subtitle="{ record }">{{
+                record.city || record.website || ''
+              }}</template>
               <template #detail="{ record }">
-                <directory-record-detail :key="record.id" :record="record" kind="location" />
+                <directory-record-detail
+                  :key="record.id"
+                  :record="record"
+                  kind="location"
+                />
               </template>
             </record-inspector>
             <v-card-actions v-if="pageCount > 1" class="justify-end">
-              <v-pagination :value="tablePage" :length="pageCount" :total-visible="5" @input="goToPage" />
+              <v-pagination
+                :value="tablePage"
+                :length="pageCount"
+                :total-visible="5"
+                @input="goToPage"
+              />
             </v-card-actions>
           </template>
           <v-data-table
             v-else
             :items="items"
             :headers="tableHeaders"
-            @pagination="handlePaginationChange"
             :options.sync="tableOptions"
             :fixed-header="true"
             height="calc(100vh - 318px)"
@@ -61,6 +83,7 @@
               'items-per-page-options': itemsPerPageOptions,
             }"
             :server-items-length="pagination.total"
+            @pagination="handlePaginationChange"
           >
             <template #item.status="{ item }">
               <workspace-badge :value="item.status" />
@@ -69,7 +92,6 @@
               <formatted-date :date="item.created_at"></formatted-date>
             </template>
           </v-data-table>
-
         </v-card>
       </v-col>
     </v-row>
@@ -89,20 +111,17 @@ import {
   useContext,
   computed,
 } from '@nuxtjs/composition-api'
+
 import swalMixin, { showConfirmDialog, showToast } from '~/utils/swalMixin'
-import useClientRecords from '@/services/useClientRecords'
 import useClientLocations from '~/services/useClientLocations'
-import ClientRecordsForm from '@/components/forms/ClientRecordsForm.vue'
-import { AM_ROLE } from '~/utils/UserEnums'
+
 import { Dictionary } from '~/node_modules/@types/lodash'
 import FormattedDate from '~/components/FormattedDate.vue'
-import ClientStatusChip from '~/components/ClientStatusChip.vue'
-import useUsers from '~/services/useUsers'
+
 import RecordInspector from '~/components/RecordInspector.vue'
 import DirectoryRecordDetail from '~/components/DirectoryRecordDetail.vue'
 import UnauthorizedUser from '~/components/UnauthorizedUser.vue'
 import useAxios from '~/plugins/useAxios'
-
 
 interface IClientRecordsFilter {
   account_manager?: string | null
@@ -112,20 +131,18 @@ interface IClientRecordsFilter {
   name?: string | null
 }
 
-export default defineComponent({ 
+export default defineComponent({
   components: {
     RecordInspector,
     DirectoryRecordDetail,
-    ClientRecordsForm,
     FormattedDate,
-    ClientStatusChip,
     UnauthorizedUser,
   },
   // middleware: 'isAuthenticated',
   setup(_props, { parent, emit }) {
     const { $auth } = useContext()
-    const nonAccountManagerUserRole = computed(() =>
-      !$auth.hasScope('create report')
+    const nonAccountManagerUserRole = computed(
+      () => !$auth.hasScope('create report')
     )
     const statusOptions = ref([])
     const statusOptionsLoading = ref(false)
@@ -151,11 +168,12 @@ export default defineComponent({
     const pagination = ref({
       total: 0,
     })
-    const pageCount = computed(() => Math.max(1, Math.ceil(pagination.value.total / itemsPerPage.value)))
+    const pageCount = computed(() =>
+      Math.max(1, Math.ceil(pagination.value.total / itemsPerPage.value))
+    )
     const router = useRouter()
     const store = useStore()
-    const { list, listStatus } = useClientRecords()
-    const { list: listUsers } = useUsers()
+
     const busy = ref(false)
 
     const items: any = ref([])
@@ -217,7 +235,6 @@ export default defineComponent({
         }
         getClientRecords()
       })
-      
     }
     // set the page breadcrumbs
     const breadcrumbs = [
@@ -243,9 +260,9 @@ export default defineComponent({
     watch(
       tableOptions,
       (v: any) => {
-        tablePage.value = v.page;
+        tablePage.value = v.page
         itemsPerPage.value = v.itemsPerPage
-        
+
         if (tableOptions.value.sortBy[0]) {
           filters.value.sort_by =
             tableOptions.value.sortBy[0] === 'fullname'
@@ -268,25 +285,20 @@ export default defineComponent({
     let recordsRequest = 0
     const getClientRecords = () => {
       const request = ++recordsRequest
-      const appliedFilters = {
-        ...filters.value,
-        sort_by:
-          filters.value.sort_by + `:` + filters.value?.sorting?.toLowerCase(),
-      }
 
       busy.value = true
       axios
-      .get(
-        '/locations',
-        {params: {
-          name: filters.value.name,
-          limit: itemsPerPage.value,
-          page: tablePage.value
+        .get('/locations', {
+          params: {
+            name: filters.value.name,
+            limit: itemsPerPage.value,
+            page: tablePage.value,
           },
           withCredentials: true,
           headers: {
-            'Authorization': `Bearer ${(store.state as any).cred.cred}`
-          }})
+            Authorization: `Bearer ${(store.state as any).cred.cred}`,
+          },
+        })
         .then((resp) => {
           if (request !== recordsRequest) return
           items.value = resp.data.data.result
@@ -332,13 +344,13 @@ export default defineComponent({
       const query = { ...route.value.query }
       if (query.page) {
         tablePage.value = +query.page
-        delete query['page']
+        delete query.page
       } else {
         tablePage.value = 1
       }
       if (query.itemsPerPage) {
         itemsPerPage.value = +query.itemsPerPage
-        delete query['itemsPerPage']
+        delete query.itemsPerPage
       } else {
         itemsPerPage.value = 20
       }
@@ -448,25 +460,25 @@ export default defineComponent({
 }
 .theme--dark {
   .client-records .v-data-table {
-  table > tbody > tr > td:nth-child(1),
-  table > thead > tr > th:nth-child(1) {
-    position: sticky !important;
-    position: -webkit-sticky !important;
-    left: 0;
-    z-index: 4;
-    background: rgb(29, 28, 28);
-  }
-  table > tbody > tr {
-    &:hover {
-      th,
-      td {
-        background: rgb(63, 62, 62) !important;
+    table > tbody > tr > td:nth-child(1),
+    table > thead > tr > th:nth-child(1) {
+      position: sticky !important;
+      position: -webkit-sticky !important;
+      left: 0;
+      z-index: 4;
+      background: rgb(29, 28, 28);
+    }
+    table > tbody > tr {
+      &:hover {
+        th,
+        td {
+          background: rgb(63, 62, 62) !important;
+        }
       }
     }
+    table > thead > tr > th:nth-child(1) {
+      z-index: 5;
+    }
   }
-  table > thead > tr > th:nth-child(1) {
-    z-index: 5;
-  }
-}
 }
 </style>

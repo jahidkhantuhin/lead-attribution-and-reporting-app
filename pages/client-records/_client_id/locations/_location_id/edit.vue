@@ -2,10 +2,10 @@
   <v-row class="my-6" justify="center">
     <v-col cols="12" lg="6" md="8">
       <location-form
+        :id="editId"
         @cancel="
           $router.push(`/client-records/${clientId}/locations/${editId}`)
         "
-        :id="editId"
         @onFetchClient="onFetchClient"
       ></location-form>
     </v-col>

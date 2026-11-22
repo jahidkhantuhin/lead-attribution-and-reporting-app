@@ -15,34 +15,34 @@
       :fixed-header="true"
       height="700px"
     >
-      <template v-slot:item.lead.phone="props">
+      <template #item.lead.phone="props">
         <span> {{ props.item.lead.phone | usPhone }}</span>
       </template>
-      <template v-slot:item.lead.lead_source="props">
+      <template #item.lead.lead_source="props">
         <span style="text-transform: capitalize">
           {{ props.item.lead.lead_source }}</span
         >
       </template>
-      <template v-slot:item.referrer="props">
+      <template #item.referrer="props">
         <truncate-text
           :text="props.item.referrer"
           title="Referrer"
-          showText="Show Link"
+          show-text="Show Link"
           :button="true"
           :url="true"
         ></truncate-text>
       </template>
-      <template v-slot:item.chat_date="props">
+      <template #item.chat_date="props">
         <formatted-date :date="props.item.chat_date"></formatted-date>
       </template>
       <template #item.chat="{ item }">
         <v-btn
           small
+          title="Chat Transcript"
           @click="
             currentChat = item
             chatDialog = true
           "
-          title="Chat Transcript"
         >
           Chat Transcript
         </v-btn>
@@ -60,8 +60,8 @@
           >
             <ul class="chat-ul">
               <li
-                :key="key"
                 v-for="(chat, key) in currentChat.chat.split('\n')"
+                :key="key"
               >
                 {{ chat }}
               </li>
@@ -92,7 +92,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from '@nuxtjs/composition-api'
-import { ldr_PPC_ChatsColumns } from '~/utils/reports-upload/ldr/columns'
+import { ldrPpcChatsColumns } from '~/utils/reports-upload/ldr/columns'
 
 import FormattedDate from '~/components/FormattedDate.vue'
 import TruncateText from '~/components/TruncateText.vue'
@@ -113,7 +113,7 @@ export default defineComponent({
     const currentChat = ref(null)
     const chatDialog = ref(false)
     return {
-      chatsHeader: ldr_PPC_ChatsColumns(),
+      chatsHeader: ldrPpcChatsColumns(),
       currentChat,
       chatDialog,
     }

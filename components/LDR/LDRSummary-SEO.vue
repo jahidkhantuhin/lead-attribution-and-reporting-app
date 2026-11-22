@@ -14,63 +14,59 @@
         <template v-if="summarySEO">
           <tr>
             <td><strong>Calls</strong></td>
-            <td>{{ }}</td>
-            <td>{{ }}</td>
-            <td>{{ }}
-            </td>
-            <td>{{ }}
-            </td>
+            <td>{{}}</td>
+            <td>{{}}</td>
+            <td>{{}}</td>
+            <td>{{}}</td>
           </tr>
           <tr>
             <td><strong>Chats</strong></td>
-            <td>{{ }}</td>
-            <td>{{ }}</td>
-            <td>{{ }}</td>
-            <td>{{ }}</td>
+            <td>{{}}</td>
+            <td>{{}}</td>
+            <td>{{}}</td>
+            <td>{{}}</td>
           </tr>
           <tr>
             <td><strong>Forms</strong></td>
-            <td>{{ }}</td>
-            <td>{{ }}</td>
-            <td>{{ }}</td>
-            <td>{{ }}</td>
+            <td>{{}}</td>
+            <td>{{}}</td>
+            <td>{{}}</td>
+            <td>{{}}</td>
           </tr>
           <tr>
             <td><strong>Total # of Leads</strong></td>
-            <td>{{ }}</td>
-            <td>{{ }}</td>
-            <td></td>  
-            <td></td>  
+            <td>{{}}</td>
+            <td>{{}}</td>
+            <td></td>
+            <td></td>
           </tr>
           <tr>
             <td></td>
-            <td></td>  
-            <td></td>  
             <td></td>
-            <td></td>  
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
           <tr>
             <td><strong>Total SEO Spend</strong></td>
-            <td>{{ }}
-            </td>
+            <td>{{}}</td>
             <td></td>
             <td></td>
             <td></td>
           </tr>
           <tr>
             <td><strong>CPL</strong></td>
-            <td>{{ }}
-            </td>
+            <td>{{}}</td>
             <td></td>
             <td></td>
             <td></td>
           </tr>
           <tr>
             <td></td>
-            <td></td>  
-            <td></td>  
             <td></td>
-            <td></td>  
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
         </template>
         <template v-else>
@@ -80,17 +76,17 @@
         </template>
       </tbody>
       <thead>
-          <tr>
-            <td><strong>Chat Summary</strong></td>
-            <td><strong>Count</strong></td>
-            <td><strong>Unique</strong></td>
-            <td><strong>Percentage of Unique Leads</strong></td>
-            <td><strong> X </strong></td>
-          </tr>
+        <tr>
+          <td><strong>Chat Summary</strong></td>
+          <td><strong>Count</strong></td>
+          <td><strong>Unique</strong></td>
+          <td><strong>Percentage of Unique Leads</strong></td>
+          <td><strong> X </strong></td>
+        </tr>
       </thead>
       <tbody>
         <template v-if="summarySEO">
-            <tr>
+          <tr>
             <td>Chats started</td>
             <td></td>
             <td></td>
@@ -113,10 +109,10 @@
           </tr>
           <tr>
             <td></td>
-            <td></td>  
-            <td></td>  
             <td></td>
-            <td></td>  
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
         </template>
         <template v-else>
@@ -125,13 +121,13 @@
           </tr>
         </template>
       </tbody>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
       <thead>
         <tr>
           <td><strong>Calls Summary</strong></td>
@@ -146,36 +142,36 @@
           <tr>
             <td>Appointments booked</td>
             <td></td>
-            <td> {{ }} </td>
-            <td> {{ }}  </td>
+            <td>{{}}</td>
+            <td>{{}}</td>
             <td></td>
           </tr>
           <tr>
             <td>Appointments NOT booked</td>
             <td></td>
-            <td> {{ }} </td>
-            <td> {{ }}  </td>
+            <td>{{}}</td>
+            <td>{{}}</td>
             <td></td>
           </tr>
           <tr>
             <td>Missed Calls</td>
             <td></td>
-            <td> {{ }} </td>
-            <td> {{ }}  </td>
+            <td>{{}}</td>
+            <td>{{}}</td>
             <td></td>
           </tr>
           <tr>
             <td>Irrelevant Calls</td>
             <td></td>
-            <td> {{ }} </td>
-            <td> {{ }}  </td>
+            <td>{{}}</td>
+            <td>{{}}</td>
             <td></td>
           </tr>
           <tr>
             <td>Unscored Calls</td>
             <td></td>
-            <td> {{ }} </td>
-            <td> {{ }}  </td>
+            <td>{{}}</td>
+            <td>{{}}</td>
             <td></td>
           </tr>
         </template>

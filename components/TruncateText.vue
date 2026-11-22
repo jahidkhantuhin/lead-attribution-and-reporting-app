@@ -10,19 +10,19 @@
     </a>
     <v-btn
       v-if="button && text && text.length > 50"
-      @click="expanded = true"
       nuxt
       link
       small
+      @click="expanded = true"
     >
       {{ showText }}
     </v-btn>
     <v-btn
       v-if="button && text && text.length < 50"
-      @click="expanded = true"
       nuxt
       link
       small
+      @click="expanded = true"
     >
       {{ showText }}
     </v-btn>
@@ -39,14 +39,14 @@
             >{{ text }}
 
             <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-btn
+                  v-if="url"
                   icon
                   x-small
                   :ripple="false"
-                  @click="copy"
-                  v-if="url"
                   v-bind="attrs"
+                  @click="copy"
                   v-on="on"
                 >
                   <v-icon> mdi-content-copy </v-icon>
@@ -82,8 +82,8 @@ import swalMixin, { showToast } from '~/utils/swalMixin'
 
 export default defineComponent({
   props: {
-    text: String,
-    title: String,
+    text: { type: String, default: undefined },
+    title: { type: String, default: undefined },
     url: {
       type: Boolean,
       default: false,
@@ -119,8 +119,7 @@ export default defineComponent({
 })
 </script>
 
-
-<style scoped lang="scss" >
+<style scoped lang="scss">
 .quote {
   font-size: 32px;
   &:last-child {

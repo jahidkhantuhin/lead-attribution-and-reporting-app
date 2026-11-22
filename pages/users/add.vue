@@ -5,8 +5,8 @@
         <v-card>
           <v-card-title> Create a user </v-card-title>
           <user-form
-            @cancel="$router.push('/users/')"
             scope="admin"
+            @cancel="$router.push('/users/')"
             @done="onCreate"
           ></user-form>
         </v-card>
@@ -18,14 +18,12 @@
 <script lang="ts">
 import {
   defineComponent,
-  onMounted,
   ref,
   useRouter,
   useStore,
 } from '@nuxtjs/composition-api'
 import { IBreadcrumbs } from '@/store'
 
-import useUsers from '@/services/useUsers'
 import UserForm from '~/components/forms/UserForm.vue'
 import RestrictedComponent from '~/components/RestrictedComponent.vue'
 
@@ -38,7 +36,7 @@ export default defineComponent({
   setup() {
     const store = useStore()
     const router = useRouter()
-    const usersApi = useUsers()
+
     const busy = ref(false)
 
     // set the page breadcrumbs

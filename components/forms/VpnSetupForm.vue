@@ -3,12 +3,10 @@
     <div>
       <v-row v-if="connectedToVpn">
         <v-col cols="12">
-          <v-alert
-            shaped
-            prominent
-            type="error"
-          >
-            You are currently connected to wm4d vpn. Please disconnect from vpn and <v-btn small class="info" @click="refreshPage"> Click Here</v-btn>
+          <v-alert shaped prominent type="error">
+            You are currently connected to wm4d vpn. Please disconnect from vpn
+            and
+            <v-btn small class="info" @click="refreshPage"> Click Here</v-btn>
           </v-alert>
         </v-col>
       </v-row>
@@ -32,16 +30,18 @@
                   :filter="() => true"
                   item-value="url"
                   :no-data-text="
-                    clientsListLoading === false && searchInput && searchInput.length > 0
+                    clientsListLoading === false &&
+                    searchInput &&
+                    searchInput.length > 0
                       ? 'No Results found'
                       : clientsListLoading
                       ? 'Loading'
                       : 'Search something'
                   "
                   :search-input.sync="searchInput"
+                  :rules="rules.url"
                   @keydown="fetchClients(searchInput)"
                   @change="onChange"
-                  :rules="rules.url"
                   @keydown.enter="formValid && submit()"
                 >
                 </v-autocomplete>
@@ -50,39 +50,38 @@
             <v-col cols="3">
               <v-card-text>
                 <v-select
+                  v-model="formData.number_of_hours"
                   label="Period"
                   :items="numberOfHours"
-                  v-model="formData.number_of_hours"
                   :rules="rules.number_of_hours"
                   clearable
                 ></v-select>
               </v-card-text>
             </v-col>
-            <v-col cols="4" v-if="adminUser">
-              <v-card-text >
+            <v-col v-if="adminUser" cols="4">
+              <v-card-text>
                 <v-text-field
+                  v-model="formData.ip"
                   label="IP Address"
                   class="mb-3"
-                  v-model="formData.ip"
                   :rules="rules.ip"
                   clearable
                 >
                 </v-text-field>
               </v-card-text>
             </v-col>
-            <v-col cols="4" v-if="!adminUser">
-              <v-card-text >
+            <v-col v-if="!adminUser" cols="4">
+              <v-card-text>
                 <v-text-field
+                  v-model="formData.ip"
                   label="IP Address"
                   class="mb-3"
-                  v-model="formData.ip"
                   :rules="rules.ip"
                   readonly
                 >
                 </v-text-field>
               </v-card-text>
             </v-col>
-            
           </v-row>
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -104,7 +103,6 @@
 
 <script lang="ts">
 import {
-  onMounted,
   defineComponent,
   ref,
   computed,
@@ -113,38 +111,38 @@ import {
   onBeforeMount,
   useContext,
 } from '@nuxtjs/composition-api'
-import LocationForm from './LocationForm.vue'
-import StaffForm from './StaffForm.vue'
-import SwalMixin, { showToast } from '~/utils/swalMixin'
-import useUsers from '~/services/useUsers'
-import useApi from '~/services/useApi'
 import useLocationRecords from '@/services/useLocationRecords'
-import useAxios from '~/plugins/useAxios'
 
+import SwalMixin, { showToast } from '~/utils/swalMixin'
+
+import useApi from '~/services/useApi'
+import useAxios from '~/plugins/useAxios'
 
 let timeout: any
 
 interface Client {
-      url?: string
-      ip?: string
-      location_ids?: any[]
-    }
+  url?: string
+  ip?: string
+  location_ids?: any[]
+}
 
 export default defineComponent({
-  components: { LocationForm, StaffForm },
+  components: {},
   props: {
     id: {
       type: [String, Number],
+      default: undefined,
     },
     name: {
       type: [String, Number],
+      default: undefined,
     },
   },
-  setup(_props, { parent, emit }) {
+  setup(_props, { parent }) {
     const ipAddress = ref()
     const { $auth } = useContext()
-    const adminUser = computed(() =>
-      $auth.user?.role === 'admin' || $auth.user?.role === 'super admin'
+    const adminUser = computed(
+      () => $auth.user?.role === 'admin' || $auth.user?.role === 'super admin'
     )
     const refreshPage = () => {
       window.location.reload()
@@ -164,17 +162,16 @@ export default defineComponent({
     const entries = ref<any>([])
     const isLoading = ref(false)
     const search = ref(null)
-    const { list, create} = useLocationRecords()
+    const { list, create } = useLocationRecords()
     const axios = useAxios()
-    const numberOfHours  = ref([
-      {text: 72, value: 72},
-      {text: 96, value: 96},
+    const numberOfHours = ref([
+      { text: 72, value: 72 },
+      { text: 96, value: 96 },
     ])
 
-
-  watch(search, () => {
-      if (entries.length > 0) { 
-      return
+    watch(search, () => {
+      if (entries.length > 0) {
+        return
       }
       if (isLoading.value) {
         return
@@ -182,13 +179,10 @@ export default defineComponent({
 
       isLoading.value = true
       list({})
-          .then((resp) => {
-            entries.value = resp.data.data.result ? resp.data.data.result : []
-            console.log('LOCATION RECORDS', entries.value)
-          })
-        .catch(err => {
-          console.log(err)
+        .then((resp) => {
+          entries.value = resp.data.data.result ? resp.data.data.result : []
         })
+        .catch((_err) => {})
         .finally(() => (isLoading.value = false))
     })
 
@@ -200,7 +194,7 @@ export default defineComponent({
         if (searchInput.value) {
           clientsListLoading.value = true
           const res = await get(
-            `/sites?name=${searchInput.value}&date_start=2022-08-01&date_end=2022-08-31`,
+            `/sites?name=${searchInput.value}&date_start=2022-08-01&date_end=2022-08-31`
           )
           clientsList.value = res.data.data.result
           clientsListLoading.value = false
@@ -208,11 +202,7 @@ export default defineComponent({
       }, 300)
     }
 
-    const onChange = () => {
-      const client = clientsList.value.find(
-        (c: any) => c.id === formData.value.url
-      )
-    }
+    const onChange = () => {}
 
     watch(searchInput, () => {
       if (!searchInput.value) {
@@ -220,25 +210,25 @@ export default defineComponent({
       }
     })
 
-    const locationId = ref(
-      router.currentRoute.query.id
-    )
-    
-    const locationName = ref(
-      router.currentRoute.query.name
-    )
-    const formData = ref<Client>({
-    })
+    const locationId = ref(router.currentRoute.query.id)
+
+    const locationName = ref(router.currentRoute.query.name)
+    const formData = ref<Client>({})
 
     const locations = ref([])
-
 
     const rules = {
       url: [(v: string | number) => !!v || 'Client is required'],
       ip: [
         (v: string | number) => !!v || 'IP Address is required',
-        (v: string) => /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(v) || 'IP Address must be valid',],
-      number_of_hours: [(v: string | number) => !!v || 'Number of hours is required'],
+        (v: string) =>
+          /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(
+            v
+          ) || 'IP Address must be valid',
+      ],
+      number_of_hours: [
+        (v: string | number) => !!v || 'Number of hours is required',
+      ],
 
       //   return !!(e.id.length > 0) || 'Location is required'
       // })],
@@ -250,15 +240,15 @@ export default defineComponent({
 
     const submit = () => {
       busy.value = true
-      axios   
+      axios
         .post(
           '/vpn-access',
-          {...formData.value},
+          { ...formData.value },
           {
             withCredentials: true,
           }
         )
-        .then((resp) => {
+        .then((_resp) => {
           showToast($swal, {
             title: `Request Successfully Sent!`,
           })
@@ -271,19 +261,16 @@ export default defineComponent({
       busy.value = true
       create({
         url: formData.value.url,
-        location_ids: [locationId.value]
+        location_ids: [locationId.value],
       })
-        .then((resp) => {
+        .then((_resp) => {
           showToast($swal, {
             title: `Location Successfully added!`,
           })
 
           router.push(`/location-records`)
-          
         })
-        .finally(() => 
-        (busy.value = false)
-        )
+        .finally(() => (busy.value = false))
     }
 
     const isEditing = computed(() => {
@@ -295,15 +282,16 @@ export default defineComponent({
 
       return false
     })
-    onBeforeMount(async() => {
+    onBeforeMount(async () => {
       // isLoading.value = true
-      await axios   
-        .get(
-          '', {baseURL: 'https://api.ipify.org/?format=json'}
-        )
+      await axios
+        .get('', { baseURL: 'https://api.ipify.org/?format=json' })
         .then((resp) => {
           // isLoading.value = false
-          if ( resp.data.ip === '34.238.213.152' || resp.data.ip === '54.179.205.95' ) {
+          if (
+            resp.data.ip === '34.238.213.152' ||
+            resp.data.ip === '54.179.205.95'
+          ) {
             connectedToVpn.value = true
           } else {
             connectedToVpn.value = false

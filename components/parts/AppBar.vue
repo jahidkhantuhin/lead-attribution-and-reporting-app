@@ -11,7 +11,13 @@
 
       <v-tooltip v-for="(item, index) in appbarItems" :key="index" bottom>
         <template #activator="{ on, attrs }">
-          <v-btn icon v-bind="attrs" :to="item.link" :aria-label="item.title" v-on="on">
+          <v-btn
+            icon
+            v-bind="attrs"
+            :to="item.link"
+            :aria-label="item.title"
+            v-on="on"
+          >
             <v-icon>{{ item.icon }}</v-icon>
           </v-btn>
         </template>

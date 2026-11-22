@@ -25,21 +25,24 @@
       </template>
       <template #item.status="{ item }">
         <workspace-badge :value="item.status" />
-      </template> 
+      </template>
       <template #item.name="{ item }">
-        <nuxt-link class="client-link" :to="`/client-records/${clientID}/locations/${item.id}`">
-        <span>{{ item.name }}</span>
+        <nuxt-link
+          class="client-link"
+          :to="`/client-records/${clientID}/locations/${item.id}`"
+        >
+          <span>{{ item.name }}</span>
         </nuxt-link>
       </template>
       <template #item.website="{ item }">
         <v-btn
+          v-if="item.website"
           target="_blank"
           :href="`${
             item.website.includes('http') ? item.website : '//' + item.website
           }`"
           elevation="0"
           small
-          v-if="item.website"
           class="text-lowercase"
         >
           <!-- Open link -->
@@ -51,16 +54,16 @@
       </template>
       <template #item.actions="{ item }">
         <v-menu>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <v-btn small v-bind="attrs" v-on="on"> Actions </v-btn>
           </template>
           <v-list>
             <v-list-item
-                  title="View Location"
-                  :to="`/client-records/${clientID}/locations/${item.id}`"
-                >
-                  <v-list-item-title>View</v-list-item-title>
-                </v-list-item>
+              title="View Location"
+              :to="`/client-records/${clientID}/locations/${item.id}`"
+            >
+              <v-list-item-title>View</v-list-item-title>
+            </v-list-item>
             <v-list-item
               title="Edit Location"
               :to="`/client-records/${clientID}/locations/${item.id}/edit`"
@@ -87,24 +90,22 @@ import {
   ref,
   useRoute,
 } from '@nuxtjs/composition-api'
-import LocationForm from '@/components/forms/LocationForm.vue'
+
+import FormattedDate from '../FormattedDate.vue'
+
 import swalMixin, { showConfirmDialog, showToast } from '~/utils/swalMixin'
 import useClientLocations from '~/services/useClientLocations'
-import FormattedDate from '../FormattedDate.vue'
-import LocationDetails from './LocationDetails.vue'
 import ReportingEmailAddress from '~/components/ReportingEmailAddress.vue'
 
 export default defineComponent({
   components: {
-    LocationForm,
     FormattedDate,
-    LocationDetails,
     ReportingEmailAddress,
   },
   props: {
     list: {
       type: Array,
-      default: [],
+      default: () => [],
     },
     loading: {
       type: Boolean,
@@ -140,7 +141,7 @@ export default defineComponent({
         sortable: true,
         value: `status`,
       },
-      
+
       {
         text: `Account Manager`,
         align: `start`,
@@ -159,8 +160,6 @@ export default defineComponent({
         sortable: true,
         value: `created_at`,
       },
-
-      
     ]
 
     const handleDeleteLocation = (id: any) => {

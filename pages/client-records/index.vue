@@ -1,38 +1,52 @@
 <template>
   <div>
-    <UnauthorizedUser v-if="nonAccountManagerUserRole"/>
+    <UnauthorizedUser v-if="nonAccountManagerUserRole" />
     <v-row
+      v-if="!nonAccountManagerUserRole"
       :class="{
         'my-6': true,
         'client-records': true,
       }"
-      v-if="!nonAccountManagerUserRole"
     >
-      <v-col  md="12">
+      <v-col md="12">
         <v-card class="workspace-filter-panel">
           <v-card-title>Find clients</v-card-title>
           <v-card-text>
             <v-row align="center">
               <v-col cols="12" sm="7" md="5">
-            <v-text-field
-              label="Search clients"
-              append-icon="mdi-magnify"
-              clearable
-              v-model="filters.name"
-              @keydown.enter.prevent="handleFilterApply(true)"
-              maxlength="250"
-              >
-            </v-text-field>
+                <v-text-field
+                  v-model="filters.name"
+                  label="Search clients"
+                  append-icon="mdi-magnify"
+                  clearable
+                  maxlength="250"
+                  @keydown.enter.prevent="handleFilterApply(true)"
+                >
+                </v-text-field>
               </v-col>
               <v-col cols="12" sm="5" md="3">
-                <v-select v-model="filters.status" label="Status" :items="statusOptions" item-text="id" item-value="value" clearable hide-details="auto" />
+                <v-select
+                  v-model="filters.status"
+                  label="Status"
+                  :items="statusOptions"
+                  item-text="id"
+                  item-value="value"
+                  clearable
+                  hide-details="auto"
+                />
               </v-col>
             </v-row>
           </v-card-text>
           <v-card-actions>
-            <v-btn color="primary" @click="handleFilterApply(true)">Apply</v-btn>
-            <v-chip v-if="appliedName" small close @click:close="clearSearch">Search: {{ appliedName }}</v-chip>
-            <v-chip v-if="appliedStatus" small close @click:close="clearStatus">Status: {{ appliedStatusLabel }}</v-chip>
+            <v-btn color="primary" @click="handleFilterApply(true)"
+              >Apply</v-btn
+            >
+            <v-chip v-if="appliedName" small close @click:close="clearSearch"
+              >Search: {{ appliedName }}</v-chip
+            >
+            <v-chip v-if="appliedStatus" small close @click:close="clearStatus"
+              >Status: {{ appliedStatusLabel }}</v-chip
+            >
           </v-card-actions>
         </v-card>
       </v-col>
@@ -46,26 +60,47 @@
               Add
             </v-btn>
             <v-spacer />
-            <v-btn text small @click="tableView = !tableView">{{ tableView ? 'Inspector' : 'View table' }}</v-btn>
+            <v-btn text small @click="tableView = !tableView">{{
+              tableView ? 'Inspector' : 'View table'
+            }}</v-btn>
           </v-toolbar>
           <template v-if="!tableView">
-            <v-card-text class="pb-0">{{ pagination.total }} clients</v-card-text>
-            <record-inspector :records="items" :loading="busy" title="Client inspector">
-              <template #name="{ record }">{{ record.name || [record.first_name, record.last_name].filter(Boolean).join(' ') }}</template>
-              <template #subtitle="{ record }">{{ record.email || '' }}</template>
+            <v-card-text class="pb-0"
+              >{{ pagination.total }} clients</v-card-text
+            >
+            <record-inspector
+              :records="items"
+              :loading="busy"
+              title="Client inspector"
+            >
+              <template #name="{ record }">{{
+                record.name ||
+                [record.first_name, record.last_name].filter(Boolean).join(' ')
+              }}</template>
+              <template #subtitle="{ record }">{{
+                record.email || ''
+              }}</template>
               <template #detail="{ record }">
-                <directory-record-detail :key="record.id" :record="record" kind="client" />
+                <directory-record-detail
+                  :key="record.id"
+                  :record="record"
+                  kind="client"
+                />
               </template>
             </record-inspector>
             <v-card-actions v-if="pageCount > 1" class="justify-end">
-              <v-pagination :value="tablePage" :length="pageCount" :total-visible="5" @input="goToPage" />
+              <v-pagination
+                :value="tablePage"
+                :length="pageCount"
+                :total-visible="5"
+                @input="goToPage"
+              />
             </v-card-actions>
           </template>
           <v-data-table
             v-else
             :items="items"
             :headers="tableHeaders"
-            @pagination="handlePaginationChange"
             :options.sync="tableOptions"
             :fixed-header="true"
             height="calc(100vh - 318px)"
@@ -74,6 +109,7 @@
               'items-per-page-options': itemsPerPageOptions,
             }"
             :server-items-length="pagination.total"
+            @pagination="handlePaginationChange"
           >
             <template #item.status="{ item }">
               <nuxt-link class="client-link" :to="`/client-records/${item.id}`">
@@ -82,15 +118,15 @@
             </template>
             <template #item.num_of_locations="{ item }">
               <nuxt-link class="client-link" :to="`/client-records/${item.id}`">
-              {{ item.num_of_locations }}
+                {{ item.num_of_locations }}
               </nuxt-link>
             </template>
             <template #item.account_manager_id="{ item }">
               <nuxt-link class="client-link" :to="`/client-records/${item.id}`">
-              <span v-if="item && item.account_manager"
-                >{{ item.account_manager.first_name }}
-                {{ item.account_manager.last_name }}
-              </span>
+                <span v-if="item && item.account_manager"
+                  >{{ item.account_manager.first_name }}
+                  {{ item.account_manager.last_name }}
+                </span>
               </nuxt-link>
             </template>
             <template #item.name="{ item }">
@@ -103,7 +139,7 @@
             </template>
             <template #item.actions="{ item }">
               <v-menu>
-                <template v-slot:activator="{ on, attrs }">
+                <template #activator="{ on, attrs }">
                   <v-btn small color="primary" dark v-bind="attrs" v-on="on">
                     Actions
                   </v-btn>
@@ -125,7 +161,6 @@
               </v-menu>
             </template>
           </v-data-table>
-
         </v-card>
       </v-col>
     </v-row>
@@ -145,19 +180,18 @@ import {
   useContext,
   computed,
 } from '@nuxtjs/composition-api'
-import swalMixin, { showConfirmDialog, showToast } from '~/utils/swalMixin'
 import useClientRecords from '@/services/useClientRecords'
+
+import swalMixin, { showConfirmDialog, showToast } from '~/utils/swalMixin'
 import useClientLocations from '~/services/useClientLocations'
-import ClientRecordsForm from '@/components/forms/ClientRecordsForm.vue'
 import { AM_ROLE } from '~/utils/UserEnums'
 import { Dictionary } from '~/node_modules/@types/lodash'
 import FormattedDate from '~/components/FormattedDate.vue'
-import ClientStatusChip from '~/components/ClientStatusChip.vue'
+
 import useUsers from '~/services/useUsers'
 import RecordInspector from '~/components/RecordInspector.vue'
 import DirectoryRecordDetail from '~/components/DirectoryRecordDetail.vue'
 import UnauthorizedUser from '~/components/UnauthorizedUser.vue'
-
 
 interface IClientRecordsFilter {
   account_manager?: string | null
@@ -167,20 +201,18 @@ interface IClientRecordsFilter {
   name?: string | null
 }
 
-export default defineComponent({ 
+export default defineComponent({
   components: {
     RecordInspector,
     DirectoryRecordDetail,
-    ClientRecordsForm,
     FormattedDate,
-    ClientStatusChip,
     UnauthorizedUser,
   },
   // middleware: 'isAuthenticated',
   setup(_props, { parent, emit }) {
     const { $auth } = useContext()
-    const nonAccountManagerUserRole = computed(() =>
-      !$auth.hasScope('create report')
+    const nonAccountManagerUserRole = computed(
+      () => !$auth.hasScope('create report')
     )
     const statusOptions = ref<Array<{ id: string; value: string }>>([])
     const statusOptionsLoading = ref(false)
@@ -203,11 +235,18 @@ export default defineComponent({
     const tableView = ref(false)
     const appliedName = ref('')
     const appliedStatus = ref('')
-    const appliedStatusLabel = computed(() => statusOptions.value.find(option => option.value === appliedStatus.value)?.id || appliedStatus.value.replace(/_/g, ' '))
+    const appliedStatusLabel = computed(
+      () =>
+        statusOptions.value.find(
+          (option) => option.value === appliedStatus.value
+        )?.id || appliedStatus.value.replace(/_/g, ' ')
+    )
     const pagination = ref({
       total: 0,
     })
-    const pageCount = computed(() => Math.max(1, Math.ceil(pagination.value.total / itemsPerPage.value)))
+    const pageCount = computed(() =>
+      Math.max(1, Math.ceil(pagination.value.total / itemsPerPage.value))
+    )
     const router = useRouter()
     const store = useStore()
     const { list, listStatus } = useClientRecords()
@@ -231,7 +270,7 @@ export default defineComponent({
         value: `name`,
         width: '200px',
       },
-      
+
       {
         text: `Status`,
         align: `start`,
@@ -281,7 +320,6 @@ export default defineComponent({
         }
         getClientRecords()
       })
-      
     }
     // set the page breadcrumbs
     const breadcrumbs = [
@@ -307,9 +345,9 @@ export default defineComponent({
     watch(
       tableOptions,
       (v: any) => {
-        tablePage.value = v.page;
+        tablePage.value = v.page
         itemsPerPage.value = v.itemsPerPage
-        
+
         if (tableOptions.value.sortBy[0]) {
           filters.value.sort_by =
             tableOptions.value.sortBy[0] === 'fullname'
@@ -379,7 +417,7 @@ export default defineComponent({
       listStatus().then((resp) => {
         statusOptions.value = Object.keys(resp.data.data).map((key) => {
           return {
-            id: new String(key).toString(),
+            id: String(key).toString(),
             value: resp.data.data[key],
           }
         }) as any
@@ -402,7 +440,7 @@ export default defineComponent({
             ...res.data.data.result.map((item: any) => {
               return {
                 ...item,
-                id: new String(item.id).toString(),
+                id: String(item.id).toString(),
               }
             }),
           ]
@@ -431,13 +469,13 @@ export default defineComponent({
       const query = { ...route.value.query }
       if (query.page) {
         tablePage.value = +query.page
-        delete query['page']
+        delete query.page
       } else {
         tablePage.value = 1
       }
       if (query.itemsPerPage) {
         itemsPerPage.value = +query.itemsPerPage
-        delete query['itemsPerPage']
+        delete query.itemsPerPage
       } else {
         itemsPerPage.value = 20
       }
@@ -553,25 +591,25 @@ export default defineComponent({
 }
 .theme--dark {
   .client-records .v-data-table {
-  table > tbody > tr > td:nth-child(1),
-  table > thead > tr > th:nth-child(1) {
-    position: sticky !important;
-    position: -webkit-sticky !important;
-    left: 0;
-    z-index: 4;
-    background: rgb(29, 28, 28);
-  }
-  table > tbody > tr {
-    &:hover {
-      th,
-      td {
-        background: rgb(63, 62, 62) !important;
+    table > tbody > tr > td:nth-child(1),
+    table > thead > tr > th:nth-child(1) {
+      position: sticky !important;
+      position: -webkit-sticky !important;
+      left: 0;
+      z-index: 4;
+      background: rgb(29, 28, 28);
+    }
+    table > tbody > tr {
+      &:hover {
+        th,
+        td {
+          background: rgb(63, 62, 62) !important;
+        }
       }
     }
+    table > thead > tr > th:nth-child(1) {
+      z-index: 5;
+    }
   }
-  table > thead > tr > th:nth-child(1) {
-    z-index: 5;
-  }
-}
 }
 </style>

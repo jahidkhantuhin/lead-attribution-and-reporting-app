@@ -22,70 +22,70 @@ export default defineComponent({
   },
   setup(props) {
     const chip = computed(() => {
-      if (props.client?.status?.key == 121) {
+      if (Number(props.client?.status?.key) === 121) {
         return {
           textColor: 'white',
           color: 'blue',
           text: props.client?.status?.value,
         }
       }
-      if (props.client?.status?.key == 122) {
+      if (Number(props.client?.status?.key) === 122) {
         return {
           textColor: 'white',
           color: 'green',
           text: props.client?.status?.value,
         }
       }
-      if (props.client?.status?.key == 128) {
+      if (Number(props.client?.status?.key) === 128) {
         return {
           textColor: 'white',
           color: 'red',
           text: props.client?.status?.value,
         }
       }
-      if (props.client?.status?.key == 200) {
+      if (Number(props.client?.status?.key) === 200) {
         return {
           textColor: 'white',
           color: 'orange',
           text: props.client?.status?.value,
         }
       }
-      if (props.client?.status?.key == 201) {
+      if (Number(props.client?.status?.key) === 201) {
         return {
           textColor: 'white',
           color: 'orange',
           text: props.client?.status?.value,
         }
       }
-      if (props.client?.status?.key == 320) {
+      if (Number(props.client?.status?.key) === 320) {
         return {
           textColor: 'white',
           color: 'red',
           text: props.client?.status?.value,
         }
       }
-      if (props.client?.status?.key == 321) {
+      if (Number(props.client?.status?.key) === 321) {
         return {
           textColor: 'white',
           color: 'red',
           text: props.client?.status?.value,
         }
       }
-      if (props.client?.status?.key == 322) {
+      if (Number(props.client?.status?.key) === 322) {
         return {
           textColor: 'white',
           color: 'red',
           text: props.client?.status?.value,
         }
       }
-      if (props.client?.status?.key == 323) {
+      if (Number(props.client?.status?.key) === 323) {
         return {
           textColor: 'white',
           color: 'yellow',
           text: props.client?.status?.value,
         }
       }
-      if (props.client?.status?.key == 'paying_client') {
+      if (String(props.client?.status?.key) === 'paying_client') {
         return {
           textColor: 'white',
           color: 'green',

@@ -3,7 +3,7 @@
     <v-row no-gutters>
       <v-col lg="3" xl="2" md="12" offset-lg="1">
         <v-expand-transition>
-          <v-card class="text-center" v-if="fetchingUser">
+          <v-card v-if="fetchingUser" class="text-center">
             <v-card-text>
               <v-progress-circular :size="50" color="primary" indeterminate>
               </v-progress-circular>
@@ -35,24 +35,24 @@ import {
   ref,
   useRoute,
   useRouter,
-  useStore,
+  useContext,
 } from '@nuxtjs/composition-api'
 
 import LoginForm from '@/components/LoginForm.vue'
-import { useContext } from '@nuxtjs/composition-api'
+
 import useAxios from '~/plugins/useAxios'
 
 export default defineComponent({
   components: { LoginForm },
+  layout: 'blank',
   middleware: 'redirectToHomeIfAlreadyLoggedIn',
   auth: 'guest',
-  layout: 'blank',
-  setup(_props, { root, parent }) {
+  setup() {
     const { $auth } = useContext()
     const $axios = useAxios()
     const router = useRouter()
     const route = useRoute()
-    const store = useStore()
+
     const showForm = ref(false)
 
     const fetchingUser = ref(true)
@@ -73,7 +73,6 @@ export default defineComponent({
           $auth
             .setUserToken(true)
             .then((resp) => {
-              console.log(resp)
               if (resp) {
                 router.push(route.value.query.redirect || '/')
               }

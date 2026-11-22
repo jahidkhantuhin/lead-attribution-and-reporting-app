@@ -12,18 +12,18 @@
             <!-- User type -->
 
             <v-select
+              v-model="filters.role"
               :items="roles"
               :item-text="(item) => item.name.toUpperCase()"
               :item-value="(item) => item.name"
               :loading="loadingRoles"
               label="Role"
-              v-model="filters.role"
               clearable
             ></v-select>
             <!-- Search Term -->
             <v-text-field
-              label="Search users"
               v-model="filters.search"
+              label="Search users"
               clearable
               maxlength="250"
             ></v-text-field>
@@ -38,14 +38,14 @@
 
             <!-- Order -->
             <v-select
+              v-model="filters.sort_by"
               label="Order By"
               :items="sortByOptions"
-              v-model="filters.sort_by"
             ></v-select>
             <v-select
+              v-model="filters.sorting"
               label="Order"
               :items="sortingOptions"
-              v-model="filters.sorting"
             ></v-select>
           </v-card-text>
           <v-card-actions>
@@ -80,8 +80,8 @@
             'items-per-page-options': itemsPerPageOptions,
           }"
           :server-items-length="pagination.total"
-          @pagination="handlePaginationChange"
           class="elevation-1"
+          @pagination="handlePaginationChange"
         >
           <template #item.fullname="{ item }">
             <!-- <user-profile-picture
@@ -106,29 +106,29 @@
                   isUserAllowedToEdit(item, $auth.user))
               "
             >
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-btn small color="primary" dark v-bind="attrs" v-on="on">
                   Actions
                 </v-btn>
               </template>
               <v-list>
                 <v-list-item
-                  :to="`/users/${item.id}/edit`"
-                  title="Edit User"
                   v-if="
                     $store.getters['users/isAllowed']('update user') &&
                     isUserAllowedToEdit(item, $auth.user)
                   "
+                  :to="`/users/${item.id}/edit`"
+                  title="Edit User"
                 >
                   <v-list-item-title>Edit</v-list-item-title>
                 </v-list-item>
                 <v-list-item
-                  title="Delete User"
-                  @click="handleDeleteUser(item.id)"
                   v-if="
                     $store.getters['users/isAllowed']('delete user') &&
                     isUserAllowedToEdit(item, $auth.user)
                   "
+                  title="Delete User"
+                  @click="handleDeleteUser(item.id)"
                 >
                   <v-list-item-title>Delete</v-list-item-title>
                 </v-list-item>
@@ -181,7 +181,7 @@ import { IBreadcrumbs } from '@/store'
 
 import useUsers from '@/services/useUsers'
 import { Dictionary } from '~/node_modules/@types/lodash'
-import UserProfilePicture from '~/components/UserProfilePicture.vue'
+
 import isUserAllowedToEdit from '~/utils/isUserAllowedToEdit'
 import swalMixin, { showConfirmDialog, showToast } from '~/utils/swalMixin'
 
@@ -200,9 +200,9 @@ interface IFilterSelectOption {
 }
 
 export default defineComponent({
-  components: { UserProfilePicture },
+  components: {},
   middleware: 'isAuthenticated',
-  setup(props, { parent }) {
+  setup(_props, { parent }) {
     const itemsPerPageOptions = ref([20, 50, 100, 500])
     const itemsPerPage = ref(itemsPerPageOptions.value[0])
     const page = ref(1)
@@ -310,9 +310,7 @@ export default defineComponent({
             users.value = response.data.data.result
             pagination.value = response.data.data.pagination
           })
-          .catch((error) => {
-            console.log(`getUsers error`, ...error.repose)
-          })
+          .catch((_error) => {})
           .finally(() => (busy.value = false))
       }
     }
@@ -333,7 +331,7 @@ export default defineComponent({
                 !item.name.includes('super admin')
             ))
         )
-        .catch(({ response }) => console.log(`getRoles error`, response))
+        .catch(({ response }) => console.error(`getRoles error`, response))
         .finally(() => (loadingRoles.value = false))
     }
 
@@ -411,13 +409,13 @@ export default defineComponent({
       const query = route.value.query
       if (query.page) {
         page.value = +query.page
-        delete query['page']
+        delete query.page
       } else {
         page.value = 1
       }
       if (query.itemsPerPage) {
         itemsPerPage.value = +query.itemsPerPage
-        delete query['itemsPerPage']
+        delete query.itemsPerPage
       } else {
         itemsPerPage.value = 20
       }

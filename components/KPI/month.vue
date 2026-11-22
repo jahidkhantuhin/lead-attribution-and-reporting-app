@@ -1,22 +1,22 @@
 <template>
   <div v-if="response">
-    <!-- <pre>{{ JSON.stringify(summary_transformed, null, 2) }}</pre> -->
+    <!-- <pre>{{ JSON.stringify(summaryTransformed, null, 2) }}</pre> -->
 
     <div
+      v-for="(year, index) in Object.keys(summaryTransformed)"
       :key="index"
       class=""
-      v-for="(year, index) in Object.keys(summary_transformed)"
     >
       <h1 class="heading">{{ year }}</h1>
-      <KPITable mode="month" :rows="summary_transformed[year]"></KPITable>
+      <KPITable mode="month" :rows="summaryTransformed[year]"></KPITable>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 import KPITable from '~/components/KPI/table.vue'
-import { callColors } from '~/shared/callColors'
+
 import { transformMonthlyReportIntoObject } from '~/utils/reports-upload/kpi'
 
 export default defineComponent({
@@ -26,15 +26,15 @@ export default defineComponent({
   props: {
     response: {
       type: Object,
-      default: {},
+      default: () => ({}),
     },
   },
   setup(props) {
-    const summary_transformed = computed(() => {
+    const summaryTransformed = computed(() => {
       return transformMonthlyReportIntoObject(props.response.summary)
     })
     return {
-      summary_transformed,
+      summaryTransformed,
     }
   },
 })

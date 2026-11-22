@@ -1,9 +1,9 @@
 <template>
   <span
-    class="text-lowercase"
     v-if="
       location && location.website && location.name && reportingEmailAddress
     "
+    class="text-lowercase"
   >
     {{ reportingEmailAddress }}
     <a @click="copy(reportingEmailAddress)">
@@ -14,8 +14,8 @@
 
 <script lang="ts">
 import { computed, defineComponent } from '@nuxtjs/composition-api'
-import swalMixin, { showConfirmDialog, showToast } from '~/utils/swalMixin'
 import slugify from 'slugify'
+import swalMixin, { showToast } from '~/utils/swalMixin'
 
 export default defineComponent({
   props: {
@@ -45,7 +45,7 @@ export default defineComponent({
 
           const link = new URL(website)
 
-          let str = `reporting_${link?.hostname?.replace(
+          const str = `reporting_${link?.hostname?.replace(
             /.+\/\/|www.|\..+/g,
             ''
           )}-${slugify(props.location.name)}@100marketers.com`.toLowerCase()

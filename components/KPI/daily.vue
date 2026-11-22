@@ -1,6 +1,6 @@
 <template>
   <div>
-    <KPITable mode="day" :rows="summary_transformed"></KPITable>
+    <KPITable mode="day" :rows="summaryTransformed"></KPITable>
   </div>
 </template>
 
@@ -17,11 +17,11 @@ export default defineComponent({
   props: {
     response: {
       type: Object,
-      default: {},
+      default: () => ({}),
     },
   },
   setup(props) {
-    let summary_transformed = computed(() => {
+    const summaryTransformed = computed(() => {
       return (
         props.response &&
         sortBy(
@@ -36,7 +36,7 @@ export default defineComponent({
       )
     })
     return {
-      summary_transformed,
+      summaryTransformed,
     }
   },
 })

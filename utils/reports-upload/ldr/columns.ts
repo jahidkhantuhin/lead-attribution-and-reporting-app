@@ -216,7 +216,7 @@ export const ldrChatsColumns = () => {
     },
   ]
 }
-export const ldr_PPC_ChatsColumns = () => {
+export const ldrPpcChatsColumns = () => {
   return [
     {
       upload: {
@@ -339,7 +339,7 @@ export const ldr_PPC_ChatsColumns = () => {
   ]
 }
 
-export const ldr_FB_ChatsColumns = () => {
+export const ldrFbChatsColumns = () => {
   return [
     {
       upload: {
@@ -462,7 +462,7 @@ export const ldr_FB_ChatsColumns = () => {
   ]
 }
 
-export const ldr_SEO_ChatsColumns = () => {
+export const ldrSeoChatsColumns = () => {
   return [
     {
       upload: {
@@ -801,7 +801,7 @@ export const ldrCallsColumns = () => {
   ]
 }
 
-export const ldr_PPC_CallsColumns = () => {
+export const ldrPpcCallsColumns = () => {
   return [
     {
       width: '80px',
@@ -1155,7 +1155,7 @@ export const ldr_PPC_CallsColumns = () => {
   ]
 }
 
-export const ldr_FB_CallsColumns = () => {
+export const ldrFbCallsColumns = () => {
   return [
     {
       width: '80px',
@@ -1496,7 +1496,7 @@ export const ldr_FB_CallsColumns = () => {
   ]
 }
 
-export const ldr_SEO_CallsColumns = () => {
+export const ldrSeoCallsColumns = () => {
   return [
     {
       width: '80px',
@@ -1725,7 +1725,7 @@ export const ldr_SEO_CallsColumns = () => {
   ]
 }
 
-export const ldr_PPC_FormsColumns = () => {
+export const ldrPpcFormsColumns = () => {
   return [
     {
       width: '80px',
@@ -1827,7 +1827,7 @@ export const ldr_PPC_FormsColumns = () => {
   ]
 }
 
-export const ldr_FB_FormsColumns = () => {
+export const ldrFbFormsColumns = () => {
   return [
     {
       width: '80px',
@@ -1929,7 +1929,7 @@ export const ldr_FB_FormsColumns = () => {
   ]
 }
 
-export const ldr_SEO_FormsColumns = () => {
+export const ldrSeoFormsColumns = () => {
   return [
     {
       width: '80px',

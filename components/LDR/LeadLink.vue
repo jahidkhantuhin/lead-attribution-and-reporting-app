@@ -11,6 +11,7 @@ export default defineComponent({
   props: {
     lead: {
       type: Object,
+      default: undefined,
     },
   },
   setup(props) {

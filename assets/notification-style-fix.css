@@ -1,10 +1,10 @@
 .v-toast .v-toast__text,
-swal2-popup,
+.swal2-popup,
 .swal2-container,
 .swal2-container *,
 .swal2-toast,
 .swal2-noanimation {
-  font-family: 'Roboto';
+  font-family: 'Roboto', sans-serif;
 }
 
 .swal2-title {

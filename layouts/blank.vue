@@ -4,14 +4,21 @@
       <div class="auth-grid">
         <aside class="auth-brand-panel">
           <div class="workspace-brand">
-            <span class="workspace-brand-mark"><v-icon small>mdi-chart-box-outline</v-icon></span>
+            <span class="workspace-brand-mark"
+              ><v-icon small>mdi-chart-box-outline</v-icon></span
+            >
             Foundation
           </div>
           <div class="auth-brand-copy">
             <p>Lead attribution<br />and reporting</p>
-            <span>Track calls, chats, and form submissions across client locations.</span>
+            <span
+              >Track calls, chats, and form submissions across client
+              locations.</span
+            >
           </div>
-          <div class="auth-chart" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="auth-chart" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
         </aside>
         <div class="auth-panel"><nuxt /></div>
       </div>

@@ -1,0 +1,24 @@
+name: Quality checks
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --legacy-peer-deps --ignore-scripts
+      - name: Run lint and tests
+        run: |
+          status=0
+          npm run lint:js || status=1
+          npm run lint:style || status=1
+          npm test -- --runInBand --coverage=false || status=1
+          exit "$status"

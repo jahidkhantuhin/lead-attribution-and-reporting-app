@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <UnauthorizedUser v-if="nonAccountManagerUserRole"/>
+      <UnauthorizedUser v-if="nonAccountManagerUserRole" />
     </div>
     <div v-if="!nonAccountManagerUserRole">
       <v-row class="my-5">
@@ -9,9 +9,9 @@
           <v-card color="default" rounded class="workspace-filter-panel">
             <v-card-title>{{ $t('message.filters') }}</v-card-title>
             <payment-report-filters
-              :callScorersLoading="callScorersLoading"
+              :call-scorers-loading="callScorersLoading"
               :headers="headers"
-              :callScorers="callScorers"
+              :call-scorers="callScorers"
               :loading="generatingPaymentReportLoading"
               @search="handleGenerateReport"
             ></payment-report-filters>
@@ -38,9 +38,9 @@
                 <v-icon>mdi-link</v-icon>
               </v-btn>
               <v-btn
+                v-show="loaded"
                 icon
                 title="Reload the report"
-                v-show="loaded"
                 @click="fetchPaymentReport"
               >
                 <v-icon>mdi-refresh</v-icon>
@@ -48,9 +48,9 @@
               <v-btn
                 v-show="loaded"
                 icon
-                @click="uploadReport"
                 title="Upload to Google Drive"
                 :color="googleDocLink ? 'info' : 'normal'"
+                @click="uploadReport"
               >
                 <v-icon>mdi-upload</v-icon>
               </v-btn>
@@ -72,24 +72,24 @@
 
             <v-card-text>
               <report-generated
+                v-if="
+                  paymentReport.ratings.length > 0 &&
+                  generatingPaymentReportSuccess === true &&
+                  generatingPaymentReportLoading === false
+                "
                 :scorer="selectedCallScorer && selectedCallScorer.fullname"
                 :date="
                   selectedFilters &&
                   selectedFilters.date &&
                   selectedFilters.date.join(',')
                 "
-                v-if="
-                  paymentReport.ratings.length > 0 &&
-                  generatingPaymentReportSuccess === true &&
-                  generatingPaymentReportLoading === false
-                "
               ></report-generated>
             </v-card-text>
 
             <!-- CLient Info -->
             <v-card-text
-              class="text-h5"
               v-if="loaded === true && paymentReport.ratings.length > 0"
+              class="text-h5"
             >
               Scorer: {{ selectedCallScorer && selectedCallScorer.fullname }}
             </v-card-text>
@@ -112,13 +112,13 @@
             <!-- summary -->
             <div class="payment-report-detail">
               <payment-report-detail
-                :scorer="selectedCallScorer && selectedCallScorer.fullname"
-                :payRate="payRate"
-                :report="computedReport"
                 v-if="
                   generatingPaymentReportSuccess === true &&
                   generatingPaymentReportLoading === false
                 "
+                :scorer="selectedCallScorer && selectedCallScorer.fullname"
+                :pay-rate="payRate"
+                :report="computedReport"
               />
             </div>
           </v-card>
@@ -147,8 +147,8 @@
             <v-card-text>
               <span class="google-doc-link">{{ googleDocLink }}</span>
               <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                  <a @click="copy" v-bind="attrs" v-on="on">
+                <template #activator="{ on, attrs }">
+                  <a v-bind="attrs" @click="copy" v-on="on">
                     <v-icon> mdi-content-copy </v-icon>
                   </a>
                 </template>
@@ -183,7 +183,7 @@ import {
 } from '@nuxtjs/composition-api'
 import PaymentReportFilters from '~/components/PaymentReportFilters.vue'
 import ReportGenerated from '~/components/ReportGenerated.vue'
-import ReportGenerateFailed from '~/components/ReportGenerateFailed.vue'
+
 import PaymentReportDetail from '~/components/PaymentReportDetail.vue'
 import useAxios from '~/plugins/useAxios'
 import { IBreadcrumbs } from '~/store'
@@ -195,13 +195,6 @@ import secondsToHHMMSS from '~/utils/secondsToHHMMSS'
 import swalMixin, { showToast } from '~/utils/swalMixin'
 import generatePaymentReport from '~/utils/reports-upload/payment-report'
 import UnauthorizedUser from '~/components/UnauthorizedUser.vue'
-
-
-interface IFilters {
-  user_id: any
-  from: any
-  to: any
-}
 
 const totalsSkeleton = {
   name: 'Totals',
@@ -216,34 +209,33 @@ export default defineComponent({
   components: {
     PaymentReportFilters,
     ReportGenerated,
-    ReportGenerateFailed,
     DatesAndDiff,
     PaymentReportDetail,
     FormattedDate,
     UnauthorizedUser,
   },
   // middleware: 'isAuthenticated',
-  setup(props, { parent }) {
+  setup(_props, { parent }) {
     const store = useStore()
     const { $auth } = useContext()
-    const nonAccountManagerUserRole = computed(() =>
-      !$auth.hasScope('create report') && $auth.hasScope('vpn access')
+    const nonAccountManagerUserRole = computed(
+      () => !$auth.hasScope('create report') && $auth.hasScope('vpn access')
     )
-    let payRate = ref(0)
+    const payRate = ref(0)
     const axios = useAxios()
-    let paymentReport = ref({
+    const paymentReport = ref({
       ratings: [],
       cache: {},
     })
-    let selectedFilters = ref({
+    const selectedFilters = ref({
       user_id: null,
       from: '',
       to: '',
     })
-    let generatingPaymentReportLoading = ref(false)
-    let generatingPaymentReportSuccess = ref(false)
-    let loaded = ref(false)
-    let headers = ref([])
+    const generatingPaymentReportLoading = ref(false)
+    const generatingPaymentReportSuccess = ref(false)
+    const loaded = ref(false)
+    const headers = ref([])
     const $swal = swalMixin((parent as any).$swal as any)
 
     const callScorers = ref([])
@@ -287,9 +279,9 @@ export default defineComponent({
         let reportTotal: any = payRate.value * (rating.total_rating_time / 3600)
         reportTotal = reportTotal.toFixed(2)
         rating.total = reportTotal
-        let totalsTotal = +rating.total + totals.value.total
+        const totalsTotal = +rating.total + totals.value.total
 
-        totals.value.total = +new Number(totalsTotal).toFixed(2)
+        totals.value.total = +Number(totalsTotal).toFixed(2)
 
         return rating
       })
@@ -338,7 +330,7 @@ export default defineComponent({
       getUsers()
     })
 
-    let selectedCallScorer = computed(() => {
+    const selectedCallScorer = computed(() => {
       if (selectedFilters && (selectedFilters as any).value.user_id) {
         const userid = (selectedFilters as any).value.user_id
         return (callScorers as any).value.find((c: any) => {
@@ -362,8 +354,8 @@ export default defineComponent({
           {
             withCredentials: true,
             headers: {
-              'Authorization': `Bearer ${(store.state as any).cred.cred}`
-            }
+              Authorization: `Bearer ${(store.state as any).cred.cred}`,
+            },
           }
         )
         .then((res: any) => {
@@ -375,7 +367,7 @@ export default defineComponent({
             payRate.value = res.data.data.pay_rate
           }
         })
-        .catch((e: any) => {
+        .catch((_e: any) => {
           generatingPaymentReportLoading.value = false
           generatingPaymentReportSuccess.value = false
           loaded.value = true
@@ -383,9 +375,9 @@ export default defineComponent({
     }
     const handleGenerateReport = (filters: any) => {
       selectedFilters.value = {
-        user_id: filters['user_id'],
-        from: filters['dates'][0],
-        to: filters['dates'][1] ? filters['dates'][1] : filters['dates'][0],
+        user_id: filters.user_id,
+        from: filters.dates[0],
+        to: filters.dates[1] ? filters.dates[1] : filters.dates[0],
       }
       fetchPaymentReport()
     }
@@ -414,8 +406,8 @@ export default defineComponent({
           {
             withCredentials: true,
             headers: {
-              'Authorization': `Bearer ${(store.state as any).cred.cred}`
-            }
+              Authorization: `Bearer ${(store.state as any).cred.cred}`,
+            },
           }
         )
         .then((res) => {
@@ -536,12 +528,12 @@ export default defineComponent({
   }
 }
 .theme--dark {
- .payment-report-detail table tbody {
-  tr {
-    &:last-child {
-      background: #000;
+  .payment-report-detail table tbody {
+    tr {
+      &:last-child {
+        background: #000;
+      }
     }
   }
-} 
 }
 </style>

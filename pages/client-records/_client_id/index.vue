@@ -1,12 +1,16 @@
 <template>
   <v-row>
     <v-col cols="10" offset="1">
-      <v-card :loading="busy" v-if="apiStatus === 200">
+      <v-card v-if="apiStatus === 200" :loading="busy">
         <v-card-title>
           <h3 class="text-capitalize client-name">
             {{ !busy ? clientData.name : 'Loading...' }}
           </h3>
-          <workspace-badge v-if="clientData.status" :value="clientData.status" class="ml-4" />
+          <workspace-badge
+            v-if="clientData.status"
+            :value="clientData.status"
+            class="ml-4"
+          />
           <h5 v-if="clientData.email" class="ml-4">
             {{ clientData.email }}
           </h5>
@@ -23,20 +27,28 @@
           >
         </v-card-title>
         <v-card-text>
-          <span class="text-capitalize">{{ clientData.city ? clientData.city : 'city' }}</span>
-          <span class="text-capitalize ml-4">{{ clientData.state ? clientData.state : 'state' }}</span>
-          <span class="text-capitalize ml-4">{{ clientData.zipcode ? clientData.zipcode : 'zipcode' }}</span>
-          <span class="text-capitalize ml-4">{{ clientData.address ? clientData.address : 'address' }}</span>
+          <span class="text-capitalize">{{
+            clientData.city ? clientData.city : 'city'
+          }}</span>
+          <span class="text-capitalize ml-4">{{
+            clientData.state ? clientData.state : 'state'
+          }}</span>
+          <span class="text-capitalize ml-4">{{
+            clientData.zipcode ? clientData.zipcode : 'zipcode'
+          }}</span>
+          <span class="text-capitalize ml-4">{{
+            clientData.address ? clientData.address : 'address'
+          }}</span>
         </v-card-text>
         <staff-list
-          @fetchClient="getClient"
           :loading="busy"
           :list="clientData.staff ? clientData.staff : []"
+          @fetchClient="getClient"
         ></staff-list>
         <location-list
           :loading="busy"
-          @fetchClient="getClient"
           :list="clientData.locations ? clientData.locations : []"
+          @fetchClient="getClient"
         ></location-list>
       </v-card>
       <v-card v-else-if="apiStatus === 404">
@@ -61,19 +73,16 @@ import {
   useRouter,
   onMounted,
 } from '@nuxtjs/composition-api'
-import ClientRecordsForm from '@/components/forms/ClientRecordsForm.vue'
+
 import useClientRecords from '~/services/useClientRecords'
 import StaffList from '~/components/ClientRecords/StaffList.vue'
 import LocationList from '~/components/ClientRecords/LocationList.vue'
 // import LocationDetails from '~/components/ClientRecords/LocationDetails.vue'
-import ClientStatusChip from '~/components/ClientStatusChip.vue'
 
 export default defineComponent({
   components: {
-    ClientRecordsForm,
     StaffList,
     LocationList,
-    ClientStatusChip,
   },
   middleware: 'isAuthenticated',
   setup() {
@@ -106,16 +115,21 @@ export default defineComponent({
         .then((resp) => {
           clientData.value = resp.data.data
 
-          breadcrumbs.push({
-            text: (clientData.value as any).last_name + ',' + ' ' + (clientData.value as any).first_name,
-            to: `/client-records/${(clientData.value as any).id}`,
-            disabled: true,
-          },
-          {
-           text: (clientData.value as any).last_name + ' ' + 'Details',
-            to: ``,
-            disabled: true, 
-          },
+          breadcrumbs.push(
+            {
+              text:
+                (clientData.value as any).last_name +
+                ',' +
+                ' ' +
+                (clientData.value as any).first_name,
+              to: `/client-records/${(clientData.value as any).id}`,
+              disabled: true,
+            },
+            {
+              text: (clientData.value as any).last_name + ' ' + 'Details',
+              to: ``,
+              disabled: true,
+            }
           )
 
           store.dispatch('setPageHeading', { pageTitle, breadcrumbs })

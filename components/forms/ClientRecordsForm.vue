@@ -4,75 +4,79 @@
       <v-card-title> {{ title }} </v-card-title>
       <v-card-text>
         <v-text-field
+          v-model="formData.last_name"
           label="Last name *"
           clearable
           class="mb-3"
           maxlength="50"
           counter="50"
-          v-model="formData.last_name"
           :rules="formData.status === 'inactive' ? false : rules.last_name"
-          @keydown.enter="formValid && submit()"
           max="50"
+          @keydown.enter="formValid && submit()"
         >
         </v-text-field>
         <v-text-field
+          v-model="formData.first_name"
           label="First name *"
           clearable
           class="mb-3"
           maxlength="50"
           counter="50"
-          v-model="formData.first_name"
           :rules="formData.status === 'inactive' ? false : rules.first_name"
-          @keydown.enter="formValid && submit()"
           max="50"
+          @keydown.enter="formValid && submit()"
         >
         </v-text-field>
         <v-text-field
+          v-model="formData.email"
           label="Email *"
           clearable
           class="mb-3"
           maxlength="250"
-          v-model="formData.email"
           :rules="formData.status === 'inactive' ? false : rules.email"
           @keydown.enter="formValid && submit()"
         >
         </v-text-field>
         <v-text-field
+          v-model="formData.phone_number"
           label="Phone number *"
           clearable
           class="mb-3"
-          v-model="formData.phone_number"
           :rules="formData.status === 'inactive' ? false : rules.phone_number"
-          @keydown.enter="formValid && submit()"
           maxlength="250"
+          @keydown.enter="formValid && submit()"
         >
         </v-text-field>
         <v-text-field
+          v-model="formData.personal_website"
           label="Personal website"
           clearable
           class="mb-3"
-          v-model="formData.personal_website"
-          :rules="formData.status === 'inactive' ? false : rules.personal_website"
+          :rules="
+            formData.status === 'inactive' ? false : rules.personal_website
+          "
           maxlength="250"
           @keydown.enter="formValid && submit()"
         >
         </v-text-field>
         <v-autocomplete
+          v-model="formData['account_manager_id']"
           :items="accountManagers"
           item-value="id"
-          :rules="formData.status === 'inactive' ? false : rules.account_manager_id"
+          :rules="
+            formData.status === 'inactive' ? false : rules.account_manager_id
+          "
           :loading="loadingAccountManagers"
-          v-model="formData['account_manager_id']"
           item-text="fullname"
           label="Account Manager *"
         >
         </v-autocomplete>
         <v-select
+          v-model="formData['status']"
           :items="statusOptions"
           placeholder="Select Status"
           item-value="value"
           item-text="text"
-          v-model="formData['status']"
         >
         </v-select>
       </v-card-text>
@@ -101,20 +105,19 @@ import {
   computed,
   useRouter,
 } from '@nuxtjs/composition-api'
+
 import useClientRecords from '~/services/useClientRecords'
-import LocationForm from './LocationForm.vue'
-import StaffForm from './StaffForm.vue'
 import SwalMixin, { showToast } from '~/utils/swalMixin'
 import useUsers from '~/services/useUsers'
 import { AM_ROLE } from '~/utils/UserEnums'
 import { Client } from '~/shared/Types'
-import { mapValues } from 'lodash'
 
 export default defineComponent({
-  components: { LocationForm, StaffForm },
+  components: {},
   props: {
     id: {
       type: [String, Number],
+      default: undefined,
     },
   },
   setup(_props, { parent, emit }) {
@@ -124,13 +127,7 @@ export default defineComponent({
     const { list: listUsers } = useUsers()
     const clientStatus = ref(false)
     const isChangingStatus = ref(false)
-    const {
-      create,
-      clientById,
-      update,
-      changeStatus,
-      listStatus,
-    } = useClientRecords()
+    const { create, clientById, update, changeStatus } = useClientRecords()
     const accountManagers = ref<Array<any>>([])
     const loadingAccountManagers = ref(false)
 
@@ -138,8 +135,8 @@ export default defineComponent({
 
     const locations = ref([])
     const statusOptions = ref([
-      {text: 'Active', value: 'active'},
-      {text: 'Inactive', value: 'inactive'},
+      { text: 'Active', value: 'active' },
+      { text: 'Inactive', value: 'inactive' },
     ])
     const router = useRouter()
 
@@ -162,7 +159,7 @@ export default defineComponent({
         (v: string) => {
           if (v) {
             return (
-              /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(v) ||
+              /^(?:\w+:)?\/\/([^\s.]+\.\S{2}|localhost[:?\d]*)\S*$/.test(v) ||
               'Website should start with https:// e.g "https://example.com"'
             )
           } else return true
@@ -225,15 +222,16 @@ export default defineComponent({
           .then((resp) => {
             const data = resp.data.data
             formData.value = data
-            delete formData.value['staff']
-            delete formData.value['locations']
+            delete formData.value.staff
+            delete formData.value.locations
             // delete formData.value['status']
-            formData.value['account_manager_id'] =
+            formData.value.account_manager_id =
               formData.value.account_manager?.id
 
             // formData.value['status'] = 1
 
-            formData.value.status = typeof data.status === 'string' ? data.status : data.status?.key
+            formData.value.status =
+              typeof data.status === 'string' ? data.status : data.status?.key
 
             emit('onFetchClient', data)
           })

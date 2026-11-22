@@ -4,7 +4,7 @@
       NAME & STATUS
       <v-spacer></v-spacer>
     </v-card-title>
-  <v-card-text>
+    <v-card-text>
       <v-simple-table>
         <template #default>
           <tbody>
@@ -15,13 +15,13 @@
               <td><strong>Last Updated</strong></td>
             </tr>
             <tr>
-              <td> </td>
-              <td> {{ locationData.name }}  </td>
-              <td> <workspace-badge :value="locationData.status" /> </td>
-              <td> 
-                <formatted-date :date="locationData.updated_at"> 
-                  {{ locationData.updated_at }} 
-                </formatted-date> 
+              <td></td>
+              <td>{{ locationData.name }}</td>
+              <td><workspace-badge :value="locationData.status" /></td>
+              <td>
+                <formatted-date :date="locationData.updated_at">
+                  {{ locationData.updated_at }}
+                </formatted-date>
               </td>
             </tr>
           </tbody>
@@ -32,12 +32,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  ref,
-  useRoute,
-} from '@nuxtjs/composition-api'
+import { defineComponent, ref } from '@nuxtjs/composition-api'
 import FormattedDate from '~/components/FormattedDate.vue'
 
 export default defineComponent({
@@ -47,12 +42,11 @@ export default defineComponent({
   props: {
     locationData: {
       type: Object,
-      default: {},
+      default: () => ({}),
     },
   },
-  setup(props, { parent, emit }) {
+  setup() {
     const busy = ref(false)
-    const route = useRoute()
 
     return {
       busy,

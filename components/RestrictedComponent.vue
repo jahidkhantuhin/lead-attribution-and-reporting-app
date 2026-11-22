@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div  v-if="isAllowed"><slot> </slot></div>
-    <div v-else>Not allowed to {{permission}}</div>
+    <div v-if="isAllowed"><slot> </slot></div>
+    <div v-else>Not allowed to {{ permission }}</div>
   </div>
 </template>
 

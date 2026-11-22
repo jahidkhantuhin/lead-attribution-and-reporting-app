@@ -3,7 +3,7 @@
     <v-row no-gutters>
       <v-col lg="3" xl="2" md="12" offset-lg="1">
         <v-expand-transition>
-          <v-card class="text-center" v-if="fetchingUser">
+          <v-card v-if="fetchingUser" class="text-center">
             <v-card-text>
               <v-progress-circular :size="50" color="primary" indeterminate>
               </v-progress-circular>
@@ -19,9 +19,7 @@
             }}</v-card-subtitle>
 
             <v-card-text>
-              <LoginForm 
-              @clicked="onLoginChange"
-              ></LoginForm>
+              <LoginForm @clicked="onLoginChange"></LoginForm>
             </v-card-text>
           </v-card>
         </v-expand-transition>
@@ -34,23 +32,23 @@
 import {
   defineComponent,
   onBeforeMount,
-  onMounted,
   ref,
   useRoute,
   useRouter,
   useStore,
+  useContext,
 } from '@nuxtjs/composition-api'
 
 import LoginForm from '@/components/LoginForm.vue'
-import { useContext } from '@nuxtjs/composition-api'
+
 import useAxios from '~/plugins/useAxios'
 
 export default defineComponent({
   components: { LoginForm },
+  layout: 'blank',
   middleware: 'redirectToHomeIfAlreadyLoggedIn',
   auth: 'guest',
-  layout: 'blank',
-  setup(_props, { root, parent }) {
+  setup() {
     const { $auth } = useContext()
     const $axios = useAxios()
     const router = useRouter()
@@ -65,7 +63,6 @@ export default defineComponent({
       googleCred.value = Cred
     }
 
-
     onBeforeMount(async () => {
       if (process.env.SHOWCASE_MODE === 'true') {
         fetchingUser.value = false
@@ -73,17 +70,17 @@ export default defineComponent({
         return
       }
       await $axios
-        .get(
-          '/social-login-direct',
-          {params: { 
-            'code': `${googleCred.code}`,
-            }})
+        .get('/social-login-direct', {
+          params: {
+            code: `${googleCred.code}`,
+          },
+        })
         .then((response) => {
-          $auth.setUser(response.data.data.user);
+          $auth.setUser(response.data.data.user)
           store.dispatch('setGoogle', {
-              cred: response.data.data.token,
-            })
-          router.push((route.value.query).redirect || "/");
+            cred: response.data.data.token,
+          })
+          router.push(route.value.query.redirect || '/')
           // $auth
           //   .setUserToken(true)
           //   .then((resp) => {
@@ -97,7 +94,6 @@ export default defineComponent({
           //     showForm.value = true
           //   })
         })
-      console.log('CODE', googleCred)
     })
     // onMounted(async () => {
     //   await $axios

@@ -18,16 +18,15 @@
       :headers="headers"
       :items="items"
       hide-default-footer
-
     >
       <template #item.name="{ item }">
         <span>
           <a
+            to="`/client-records/${clientID}/staff/${item.id}`"
             @click="
               staffDrawer = true
               staffDrawerData = item
             "
-            to="`/client-records/${clientID}/staff/${item.id}`"
             >{{ item.name }}</a
           >
         </span>
@@ -43,7 +42,7 @@
       </template>
       <template #item.actions="{ item }">
         <v-menu>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <v-btn small v-bind="attrs" v-on="on"> Actions </v-btn>
           </template>
           <v-list>
@@ -82,11 +81,11 @@
       width="700px"
     >
       <staff-details
-        :loading="false"
         v-if="staffDrawerData"
-        :staffData="staffDrawerData"
-        :showAllButton="false"
-        :cardProps="{
+        :loading="false"
+        :staff-data="staffDrawerData"
+        :show-all-button="false"
+        :card-props="{
           elevation: 0,
         }"
       ></staff-details>
@@ -101,26 +100,25 @@ import {
   ref,
   useRoute,
 } from '@nuxtjs/composition-api'
-import StaffForm from '@/components/forms/StaffForm.vue'
-import swalMixin, { showConfirmDialog, showToast } from '~/utils/swalMixin'
-import useClientStaff from '~/services/useClientStaff'
+
 import FormattedDate from '../FormattedDate.vue'
 import StaffDetails from './StaffDetails.vue'
+import swalMixin, { showConfirmDialog, showToast } from '~/utils/swalMixin'
+import useClientStaff from '~/services/useClientStaff'
 
 export default defineComponent({
   components: {
-    StaffForm,
     FormattedDate,
     StaffDetails,
   },
   props: {
     list: {
       type: Array,
-      default: [],
+      default: () => [],
     },
     loading: {
       type: Boolean,
-      default: [],
+      default: false,
     },
   },
   setup(props, { parent, emit }) {
@@ -156,7 +154,7 @@ export default defineComponent({
         sortable: true,
         value: `phone_number`,
       },
-      
+
       {
         text: `Last Update`,
         align: `start`,

@@ -16,19 +16,19 @@
     :fixed-header="true"
     height="700px"
   >
-    <template v-slot:item.phone="props">
+    <template #item.phone="props">
       <span> {{ props.item.phone | usPhone }}</span>
     </template>
-    <template v-slot:item.email="props">
+    <template #item.email="props">
       <span>{{ props.item.email }}</span>
     </template>
-    <template v-slot:item.timestamp="props">
+    <template #item.timestamp="props">
       <formatted-date
         :timezone="props.item.timezone"
         :date="props.item.datetime"
       ></formatted-date>
     </template>
-    <template v-slot:item.type="props">
+    <template #item.type="props">
       <span class="text-capitialize">{{ props.item.type }}</span>
     </template>
   </v-data-table>

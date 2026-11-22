@@ -42,13 +42,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  watch,
-  ref,
-  onMounted,
-} from '@nuxtjs/composition-api'
+import { computed, defineComponent, watch, ref } from '@nuxtjs/composition-api'
 
 import useAxios from '@/plugins/useAxios'
 import swalMixin, { showToast } from '~/utils/swalMixin'
@@ -87,11 +81,13 @@ export default defineComponent({
       email.value = ''
       busy.value = false
       valid.value = false
-      const form = refs.pwResetForm as typeof refs.pwResetForm & { resetValidation?: () => void }
+      const form = refs.pwResetForm as typeof refs.pwResetForm & {
+        resetValidation?: () => void
+      }
       form?.resetValidation?.()
     }
 
-    watch(syncShow, isOpen => {
+    watch(syncShow, (isOpen) => {
       if (!isOpen) {
         reset()
       }

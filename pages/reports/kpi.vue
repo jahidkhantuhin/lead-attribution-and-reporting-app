@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <UnauthorizedUser v-if="nonAccountManagerUserRole"/>
+      <UnauthorizedUser v-if="nonAccountManagerUserRole" />
     </div>
     <div v-if="!nonAccountManagerUserRole">
       <!-- Filters -->
@@ -12,28 +12,32 @@
             <v-col cols="12" xl="2" lg="2" md="2" sm="12" xs="12">
               <client-picker
                 v-model="filters.client_id"
-                :URLQueryParam="'client_id'"
+                :u-r-l-query-param="'client_id'"
                 @change="handleClientChange"
               ></client-picker>
             </v-col>
             <v-col cols="12" xl="3" lg="3" md="3" sm="12" xs="12">
               <location-picker
+                v-model="filters.location_ids"
                 :client="filters.client_id"
                 :multiple="false"
-                v-model="filters.location_ids"
               ></location-picker>
             </v-col>
             <v-col cols="12" xl="3" lg="3" md="3" sm="12" xs="12">
               <datepicker
-                :kpi="true"
-                :dateHelpButtons="['lastMonth', 'thisYear', 'last2Years', 'all']"
                 v-model="filters.dates"
+                :kpi="true"
+                :date-help-buttons="[
+                  'lastMonth',
+                  'thisYear',
+                  'last2Years',
+                  'all',
+                ]"
               ></datepicker>
             </v-col>
             <v-col cols="12" xl="2" lg="2" md="2" sm="12" xs="12">
               <v-select
                 v-model="filters.type"
-                @change="handleViewChange"
                 item-text="label"
                 item-value="value"
                 :items="[
@@ -41,9 +45,18 @@
                   { label: 'Monthly', value: 'month' },
                 ]"
                 class="mr-5"
+                @change="handleViewChange"
               ></v-select>
             </v-col>
-            <v-col cols="12" xl="2" lg="2" md="2" sm="12" xs="12" align="center">
+            <v-col
+              cols="12"
+              xl="2"
+              lg="2"
+              md="2"
+              sm="12"
+              xs="12"
+              align="center"
+            >
               <v-btn @click="handleApply">
                 <v-icon left>mdi-check</v-icon>
                 Apply
@@ -64,9 +77,9 @@
           <v-btn
             icon
             title="Upload to Google Drive"
-            @click="uploadReport"
             :loading="uploadReportLoading"
             :color="googleDocLink ? 'info' : 'normal'"
+            @click="uploadReport"
           >
             <v-icon>mdi-upload</v-icon>
           </v-btn>
@@ -76,7 +89,7 @@
       <br />
       <!-- Header -->
       <v-expand-transition>
-        <v-card class="mb-5" v-if="!reportLoaded">
+        <v-card v-if="!reportLoaded" class="mb-5">
           <v-card-text>
             {{ $t('message.supplyFilters') }}
           </v-card-text>
@@ -85,12 +98,12 @@
       <div v-if="reportLoaded">
         <br />
         <KPIMonthly
-          :response="response"
           v-if="response.type === 'month'"
+          :response="response"
         ></KPIMonthly>
         <KPIDaily
-          :response="response"
           v-else-if="response.type === 'daily'"
+          :response="response"
         ></KPIDaily>
       </div>
       <!-- Upload Dialog -->
@@ -117,8 +130,8 @@
             <v-card-text>
               <span class="google-doc-link">{{ googleDocLink }}</span>
               <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                  <a @click="copyLink(googleDocLink)" v-bind="attrs" v-on="on">
+                <template #activator="{ on, attrs }">
+                  <a v-bind="attrs" @click="copyLink(googleDocLink)" v-on="on">
                     <v-icon> mdi-content-copy </v-icon>
                   </a>
                 </template>
@@ -143,19 +156,20 @@
 </template>
 
 <script lang="ts">
-import FormattedDate from '~/components/FormattedDate.vue'
 import {
   defineComponent,
   useStore,
   ref,
   computed,
   useRouter,
-  onBeforeMount,
   onMounted,
   useRoute,
   watch,
   useContext,
 } from '@nuxtjs/composition-api'
+import { Dictionary } from 'lodash'
+import moment from 'moment'
+
 import { IBreadcrumbs } from '~/store'
 import ClientPicker from '~/components/forms/ClientPicker.vue'
 import LocationPicker from '~/components/forms/LocationPicker.vue'
@@ -168,19 +182,13 @@ import {
 } from '~/utils/reports-upload/kpi'
 import useAxios from '~/plugins/useAxios'
 import useKPI from '~/services/useKPI'
-import { Dictionary, omit, sortBy } from 'lodash'
-import moment from 'moment'
-import { extendMoment } from 'moment-range'
-const MomentRange = extendMoment(moment as any)
 import KPIDaily from '~/components/KPI/daily.vue'
 import { dates as showcaseDates } from '~/showcase/fixtures'
 import KPIMonthly from '~/components/KPI/month.vue'
 import UnauthorizedUser from '~/components/UnauthorizedUser.vue'
 
-
 export default defineComponent({
   components: {
-    FormattedDate,
     ClientPicker,
     LocationPicker,
     Datepicker,
@@ -189,11 +197,11 @@ export default defineComponent({
     UnauthorizedUser,
   },
   // middleware: 'isAuthenticated',
-  setup(props, { parent }) {
+  setup(_props, { parent }) {
     const store = useStore()
     const { $auth } = useContext()
-    const nonAccountManagerUserRole = computed(() =>
-      !$auth.hasScope('create report') && $auth.hasScope('vpn access')
+    const nonAccountManagerUserRole = computed(
+      () => !$auth.hasScope('create report') && $auth.hasScope('vpn access')
     )
     const $swal = swalMixin((parent as any).$swal as any)
     const busy = ref(false)
@@ -241,17 +249,6 @@ export default defineComponent({
       },
     })
 
-    const getRangeName = () => {
-      if (isWeekly.value) {
-        return 'week'
-      } else if (isDaily.value) {
-        return 'day'
-      } else if (isMonthly.value) {
-        return 'month'
-      }
-      return 'day'
-    }
-
     const clientSideFilters = ref({
       view: 'Monthly',
       date_start: '',
@@ -292,8 +289,8 @@ export default defineComponent({
       //       .filter((lead) => lead.location_id === location),
       //   }
       //   const range = MomentRange.range(
-      //     moment(response.value.date.date_start).startOf(getRangeName()),
-      //     moment(response.value.date.date_end).endOf(getRangeName())
+      //     moment(response.value.date.dateStart).startOf(getRangeName()),
+      //     moment(response.value.date.dateEnd).endOf(getRangeName())
       //   ).by(getRangeName() as any)
       //   obj.summary_transformed = Array.from(range)
       //     .map((momentItem) => {
@@ -329,7 +326,7 @@ export default defineComponent({
       //     })
       //     .filter((c) => c.id)
       //   obj.summary_transformed = sortBy(obj.summary_transformed, [
-      //     'date_start',
+      //     'dateStart',
       //   ]).reverse()
       //   report.value.summary = [...report.value.summary, ...obj.summary]
       //   report.value.summary_transformed = [
@@ -353,7 +350,7 @@ export default defineComponent({
       return clientSideFilters.value.view.toLowerCase() === 'daily'
     })
 
-    const handleClientChange = (id: Number, client: any) => {
+    const handleClientChange = (_id: Number, client: any) => {
       selectedClient.value = client
     }
 
@@ -404,7 +401,7 @@ export default defineComponent({
       }
       uploadReportLoading.value = true
       reportLoadingDialog.value = true
-      var fn
+      let fn
       if (filters.value.type === 'month') {
         fn = generateKPIMonthlyReport
       } else {
@@ -424,8 +421,8 @@ export default defineComponent({
           {
             withCredentials: true,
             headers: {
-              'Authorization': `Bearer ${(store.state as any).cred.cred}`
-            }
+              Authorization: `Bearer ${(store.state as any).cred.cred}`,
+            },
           }
         )
         .then((res: any) => {
@@ -464,19 +461,19 @@ export default defineComponent({
     }
 
     const fetchReport = () => {
-      let date_start = filters.value.dates[0]
-      let date_end = filters.value.dates[1]
+      const dateStart = filters.value.dates[0]
+      let dateEnd = filters.value.dates[1]
 
-      if (!date_start && !date_end) {
-        date_end = moment().format('YYYY-MM-DD')
+      if (!dateStart && !dateEnd) {
+        dateEnd = moment().format('YYYY-MM-DD')
       }
 
       clientSideFilters.value.view = 'Monthly'
       busy.value = true
 
       fetchKPI({
-        date_start,
-        date_end,
+        date_start: dateStart,
+        date_end: dateEnd,
         client_id: filters.value.client_id,
         location_ids: [filters.value.location_ids],
         type: filters.value.type,
@@ -488,15 +485,15 @@ export default defineComponent({
           reportLoaded.value = true
           googleDocLink.value = ''
           reportUploaded.value = false
-          let locations = Object.entries(resp.data.data.locations)
-          let location = locations.map((item: any) => {
+          const locations = Object.entries(resp.data.data.locations)
+          const location = locations.map((item: any) => {
             return item[1]
           })
-          let locName = location.map((item: any) => {
+          const locName = location.map((item: any) => {
             return item.name
           })
           locationName.value = locName
-          console.log('Location Name', locName)
+
           trasnformReport()
           setTimeout(() => {
             document
@@ -540,7 +537,12 @@ export default defineComponent({
 
     onMounted(() => {
       if (process.env.SHOWCASE_MODE === 'true') {
-        filters.value = { ...filters.value, client_id: 1, location_ids: [1], dates: showcaseDates() }
+        filters.value = {
+          ...filters.value,
+          client_id: 1,
+          location_ids: [1],
+          dates: showcaseDates(),
+        }
       }
       loadFiltersFromURL()
       handleViewChange()
@@ -586,16 +588,13 @@ export default defineComponent({
 </script>
 <style lang="scss">
 .theme--dark {
- .lighten-5{
-   color: rgb(61, 60, 60);
- }
- .kpi-table .v-data-table__wrapper{
-   table > thead > tr > th{
-   color: rgb(156, 149, 149);
- }
- }
- 
+  .lighten-5 {
+    color: rgb(61, 60, 60);
+  }
+  .kpi-table .v-data-table__wrapper {
+    table > thead > tr > th {
+      color: rgb(156, 149, 149);
+    }
+  }
 }
-
-
 </style>

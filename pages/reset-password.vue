@@ -163,8 +163,8 @@ export default defineComponent({
           {
             withCredentials: true,
             headers: {
-              'Authorization': `Bearer ${(store.state as any).cred.cred}`
-            }
+              Authorization: `Bearer ${(store.state as any).cred.cred}`,
+            },
           }
         )
         .then(() => {

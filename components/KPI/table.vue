@@ -20,7 +20,7 @@
       <template #item.date="{ item }">
         <span>
           <formatted-date
-            formatString="ddd, MMM DD, YYYY"
+            format-string="ddd, MMM DD, YYYY"
             :date="item.date"
           ></formatted-date>
         </span>
@@ -106,7 +106,11 @@
       <template #item.total_adwords_cpc="{ item }">
         <span data-color-span class="red lighten-5">
           <abbr :title="`$${item.total_adwords_cpc}`"
-            >${{ item.total_adwords_cpc ? new Number(item.total_adwords_cpc).toFixed(2) : 0 }}
+            >${{
+              item.total_adwords_cpc
+                ? new Number(item.total_adwords_cpc).toFixed(2)
+                : 0
+            }}
           </abbr>
         </span>
       </template>
@@ -170,7 +174,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 import FormattedDate from '~/components/FormattedDate.vue'
 import { KPIColumnSections } from '~/utils/reports-upload/kpi'
 
@@ -190,7 +194,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    let dateColumn = computed(() => {
+    const dateColumn = computed(() => {
       if (props.mode === 'day') {
         return KPIColumnSections.dates.dailyColumn
       } else {
@@ -198,7 +202,7 @@ export default defineComponent({
       }
     })
 
-    let tableHeaders = computed(() => {
+    const tableHeaders = computed(() => {
       return [
         dateColumn.value,
         ...KPIColumnSections.leads,
@@ -238,25 +242,25 @@ export default defineComponent({
     z-index: 5;
   }
 }
-.theme--dark{
-.kpi-table {
-  table > tbody > tr {
-    &:hover {
-      span,
-      td {
-        background: rgb(138, 134, 134) !important;
+.theme--dark {
+  .kpi-table {
+    table > tbody > tr {
+      &:hover {
+        span,
+        td {
+          background: rgb(138, 134, 134) !important;
+        }
       }
     }
-  }
 
-  table > tbody > tr > td:nth-child(1),
-  table > thead > tr > th:nth-child(1) {
-    position: sticky !important;
-    position: -webkit-sticky !important;
-    left: 0;
-    z-index: 4;
-    background: rgb(29, 28, 28);
+    table > tbody > tr > td:nth-child(1),
+    table > thead > tr > th:nth-child(1) {
+      position: sticky !important;
+      position: -webkit-sticky !important;
+      left: 0;
+      z-index: 4;
+      background: rgb(29, 28, 28);
+    }
   }
-}
 }
 </style>

@@ -15,8 +15,6 @@ if (process.env.NODE_ENV === 'development') {
 
 if (showcase) API_URL = 'https://showcase.example.test'
 
-console.log(`Building for ${process.env.NODE_ENV} with base URL of ${API_URL}`)
-
 const axiosConfig = {
   baseURL: API_URL,
   withCredentials: true,
@@ -73,7 +71,8 @@ export default {
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
-    '~/plugins/usPhone', '~/plugins/truncateText',
+    '~/plugins/usPhone',
+    '~/plugins/truncateText',
     ...(showcase ? ['~/plugins/showcase'] : []),
   ],
 
@@ -103,19 +102,26 @@ export default {
   generate: {
     interval: showcase ? 0 : 2000,
     ...(showcase ? { concurrency: 1 } : {}),
-    routes: showcase ? [
-      ...[1, 2, 3].flatMap(id => [
-        '/client-records/' + id, '/client-records/' + id + '/edit',
-        '/client-records/' + id + '/locations/add',
-        '/client-records/' + id + '/locations/' + id,
-        '/client-records/' + id + '/locations/' + id + '/edit',
-        '/client-records/' + id + '/staff/add',
-        '/client-records/' + id + '/staff/' + id,
-        '/client-records/' + id + '/staff/' + id + '/edit',
-      ]),
-      '/client-records/1/locations/4', '/client-records/1/locations/4/edit',
-      ...[1, 2, 3, 4].flatMap(id => ['/site-records/' + id, '/users/' + id + '/edit']),
-    ] : [],
+    routes: showcase
+      ? [
+          ...[1, 2, 3].flatMap((id) => [
+            '/client-records/' + id,
+            '/client-records/' + id + '/edit',
+            '/client-records/' + id + '/locations/add',
+            '/client-records/' + id + '/locations/' + id,
+            '/client-records/' + id + '/locations/' + id + '/edit',
+            '/client-records/' + id + '/staff/add',
+            '/client-records/' + id + '/staff/' + id,
+            '/client-records/' + id + '/staff/' + id + '/edit',
+          ]),
+          '/client-records/1/locations/4',
+          '/client-records/1/locations/4/edit',
+          ...[1, 2, 3, 4].flatMap((id) => [
+            '/site-records/' + id,
+            '/users/' + id + '/edit',
+          ]),
+        ]
+      : [],
   },
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -127,8 +133,8 @@ export default {
     ...(!showcase ? ['@nuxtjs/auth-next'] : []),
     // "@nuxtjs/auth",
     'vue-sweetalert2/nuxt',
-    // ['vue-social-auth/nuxt', { 
-    //   property: '$auth', // Optional property if the $auth property is being used by another module 
+    // ['vue-social-auth/nuxt', {
+    //   property: '$auth', // Optional property if the $auth property is being used by another module
     //   providers: {
     //     google: {
     //       clientId: '109019455855-hjv5klrhc7ugf0dd0j1e4u3dim6fcicf.apps.googleusercontent.com',
@@ -157,7 +163,13 @@ export default {
     theme: {
       dark: false,
       themes: {
-        light: { primary: '#2457D6', secondary: '#087D73', accent: '#6449C7', success: '#147354', error: '#B92E46' },
+        light: {
+          primary: '#2457D6',
+          secondary: '#087D73',
+          accent: '#6449C7',
+          success: '#147354',
+          error: '#B92E46',
+        },
         dark: {
           primary: colors.blue.darken2,
           accent: colors.grey.darken3,
@@ -191,9 +203,9 @@ export default {
       routes.push({
         name: 'custom',
         path: '*',
-        component: resolve(__dirname, 'pages/404.vue')
+        component: resolve(__dirname, 'pages/404.vue'),
       })
-    }
+    },
   },
 
   auth: {
@@ -217,14 +229,20 @@ export default {
         },
       },
       google: {
-        clientId: '109019455855-hjv5klrhc7ugf0dd0j1e4u3dim6fcicf.apps.googleusercontent.com',
+        clientId:
+          '109019455855-hjv5klrhc7ugf0dd0j1e4u3dim6fcicf.apps.googleusercontent.com',
         codeChallengeMethod: '',
         responseType: 'code',
-        redirectUri: `${process.env.NODE_ENV === 'development' ? 'http://localhost:3000/social-login' :
-        process.env.NODE_ENV === 'staging' ? 'https://foundation-dev.wm4d.com/social-login' : 'https://foundation.wm4d.com/social-login' }`,
+        redirectUri: `${
+          process.env.NODE_ENV === 'development'
+            ? 'http://localhost:3000/social-login'
+            : process.env.NODE_ENV === 'staging'
+            ? 'https://foundation-dev.wm4d.com/social-login'
+            : 'https://foundation.wm4d.com/social-login'
+        }`,
         endpoints: {
           token: API_URL + '/social-login', // some backend url to resolve your auth with google and give you the token back
-          userInfo: '/user?noswal' // the endpoint to get the user info after you received the token 
+          userInfo: '/user?noswal', // the endpoint to get the user info after you received the token
         },
       },
     },

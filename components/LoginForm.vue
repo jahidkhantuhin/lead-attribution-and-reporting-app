@@ -44,7 +44,7 @@
     >
       <v-icon left>mdi-google</v-icon> Log in with Google
     </v-btn>
-    
+
     <v-btn
       block
       plain
@@ -62,11 +62,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, useRoute, useRouter, SetupContext, useStore } from '@nuxtjs/composition-api'
+import {
+  defineComponent,
+  ref,
+  useRoute,
+  useRouter,
+  SetupContext,
+} from '@nuxtjs/composition-api'
 import PasswordResetModal from '@/components/PasswordResetModal.vue'
 import SwalMixin, { showToast } from '~/utils/swalMixin'
 import useAxios from '~/plugins/useAxios'
-
 
 export default defineComponent({
   components: { PasswordResetModal },
@@ -80,7 +85,6 @@ export default defineComponent({
     //   context.emit('change', inputValue.value)
     // }
 
-    const { $axios } = context.root
     const router = useRouter()
     const route = useRoute()
 
@@ -137,7 +141,7 @@ export default defineComponent({
           .loginWith(`laravelSanctum`, {
             data,
           })
-          .then((response: any) => {
+          .then((_response: any) => {
             showToast($swal, {
               title: translate(`alert.success.login`),
             })
@@ -150,45 +154,38 @@ export default defineComponent({
     }
 
     const axios = useAxios()
-    const store = useStore()
 
+    const logInWithGoogle = (_provider: any) => {
+      formBusy.value = true
+      ;(context.root as any).$auth
+        .loginWith(`google`, { params: { prompt: 'select_account' } })
+        .then((_response: any) => {
+          // context.emit('clicked', response)
 
-    const logInWithGoogle = (provider: any) => {
-        formBusy.value = true;
-        (context.root as any).$auth
-          .loginWith(`google`, { params: { prompt: "select_account" } })
-          .then((response: any) => {
-            // context.emit('clicked', response)
-            
-            console.log('GOOGLE', response)
-            // showToast($swal, {
-            //   title: translate(`alert.success.login`),
-            // })
-            router.push('/login')
-          })
-          .finally(() => {
-            formBusy.value = false
-          })
-        // window.location.href = `${process.env.baseUrl}/social-redirect`
-
-              // ;(root as any).$auth.authenticate(provider).then((response: any) =>{
-              //   // router.push('/social-login')
-              //   SocialLogin(provider,response)
-
-              //   }).catch((err: any) => {
-              //       console.log({err:err})
-              //   })
-
-            }
-
-    const SocialLogin = (provider: any, response: any) => {
-            console.log(response)
-        axios.get(`/social-login?code=${response.code}`).then((response: any) => {
-
-
-        }).catch((err: any) => {
-            console.log({err:err})
+          // showToast($swal, {
+          //   title: translate(`alert.success.login`),
+          // })
+          router.push('/login')
         })
+        .finally(() => {
+          formBusy.value = false
+        })
+      // window.location.href = `${process.env.baseUrl}/social-redirect`
+
+      // ;(root as any).$auth.authenticate(provider).then((response: any) =>{
+      //   // router.push('/social-login')
+      //   SocialLogin(provider,response)
+
+      //   }).catch((err: any) => {
+      //       console.log({err:err})
+      //   })
+    }
+
+    const SocialLogin = (_provider: any, response: any) => {
+      axios
+        .get(`/social-login?code=${response.code}`)
+        .then((_response: any) => {})
+        .catch((_err: any) => {})
     }
 
     return {
@@ -205,7 +202,6 @@ export default defineComponent({
       SocialLogin,
       // onChange,
       inputValue,
-
     }
   },
 })

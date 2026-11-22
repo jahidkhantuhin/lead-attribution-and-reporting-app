@@ -2,9 +2,14 @@
   <span v-if="range" class="workspace-date-range">
     <v-icon small aria-hidden="true">mdi-calendar-range</v-icon>
     <span>
-      <time :datetime="range.first">{{ range.startLabel }}</time><template v-if="range.endLabel">–<time :datetime="range.last">{{ range.endLabel }}</time></template>
+      <time :datetime="range.first">{{ range.startLabel }}</time
+      ><template v-if="range.endLabel"
+        >–<time :datetime="range.last">{{ range.endLabel }}</time></template
+      >
     </span>
-    <span class="workspace-date-zone">{{ range.days }} {{ range.days === 1 ? 'day' : 'days' }}</span>
+    <span class="workspace-date-zone"
+      >{{ range.days }} {{ range.days === 1 ? 'day' : 'days' }}</span
+    >
   </span>
 </template>
 

@@ -2,10 +2,10 @@
   <div>
     <v-card-text>
       <v-autocomplete
+        v-model="filters['user_id']"
         :loading="callScorersLoading"
         label="Call scorer"
         item-value="id"
-        v-model="filters['user_id']"
         clearable
         item-text="fullname"
         :items="callScorers"
@@ -13,7 +13,8 @@
       ></v-autocomplete>
 
       <Datepicker
-        :dateHelpButtons="[
+        v-model="filters['dates']"
+        :date-help-buttons="[
           'thisWeek',
           'lastWeek',
           'last14Days',
@@ -21,7 +22,6 @@
           'thisYear',
         ]"
         @change="push"
-        v-model="filters['dates']"
       ></Datepicker>
     </v-card-text>
     <v-card-actions>
@@ -36,8 +36,8 @@
         "
         class="my-2"
         color="primary"
-        @click="$emit('search', filters)"
         :loading="loading"
+        @click="$emit('search', filters)"
       >
         {{ loading ? 'Loading...' : 'Apply' }}
       </v-btn>
@@ -49,19 +49,12 @@
 import {
   defineComponent,
   ref,
-  computed,
-  useStore,
   useRouter,
-  watch,
-  useRoute,
-  onBeforeMount,
   onMounted,
 } from '@nuxtjs/composition-api'
+import moment from 'moment'
 import Datepicker from '~/components/forms/DatePicker.vue'
 import { dates as showcaseDates } from '~/showcase/fixtures'
-import useUsers from '~/services/useUsers'
-import { CALL_SCORER_ROLE } from '~/utils/UserEnums'
-import moment from 'moment'
 
 export default defineComponent({
   components: {
@@ -74,11 +67,11 @@ export default defineComponent({
     },
     callScorers: {
       type: Array,
-      default: [],
+      default: () => [],
     },
     headers: {
       type: Array,
-      default: [],
+      default: () => [],
     },
     loading: {
       default: false,
@@ -101,7 +94,7 @@ export default defineComponent({
     }
 
     const loadFromURL = () => {
-      let query: any = router.currentRoute.query
+      const query: any = router.currentRoute.query
       if (query && query.user_id && query.dates) {
         query.user_id = +query.user_id
         filters.value = query

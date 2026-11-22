@@ -2,9 +2,9 @@
   <v-row class="my-6" justify="center">
     <v-col cols="12" lg="4" md="6">
       <ClientRecordsForm
+        :id="clientId"
         @onFetchClient="onFetchClient"
         @cancel="$router.push(`/client-records/${clientId}/`)"
-        :id="clientId"
       ></ClientRecordsForm>
     </v-col>
   </v-row>

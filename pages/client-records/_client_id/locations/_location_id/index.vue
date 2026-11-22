@@ -1,7 +1,7 @@
 <template>
   <location-details
     :loading="busy"
-    :locationData="locationData"
+    :location-data="locationData"
   ></location-details>
 </template>
 
@@ -15,7 +15,6 @@ import {
 } from '@nuxtjs/composition-api'
 import LocationDetails from '~/components/ClientRecords/LocationDetails.vue'
 import useClientLocations from '~/services/useClientLocations'
-import useClientRecords from '~/services/useClientRecords'
 
 export default defineComponent({
   components: {
@@ -29,7 +28,6 @@ export default defineComponent({
     const locationData = ref({})
     const busy = ref(false)
 
-    const { clientById } = useClientRecords()
     const { locationById } = useClientLocations()
 
     const locationID = route.value.params.location_id
@@ -57,7 +55,11 @@ export default defineComponent({
                 disabled: false,
               },
               {
-                text: (locationData.value as any).client.last_name + ',' + ' ' + (locationData.value as any).client.first_name,
+                text:
+                  (locationData.value as any).client.last_name +
+                  ',' +
+                  ' ' +
+                  (locationData.value as any).client.first_name,
                 to: `/client-records/${clientId}`,
                 disabled: false,
               },

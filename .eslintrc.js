@@ -12,6 +12,26 @@ module.exports = {
     'plugin:nuxt/recommended',
   ],
   plugins: ['prettier'],
-  // add your custom rules here
-  rules: {},
+  rules: {
+    // Vuetify uses dotted names for data-table slots such as item.status.
+    'vue/valid-v-slot': ['error', { allowModifiers: true }],
+    'no-console': ['error', { allow: ['warn', 'error'] }],
+    // API payloads retain their original field names.
+    camelcase: [
+      'error',
+      {
+        properties: 'never',
+        ignoreDestructuring: true,
+        allow: [
+          'account_manager',
+          'sort_by',
+          'client_id',
+          'location_ids',
+          'first_name',
+          'last_name',
+          'speed_score',
+        ],
+      },
+    ],
+  },
 }

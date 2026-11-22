@@ -1,44 +1,48 @@
 <template>
   <div>
     <div>
-      <UnauthorizedUser v-if="nonAccountManagerUserRole"/>
+      <UnauthorizedUser v-if="nonAccountManagerUserRole" />
     </div>
-    <div v-if="!nonAccountManagerUserRole"> 
+    <div v-if="!nonAccountManagerUserRole">
       <v-card :loading="loading">
         <v-card-title class="statistics-filters workspace-filter-inline">
           <span>Statistics</span>
           <Datepicker
-            class="statistics-date"
-            :dateHelpButtons="['thisYear', 'lastYear', 'last2Years', 'last5Years']"
-            @change="fetchGraph"
             v-model="filters['dates']"
+            class="statistics-date"
+            :date-help-buttons="[
+              'thisYear',
+              'lastYear',
+              'last2Years',
+              'last5Years',
+            ]"
+            @change="fetchGraph"
           ></Datepicker>
         </v-card-title>
         <v-card-text v-if="filters.dates.length">
-          <dates-and-diff :start="filters.dates[0]" :end="filters.dates[1] || filters.dates[0]" />
+          <dates-and-diff
+            :start="filters.dates[0]"
+            :end="filters.dates[1] || filters.dates[0]"
+          />
         </v-card-text>
         <!-- <p> {{ testingValue }} </p> -->
         <!-- <p> {{ testingValueTwo }} </p> -->
-          <v-toolbar flat v-if="dataLoaded">
-            <v-spacer></v-spacer>
-                <v-btn
-                  icon
-                  title="Copy link to this report"
-                  @click="copyReportLink"
-                >
-                  <v-icon>mdi-link</v-icon>
-                </v-btn>
-                <v-btn
-                  @click="uploadReport"
-                  :loading="uploadReportLoading"
-                  icon
-                  title="Upload to Google Drive"
-                  :color="googleDocLink ? 'info' : 'normal'"
-                >
-                  <v-icon>mdi-upload</v-icon>
-                </v-btn>
-              </v-toolbar>
-          <v-dialog v-model="reportLoadingDialog" persistent width="500">
+        <v-toolbar v-if="dataLoaded" flat>
+          <v-spacer></v-spacer>
+          <v-btn icon title="Copy link to this report" @click="copyReportLink">
+            <v-icon>mdi-link</v-icon>
+          </v-btn>
+          <v-btn
+            :loading="uploadReportLoading"
+            icon
+            title="Upload to Google Drive"
+            :color="googleDocLink ? 'info' : 'normal'"
+            @click="uploadReport"
+          >
+            <v-icon>mdi-upload</v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-dialog v-model="reportLoadingDialog" persistent width="500">
           <v-expand-transition>
             <v-card v-show="uploadReportLoading">
               <v-card-text class="pt-5">
@@ -61,8 +65,12 @@
               <v-card-text>
                 <span class="google-doc-link">{{ googleDocLink }}</span>
                 <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <a @click="copy('.google-doc-link')" v-bind="attrs" v-on="on">
+                  <template #activator="{ on, attrs }">
+                    <a
+                      v-bind="attrs"
+                      @click="copy('.google-doc-link')"
+                      v-on="on"
+                    >
                       <v-icon> mdi-content-copy </v-icon>
                     </a>
                   </template>
@@ -106,8 +114,8 @@ import {
   useStore,
   useContext,
 } from '@nuxtjs/composition-api'
-import { IBreadcrumbs } from '~/store'
 import VueApexCharts from 'vue-apexcharts'
+import { IBreadcrumbs } from '~/store'
 import useAxios from '~/plugins/useAxios'
 import Datepicker from '~/components/forms/DatePickerForStatistics.vue'
 import DatesAndDiff from '~/components/DatesAndDiff.vue'
@@ -118,7 +126,6 @@ import generateStatisticsReport from '~/utils/reports-upload/statistic-report'
 import swalMixin, { showToast } from '~/utils/swalMixin'
 import UnauthorizedUser from '~/components/UnauthorizedUser.vue'
 
-
 export default defineComponent({
   components: {
     apexchart: VueApexCharts,
@@ -127,13 +134,13 @@ export default defineComponent({
     UnauthorizedUser,
   },
   // middleware: 'isAuthenticated',
-  setup(props, { parent }) {
+  setup(_props, { parent }) {
     const { get } = useAxios()
     const store = useStore()
     const router = useRouter()
     const { $auth } = useContext()
-    const nonAccountManagerUserRole = computed(() =>
-      !$auth.hasScope('create report') && $auth.hasScope('vpn access')
+    const nonAccountManagerUserRole = computed(
+      () => !$auth.hasScope('create report') && $auth.hasScope('vpn access')
     )
     const axios = useAxios()
     const uploadData: any = ref([])
@@ -145,7 +152,7 @@ export default defineComponent({
 
     const isCopied = ref(false)
 
-    const copy = (element: string) => {
+    const copy = (_element: string) => {
       window.navigator.clipboard.writeText(googleDocLink.value)
       showToast($swal, {
         title: 'Copied to clipboard',
@@ -201,8 +208,7 @@ export default defineComponent({
               return (
                 response.value[key].find(
                   (item: any) =>
-                    item.lead_type === 'call' &&
-                    item.conversion_status === null
+                    item.lead_type === 'call' && item.conversion_status === null
                 )?.total_leads || 0
               )
             }),
@@ -293,7 +299,17 @@ export default defineComponent({
           },
         ],
         options: {
-          colors: ['#3263DE', '#098779', '#7458C7', '#C05C30', '#2679A4', '#A34473', '#53652A', '#865C39', '#50658E'],
+          colors: [
+            '#3263DE',
+            '#098779',
+            '#7458C7',
+            '#C05C30',
+            '#2679A4',
+            '#A34473',
+            '#53652A',
+            '#865C39',
+            '#50658E',
+          ],
           legend: { position: 'top', horizontalAlign: 'left' },
           chart: {
             height: 500,
@@ -323,7 +339,6 @@ export default defineComponent({
 
     // testing start
 
-
     const uploadReport = () => {
       try {
         if (reportUploaded.value === true) {
@@ -333,19 +348,20 @@ export default defineComponent({
 
         uploadReportLoading.value = true
         reportLoadingDialog.value = true
-      axios
-        .post(
-          '/reports/upload',
-          generateStatisticsReport(uploadData, {
-            user: (store as any).state.auth.user,
-          }) as any,
-          {
-            withCredentials: true,
-            headers: {
-              'Authorization': `Bearer ${(store.state as any).cred.cred}`
+        axios
+          .post(
+            '/reports/upload',
+            generateStatisticsReport(uploadData, {
+              user: (store as any).state.auth.user,
+            }) as any,
+            {
+              withCredentials: true,
+              headers: {
+                Authorization: `Bearer ${(store.state as any).cred.cred}`,
+              },
             }
-          }
-        ).then((res) => {
+          )
+          .then((res) => {
             googleDocLink.value = res.data?.data?.url
             reportUploaded.value = true
           })
@@ -356,7 +372,7 @@ export default defineComponent({
           .finally(() => {
             uploadReportLoading.value = false
           })
-          } catch (e) {
+      } catch (e) {
         console.error(e.message)
         showToast($swal, {
           title: 'Something went wrong while uploading report to G-Drive',
@@ -377,7 +393,7 @@ export default defineComponent({
         get('/reports/data', {
           withCredentials: true,
           headers: {
-            'Authorization': `Bearer ${(store.state as any).cred.cred}`
+            Authorization: `Bearer ${(store.state as any).cred.cred}`,
           },
           params: {
             date_start: filters.value.dates[0],
@@ -388,77 +404,121 @@ export default defineComponent({
             response.value = res.data.data
             dataLoaded.value = true
             // console.log('STATISTIC', response.value)
-            let transformedData = Object.entries(response.value)
+            const transformedData = Object.entries(response.value)
             // console.log('NEW-DATA', transformedData)
-            let dataOne = transformedData.map((itemOne) => {
+            const dataOne = transformedData.map((itemOne) => {
               return itemOne[1].map((itemTwo: any) => {
                 return itemTwo
               })
             })
-            let computedArray = dataOne
+            const computedArray = dataOne
             // console.log('computedArray', computedArray)
-            let computedArrayTwo = computedArray.map((itemOne: any) => {
+            const computedArrayTwo = computedArray.map((itemOne: any) => {
               return itemOne
             })
-            let computedArrayThree = computedArrayTwo.map((itemOne: any) => {
-                const keys = Object.keys(itemOne)
-                return {
-                  month_year: itemOne[0].month_year,
-                  total_calls: itemOne[5].total_leads,
-                  total_forms: itemOne[7].total_leads,
-                  total_chats: itemOne[6].total_leads,
-                  total_booked: itemOne[0].total_leads,
-                  total_not_booked: itemOne[1].total_leads,
-                  total_missed: itemOne[3].total_leads,
-                  total_irrelevant: itemOne[2].total_leads,
-                  total_not_scored: itemOne[4].total_leads,
-                  avg_total_calls: 
-                  `${new Number(itemOne[5].total_leads / ((itemOne[0].month_year).includes('January') ? 31 :
-                  (itemOne[0].month_year).includes('February') ? 28 :
-                  (itemOne[0].month_year).includes('March') ? 31 :
-                  (itemOne[0].month_year).includes('April') ? 30 :
-                  (itemOne[0].month_year).includes('May') ? 31 :
-                  (itemOne[0].month_year).includes('February') ? 28 :
-                  (itemOne[0].month_year).includes('June') ? 30 :
-                  (itemOne[0].month_year).includes('July') ? 31 :
-                  (itemOne[0].month_year).includes('August') ? 31 :
-                  (itemOne[0].month_year).includes('September') ? 30 :
-                  (itemOne[0].month_year).includes('October') ? 31 :
-                  (itemOne[0].month_year).includes('November') ? 30 :
-                  (itemOne[0].month_year).includes('December') ? 31 :
-                  30)).toFixed(2)}`,
-                  avg_total_chats: 
-                  `${new Number(itemOne[6].total_leads / ((itemOne[0].month_year).includes('January') ? 31 :
-                  (itemOne[0].month_year).includes('February') ? 28 :
-                  (itemOne[0].month_year).includes('March') ? 31 :
-                  (itemOne[0].month_year).includes('April') ? 30 :
-                  (itemOne[0].month_year).includes('May') ? 31 :
-                  (itemOne[0].month_year).includes('February') ? 28 :
-                  (itemOne[0].month_year).includes('June') ? 30 :
-                  (itemOne[0].month_year).includes('July') ? 31 :
-                  (itemOne[0].month_year).includes('August') ? 31 :
-                  (itemOne[0].month_year).includes('September') ? 30 :
-                  (itemOne[0].month_year).includes('October') ? 31 :
-                  (itemOne[0].month_year).includes('November') ? 30 :
-                  (itemOne[0].month_year).includes('December') ? 31 :
-                  30)).toFixed(2)}`,
-                  avg_total_forms: 
-                  `${new Number(itemOne[7].total_leads / ((itemOne[0].month_year).includes('January') ? 31 :
-                  (itemOne[0].month_year).includes('February') ? 28 :
-                  (itemOne[0].month_year).includes('March') ? 31 :
-                  (itemOne[0].month_year).includes('April') ? 30 :
-                  (itemOne[0].month_year).includes('May') ? 31 :
-                  (itemOne[0].month_year).includes('February') ? 28 :
-                  (itemOne[0].month_year).includes('June') ? 30 :
-                  (itemOne[0].month_year).includes('July') ? 31 :
-                  (itemOne[0].month_year).includes('August') ? 31 :
-                  (itemOne[0].month_year).includes('September') ? 30 :
-                  (itemOne[0].month_year).includes('October') ? 31 :
-                  (itemOne[0].month_year).includes('November') ? 30 :
-                  (itemOne[0].month_year).includes('December') ? 31 :
-                  30)).toFixed(2)}`,
-                }
-              })
+            const computedArrayThree = computedArrayTwo.map((itemOne: any) => {
+              return {
+                month_year: itemOne[0].month_year,
+                total_calls: itemOne[5].total_leads,
+                total_forms: itemOne[7].total_leads,
+                total_chats: itemOne[6].total_leads,
+                total_booked: itemOne[0].total_leads,
+                total_not_booked: itemOne[1].total_leads,
+                total_missed: itemOne[3].total_leads,
+                total_irrelevant: itemOne[2].total_leads,
+                total_not_scored: itemOne[4].total_leads,
+                avg_total_calls: `${Number(
+                  itemOne[5].total_leads /
+                    (itemOne[0].month_year.includes('January')
+                      ? 31
+                      : itemOne[0].month_year.includes('February')
+                      ? 28
+                      : itemOne[0].month_year.includes('March')
+                      ? 31
+                      : itemOne[0].month_year.includes('April')
+                      ? 30
+                      : itemOne[0].month_year.includes('May')
+                      ? 31
+                      : itemOne[0].month_year.includes('February')
+                      ? 28
+                      : itemOne[0].month_year.includes('June')
+                      ? 30
+                      : itemOne[0].month_year.includes('July')
+                      ? 31
+                      : itemOne[0].month_year.includes('August')
+                      ? 31
+                      : itemOne[0].month_year.includes('September')
+                      ? 30
+                      : itemOne[0].month_year.includes('October')
+                      ? 31
+                      : itemOne[0].month_year.includes('November')
+                      ? 30
+                      : itemOne[0].month_year.includes('December')
+                      ? 31
+                      : 30)
+                ).toFixed(2)}`,
+                avg_total_chats: `${Number(
+                  itemOne[6].total_leads /
+                    (itemOne[0].month_year.includes('January')
+                      ? 31
+                      : itemOne[0].month_year.includes('February')
+                      ? 28
+                      : itemOne[0].month_year.includes('March')
+                      ? 31
+                      : itemOne[0].month_year.includes('April')
+                      ? 30
+                      : itemOne[0].month_year.includes('May')
+                      ? 31
+                      : itemOne[0].month_year.includes('February')
+                      ? 28
+                      : itemOne[0].month_year.includes('June')
+                      ? 30
+                      : itemOne[0].month_year.includes('July')
+                      ? 31
+                      : itemOne[0].month_year.includes('August')
+                      ? 31
+                      : itemOne[0].month_year.includes('September')
+                      ? 30
+                      : itemOne[0].month_year.includes('October')
+                      ? 31
+                      : itemOne[0].month_year.includes('November')
+                      ? 30
+                      : itemOne[0].month_year.includes('December')
+                      ? 31
+                      : 30)
+                ).toFixed(2)}`,
+                avg_total_forms: `${Number(
+                  itemOne[7].total_leads /
+                    (itemOne[0].month_year.includes('January')
+                      ? 31
+                      : itemOne[0].month_year.includes('February')
+                      ? 28
+                      : itemOne[0].month_year.includes('March')
+                      ? 31
+                      : itemOne[0].month_year.includes('April')
+                      ? 30
+                      : itemOne[0].month_year.includes('May')
+                      ? 31
+                      : itemOne[0].month_year.includes('February')
+                      ? 28
+                      : itemOne[0].month_year.includes('June')
+                      ? 30
+                      : itemOne[0].month_year.includes('July')
+                      ? 31
+                      : itemOne[0].month_year.includes('August')
+                      ? 31
+                      : itemOne[0].month_year.includes('September')
+                      ? 30
+                      : itemOne[0].month_year.includes('October')
+                      ? 31
+                      : itemOne[0].month_year.includes('November')
+                      ? 30
+                      : itemOne[0].month_year.includes('December')
+                      ? 31
+                      : 30)
+                ).toFixed(2)}`,
+              }
+            })
             // console.log('newFormat', computedArrayThree)
             uploadData.value = computedArrayThree
             // console.log('uploadData', uploadData)
@@ -501,13 +561,11 @@ export default defineComponent({
 </script>
 <style lang="scss">
 .theme--dark {
- .apexcharts-tooltip{
-   color: rgb(61, 60, 60);
- }
- .apexcharts-canvas{
-  color: white;
-} 
+  .apexcharts-tooltip {
+    color: rgb(61, 60, 60);
+  }
+  .apexcharts-canvas {
+    color: white;
+  }
 }
-
-
 </style>

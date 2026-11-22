@@ -2,56 +2,63 @@
   <v-row class="workspace-dashboard">
     <v-col v-if="!nonAccountManagerUserRole" cols="12">
       <section class="workspace-overview" aria-label="Lead activity summary">
-        <div class="workspace-overview-heading"><h2>Lead activity</h2><p>{{ reportPeriod }}</p></div>
+        <div class="workspace-overview-heading">
+          <h2>Lead activity</h2>
+          <p>{{ reportPeriod }}</p>
+        </div>
         <dl class="workspace-metrics" :aria-busy="reportsLoading">
-          <div v-for="metric in leadMetrics" :key="metric.label" class="workspace-metric">
+          <div
+            v-for="metric in leadMetrics"
+            :key="metric.label"
+            class="workspace-metric"
+          >
             <dt>{{ metric.label }}</dt>
             <dd>{{ reportsLoading ? '—' : metric.value }}</dd>
           </div>
         </dl>
       </section>
     </v-col>
-    <v-col cols="12" md="12" v-if="!nonAccountManagerUserRole">
+    <v-col v-if="!nonAccountManagerUserRole" cols="12" md="12">
       <v-card :loading="reportsLoading">
         <v-card-title class="workspace-chart-heading">
           <span>Lead trends</span>
           <div class="workspace-period-controls">
-          <v-btn
-            x-small
-            class="mr-3"
-            elevation="1"
-            :color="currentReport == 'this_week' ? 'primary' : 'normal'"
-            :disabled="reportsLoading"
-            @click="setFilters('this_week')"
-            >This Week</v-btn
-          >
-          <v-btn
-            x-small
-            class="mr-3"
-            elevation="1"
-            :color="currentReport == 'last_week' ? 'primary' : 'normal'"
-            :disabled="reportsLoading"
-            @click="setFilters('last_week')"
-            >Last Week</v-btn
-          >
-          <v-btn
-            x-small
-            class="mr-3"
-            elevation="1"
-            :color="currentReport == 'last_month' ? 'primary' : 'normal'"
-            :disabled="reportsLoading"
-            @click="setFilters('last_month')"
-            >Last Month</v-btn
-          >
-          <v-btn
-            x-small
-            class="mr-0"
-            elevation="1"
-            :color="currentReport == 'this_month' ? 'primary' : 'normal'"
-            :disabled="reportsLoading"
-            @click="setFilters('this_month')"
-            >This Month</v-btn
-          >
+            <v-btn
+              x-small
+              class="mr-3"
+              elevation="1"
+              :color="currentReport == 'this_week' ? 'primary' : 'normal'"
+              :disabled="reportsLoading"
+              @click="setFilters('this_week')"
+              >This Week</v-btn
+            >
+            <v-btn
+              x-small
+              class="mr-3"
+              elevation="1"
+              :color="currentReport == 'last_week' ? 'primary' : 'normal'"
+              :disabled="reportsLoading"
+              @click="setFilters('last_week')"
+              >Last Week</v-btn
+            >
+            <v-btn
+              x-small
+              class="mr-3"
+              elevation="1"
+              :color="currentReport == 'last_month' ? 'primary' : 'normal'"
+              :disabled="reportsLoading"
+              @click="setFilters('last_month')"
+              >Last Month</v-btn
+            >
+            <v-btn
+              x-small
+              class="mr-0"
+              elevation="1"
+              :color="currentReport == 'this_month' ? 'primary' : 'normal'"
+              :disabled="reportsLoading"
+              @click="setFilters('this_month')"
+              >This Month</v-btn
+            >
           </div>
         </v-card-title>
         <v-card-text>
@@ -86,9 +93,9 @@ import {
 } from '@nuxtjs/composition-api'
 import { IBreadcrumbs } from '@/store'
 import VueApexCharts from 'vue-apexcharts'
+import moment from 'moment'
 import ReportsList from '~/components/ReportsList.vue'
 import useApi from '~/services/useApi'
-import moment from 'moment'
 import { formatDateRange } from '~/utils/dateFormat'
 
 export default defineComponent({
@@ -100,8 +107,8 @@ export default defineComponent({
   setup() {
     // vuex store
     const { $auth } = useContext()
-    const nonAccountManagerUserRole = computed(() =>
-      !$auth.hasScope('create report')
+    const nonAccountManagerUserRole = computed(
+      () => !$auth.hasScope('create report')
     )
     const router = useRouter()
     const reports = ref([])
@@ -164,12 +171,24 @@ export default defineComponent({
           },
         },
         grid: { strokeDashArray: 4 },
-        responsive: [{
-          breakpoint: 600,
-          options: { xaxis: { labels: { formatter: (value: string) => moment(value, 'YYYY-MM-DD', true).format('D') } } },
-        }],
+        responsive: [
+          {
+            breakpoint: 600,
+            options: {
+              xaxis: {
+                labels: {
+                  formatter: (value: string) =>
+                    moment(value, 'YYYY-MM-DD', true).format('D'),
+                },
+              },
+            },
+          },
+        ],
         xaxis: {
-          labels: { formatter: (value: string) => moment(value, 'YYYY-MM-DD', true).format('MMM D') },
+          labels: {
+            formatter: (value: string) =>
+              moment(value, 'YYYY-MM-DD', true).format('MMM D'),
+          },
           categories:
             reports &&
             reports.value.map((c: any) => {
@@ -211,13 +230,22 @@ export default defineComponent({
     const reportPeriod = computed(() => {
       const { date_start, date_end } = reportsFilters.value
       const range = formatDateRange(date_start, date_end)
-      return range ? [range.startLabel, range.endLabel].filter(Boolean).join('–') : ''
+      return range
+        ? [range.startLabel, range.endLabel].filter(Boolean).join('–')
+        : ''
     })
 
-    const leadMetrics = computed(() => graphSeries.value.map(series => ({
-      label: series.name,
-      value: series.data.reduce((total: number, count: number) => total + (Number(count) || 0), 0).toLocaleString('en-US'),
-    })))
+    const leadMetrics = computed(() =>
+      graphSeries.value.map((series) => ({
+        label: series.name,
+        value: series.data
+          .reduce(
+            (total: number, count: number) => total + (Number(count) || 0),
+            0
+          )
+          .toLocaleString('en-US'),
+      }))
+    )
 
     const setFilters = (val: string) => {
       if (val === 'this_week') {
@@ -262,14 +290,13 @@ export default defineComponent({
     }
 
     onBeforeMount(() => {
-      nonAccountManagerUserRole.value ? router.push('/vpn-setup') : ''
+      if (nonAccountManagerUserRole.value) router.push('/vpn-setup')
     })
 
     onMounted(() => {
-      !nonAccountManagerUserRole.value ? fetchLeadSummary() : ''
+      if (!nonAccountManagerUserRole.value) fetchLeadSummary()
       // nonAccountManagerUserRole.value ? router.push('/vpn-setup') : ''
     })
-    
 
     return {
       userFullName,

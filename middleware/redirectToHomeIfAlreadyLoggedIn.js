@@ -1,5 +1,5 @@
-export default function ({redirect, store}) {
-  const isAuthenticated = store.getters['users/isAuthenticated'] ? true : false
+export default function ({ store }) {
+  const isAuthenticated = !!store.getters['users/isAuthenticated']
   if (isAuthenticated) {
     // redirect({path: '/'})
   }

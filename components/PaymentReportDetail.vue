@@ -25,16 +25,16 @@
   </div>
 </template>
 <script>
-import { defineComponent, ref, computed } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import { PaymentReportColumns } from '~/utils/reports-upload/payment-report'
 
 export default defineComponent({
   props: {
-    scorer: [String, Number],
-    report: Array,
-    payRate: [Number, String],
+    scorer: { type: [String, Number], default: undefined },
+    report: { type: Array, default: undefined },
+    payRate: { type: [Number, String], default: undefined },
   },
-  setup(props) {
+  setup(_props) {
     return {
       headers: PaymentReportColumns(),
     }

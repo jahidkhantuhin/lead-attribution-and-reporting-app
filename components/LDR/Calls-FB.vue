@@ -2,10 +2,10 @@
   <div>
     <v-data-table
       :class="{
-      'elevation-1': true,
-      'data-table': true,
-      'dark-page': $vuetify.theme.dark,
-    }"
+        'elevation-1': true,
+        'data-table': true,
+        'dark-page': $vuetify.theme.dark,
+      }"
       :headers="callsHeader"
       :no-data-text="`No Calls`"
       :footer-props="{
@@ -19,18 +19,18 @@
       :fixed-header="true"
       height="700px"
     >
-      <template v-slot:item.other_details.lead_source="props">
+      <template #item.other_details.lead_source="props">
         <span style="text-transform: capitalize">
           {{ props.item.other_details.lead_source }}</span
         >
       </template>
-      <template v-slot:item.answering_number="props">
+      <template #item.answering_number="props">
         <span> {{ props.item.other_details.answering_number | usPhone }}</span>
       </template>
-      <template v-slot:item.marketing_number="props">
+      <template #item.marketing_number="props">
         <span> {{ props.item.other_details.marketing_number | usPhone }}</span>
       </template>
-      <template v-slot:item.caller_number="props">
+      <template #item.caller_number="props">
         <span>
           {{ props.item.caller_number | usPhone }}
           <a
@@ -45,21 +45,21 @@
       <template #item.call_duration="{ item }">
         <formatted-duration :value="item.call_duration" />
       </template>
-      <template v-slot:item.day="props">
+      <template #item.day="props">
         <formatted-date
           :date="props.item.call_start"
-          :formatString="Only_Day"
+          :format-string="onlyDay"
         ></formatted-date>
       </template>
-      <template v-slot:item.procedure="props">
+      <template #item.procedure>
         <span>Root Canal</span>
       </template>
-      <template v-slot:item.score.booked_appointment="props">
+      <template #item.score.booked_appointment="props">
         <span style="text-transform: capitialize">
           {{ props.item.score && props.item.score.booked_appointment }}
         </span>
       </template>
-      <template v-slot:item.score.comment="props">
+      <template #item.score.comment="props">
         <span v-if="!props.item.score">Not scored yet.</span>
         <truncate-text
           v-else
@@ -67,19 +67,19 @@
           title="Comment"
           class="mb-0"
           :button="true"
-          :showText="'Show Comment'"
+          :show-text="'Show Comment'"
           :text="props.item.score.comment"
         ></truncate-text>
       </template>
-      <template v-slot:item.landing_page_url="props">
+      <template #item.landing_page_url="props">
         <truncate-text
+          v-if="props.item && props.item.other_details"
           class="mb-0"
           title="Landing page url "
-          v-if="props.item && props.item.other_details"
           :text="props.item.other_details.landing_page_url"
         ></truncate-text>
       </template>
-      <template v-slot:item.call_start="props">
+      <template #item.call_start="props">
         <formatted-date
           :timezone="
             props.item && props.item.campaign && props.item.campaign.timezone
@@ -87,7 +87,7 @@
           :date="props.item.call_start"
         ></formatted-date>
       </template>
-      <template v-slot:item.call_status="props">
+      <template #item.call_status="props">
         <workspace-badge :value="props.item.call_status" />
       </template>
     </v-data-table>
@@ -97,10 +97,10 @@
 <script lang="ts">
 import { defineComponent } from '@nuxtjs/composition-api'
 import { callAudio } from '~/plugins/callAudio'
-import { ldr_FB_CallsColumns } from '~/utils/reports-upload/ldr/columns'
+import { ldrFbCallsColumns } from '~/utils/reports-upload/ldr/columns'
 import FormattedDate from '~/components/FormattedDate.vue'
 import TruncateText from '~/components/TruncateText.vue'
-import { Only_Day } from '~/utils/dateFormat'
+import { onlyDay } from '~/utils/dateFormat'
 
 export default defineComponent({
   components: {
@@ -120,9 +120,9 @@ export default defineComponent({
   },
   setup() {
     return {
-      callsHeader: ldr_FB_CallsColumns(),
+      callsHeader: ldrFbCallsColumns(),
       callAudio,
-      Only_Day,
+      onlyDay,
     }
   },
 })

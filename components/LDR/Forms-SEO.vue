@@ -15,22 +15,22 @@
       :fixed-header="true"
       height="700px"
     >
-      <template v-slot:item.lead.phone="props">
+      <template #item.lead.phone="props">
         <span> {{ props.item.lead.phone | usPhone }}</span>
       </template>
-      <template v-slot:item.lead.page_visited="props">
+      <template #item.lead.page_visited="props">
         <truncate-text
           :text="props.item.lead.page_visited"
           title="Show URL"
           :url="true"
-          showText="Show URL"
+          show-text="Show URL"
           :button="true"
         ></truncate-text>
       </template>
-      <template v-slot:item.leademail="props">
+      <template #item.leademail="props">
         <span>{{ props.item.lead.email }}</span>
       </template>
-      <template v-slot:item.date="props">
+      <template #item.date="props">
         <formatted-date :date="props.item.date"></formatted-date>
       </template>
       <template #item.lead.message="{ item }">
@@ -39,7 +39,7 @@
           title="Lead Message"
           :url="false"
           :quotes="true"
-          showText="Lead Message"
+          show-text="Lead Message"
           :button="true"
         ></truncate-text>
       </template>
@@ -49,7 +49,7 @@
 
 <script lang="ts">
 import { defineComponent } from '@nuxtjs/composition-api'
-import { ldr_SEO_FormsColumns } from '~/utils/reports-upload/ldr/columns'
+import { ldrSeoFormsColumns } from '~/utils/reports-upload/ldr/columns'
 
 import FormattedDate from '~/components/FormattedDate.vue'
 import TruncateText from '~/components/TruncateText.vue'
@@ -68,7 +68,7 @@ export default defineComponent({
   },
   setup() {
     return {
-      formsHeader: ldr_SEO_FormsColumns(),
+      formsHeader: ldrSeoFormsColumns(),
     }
   },
 })

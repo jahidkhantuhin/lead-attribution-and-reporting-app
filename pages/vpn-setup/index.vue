@@ -2,170 +2,187 @@
   <div>
     <div>
       <v-row class="my-6" justify="center">
-      <v-col xl="8" lg="8" md="8" sm="12">
-        <!-- <VpnSetupForm
+        <v-col xl="8" lg="8" md="8" sm="12">
+          <!-- <VpnSetupForm
           @cancel="$router.push(`/vpn-setup/`)"
           @submit="loadFiltersFromURL()"
         ></VpnSetupForm> -->
-        <div>
           <div>
-            <v-row v-if="connectedToVpn">
-              <v-col cols="12">
-                <v-alert
-                  shaped
-                  prominent
-                  type="error"
-                >
-                  You are currently connected to wm4d vpn. Please disconnect from vpn and <v-btn small class="info" @click="refreshPage"> Click Here</v-btn>
-                </v-alert>
-              </v-col>
-            </v-row>
+            <div>
+              <v-row v-if="connectedToVpn">
+                <v-col cols="12">
+                  <v-alert shaped prominent type="error">
+                    You are currently connected to wm4d vpn. Please disconnect
+                    from vpn and
+                    <v-btn small class="info" @click="refreshPage">
+                      Click Here</v-btn
+                    >
+                  </v-alert>
+                </v-col>
+              </v-row>
+            </div>
+            <div>
+              <v-form v-model="formValid">
+                <v-card>
+                  <v-card-title> Add IP Address </v-card-title>
+                  <v-row>
+                    <v-col cols="12" xl="6" lg="6" md="8" sm="12">
+                      <v-card-text>
+                        <v-autocomplete
+                          ref="autoComplete"
+                          v-model="formData.url"
+                          label="Search for a site"
+                          clearable
+                          placeholder="Search for a client *"
+                          :items="clientsList"
+                          :loading="clientsListLoading"
+                          item-text="url"
+                          :filter="() => true"
+                          item-value="url"
+                          :no-data-text="
+                            clientsListLoading === false &&
+                            searchInput &&
+                            searchInput.length > 0
+                              ? 'No Results found'
+                              : clientsListLoading
+                              ? 'Loading'
+                              : 'Search something'
+                          "
+                          :search-input.sync="searchInput"
+                          :rules="rules.url"
+                          @keydown="fetchClients(searchInput)"
+                          @change="onChange"
+                          @keydown.enter="formValid && submit()"
+                        >
+                        </v-autocomplete>
+                      </v-card-text>
+                    </v-col>
+                    <v-col cols="4" xl="2" lg="2" md="4" sm="4">
+                      <v-card-text>
+                        <v-select
+                          v-model="formData.number_of_hours"
+                          label="Period"
+                          :items="numberOfHours"
+                          :rules="rules.number_of_hours"
+                          clearable
+                        ></v-select>
+                      </v-card-text>
+                    </v-col>
+                    <v-col
+                      v-if="adminUser"
+                      cols="8"
+                      xl="4"
+                      lg="4"
+                      md="6"
+                      sm="8"
+                    >
+                      <v-card-text>
+                        <v-text-field
+                          v-model="formData.ip"
+                          label="IP Address"
+                          class="mb-3"
+                          :rules="rules.ip"
+                          clearable
+                        >
+                        </v-text-field>
+                      </v-card-text>
+                    </v-col>
+                    <v-col
+                      v-if="!adminUser"
+                      cols="8"
+                      xl="4"
+                      lg="4"
+                      md="6"
+                      sm="8"
+                    >
+                      <v-card-text>
+                        <v-text-field
+                          v-model="formData.ip"
+                          label="IP Address"
+                          class="mb-3"
+                          :rules="rules.ip"
+                          readonly
+                        >
+                        </v-text-field>
+                      </v-card-text>
+                    </v-col>
+                  </v-row>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn :disabled="busy" @click="route.push('/vpn-setup')"
+                      >Cancel</v-btn
+                    >
+                    <v-btn
+                      :disabled="!formValid || connectedToVpn"
+                      :loading="busy"
+                      color="primary"
+                      @click.prevent="formValid && submit()"
+                    >
+                      Submit
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-form>
+            </div>
           </div>
-          <div>
-            <v-form v-model="formValid">
-              <v-card>
-                <v-card-title> Add IP Address </v-card-title>
-                <v-row>
-                  <v-col cols="12" xl="6" lg="6" md="8" sm="12">
-                    <v-card-text>
-                      <v-autocomplete
-                        ref="autoComplete"
-                        v-model="formData.url"
-                        label="Search for a site"
-                        clearable
-                        placeholder="Search for a client *"
-                        :items="clientsList"
-                        :loading="clientsListLoading"
-                        item-text="url"
-                        :filter="() => true"
-                        item-value="url"
-                        :no-data-text="
-                          clientsListLoading === false && searchInput && searchInput.length > 0
-                            ? 'No Results found'
-                            : clientsListLoading
-                            ? 'Loading'
-                            : 'Search something'
-                        "
-                        :search-input.sync="searchInput"
-                        @keydown="fetchClients(searchInput)"
-                        @change="onChange"
-                        :rules="rules.url"
-                        @keydown.enter="formValid && submit()"
-                      >
-                      </v-autocomplete>
-                    </v-card-text>
-                  </v-col>
-                  <v-col cols="4" xl="2" lg="2" md="4" sm="4">
-                    <v-card-text>
-                      <v-select
-                        label="Period"
-                        :items="numberOfHours"
-                        v-model="formData.number_of_hours"
-                        :rules="rules.number_of_hours"
-                        clearable
-                      ></v-select>
-                    </v-card-text>
-                  </v-col>
-                  <v-col cols="8" xl="4" lg="4" md="6" sm="8" v-if="adminUser">
-                    <v-card-text >
-                      <v-text-field
-                        label="IP Address"
-                        class="mb-3"
-                        v-model="formData.ip"
-                        :rules="rules.ip"
-                        clearable
-                      >
-                      </v-text-field>
-                    </v-card-text>
-                  </v-col>
-                  <v-col cols="8" xl="4" lg="4" md="6" sm="8" v-if="!adminUser">
-                    <v-card-text >
-                      <v-text-field
-                        label="IP Address"
-                        class="mb-3"
-                        v-model="formData.ip"
-                        :rules="rules.ip"
-                        readonly
-                      >
-                      </v-text-field>
-                    </v-card-text>
-                  </v-col>
-                  
-                </v-row>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn :disabled="busy" @click="route.push('/vpn-setup')">Cancel</v-btn>
-                  <v-btn
-                    :disabled="!formValid || connectedToVpn"
-                    :loading="busy"
-                    color="primary"
-                    @click.prevent="formValid && submit()"
-                  >
-                    Submit
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-form>
-          </div>
-        </div>
-      </v-col>
-    </v-row>
+        </v-col>
+      </v-row>
     </div>
     <div>
-        <v-row
-          :class="{
-            'my-6': true,
-            'client-records': true,
-          }"
-        >
-          <v-col md="12">
-            <v-card :loading="busy">
-              <v-toolbar flat>
-                <v-toolbar-title>VPN activity log</v-toolbar-title>
-              </v-toolbar>
-              <v-data-table
-                :items="items"
-                :headers="tableHeaders"
-                @pagination="handlePaginationChange"
-                :options.sync="tableOptions"
-                :fixed-header="true"
-                height="calc(100vh - 318px)"
-                class="elevation-1"
-                :footer-props="{
-                  'items-per-page-options': itemsPerPageOptions,
-                }"
-                :server-items-length="pagination.total"
-              >
+      <v-row
+        :class="{
+          'my-6': true,
+          'client-records': true,
+        }"
+      >
+        <v-col md="12">
+          <v-card :loading="busy">
+            <v-toolbar flat>
+              <v-toolbar-title>VPN activity log</v-toolbar-title>
+            </v-toolbar>
+            <v-data-table
+              :items="items"
+              :headers="tableHeaders"
+              :options.sync="tableOptions"
+              :fixed-header="true"
+              height="calc(100vh - 318px)"
+              class="elevation-1"
+              :footer-props="{
+                'items-per-page-options': itemsPerPageOptions,
+              }"
+              :server-items-length="pagination.total"
+              @pagination="handlePaginationChange"
+            >
               <template #item.expiry_date="{ item }">
                 <formatted-date :date="item.expiry_date" />
               </template>
-              <template v-slot:item.user.status="{ item }">
+              <template #item.user.status="{ item }">
                 <workspace-badge :value="item.user && item.user.status" />
               </template>
               <template #item.user.first_name="{ item }">
-                  <span>
-                    {{ item.user.first_name }} {{ item.user.last_name }}
-                  </span>
-                </template>
-                <template #item.actions="{ item }">
-                  <v-menu>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn small v-bind="attrs" v-on="on"> Actions </v-btn>
-                    </template>
-                    <v-list>
-                      <v-list-item
-                        title="Delete Location"
-                        @click="handleDeleteIP(item.id)"
-                      >
-                        <v-list-item-title>Delete</v-list-item-title>
-                      </v-list-item>
-                    </v-list>
-                  </v-menu>
-                </template>
-              </v-data-table>
-            </v-card>
-          </v-col>
-        </v-row>
+                <span>
+                  {{ item.user.first_name }} {{ item.user.last_name }}
+                </span>
+              </template>
+              <template #item.actions="{ item }">
+                <v-menu>
+                  <template #activator="{ on, attrs }">
+                    <v-btn small v-bind="attrs" v-on="on"> Actions </v-btn>
+                  </template>
+                  <v-list>
+                    <v-list-item
+                      title="Delete Location"
+                      @click="handleDeleteIP(item.id)"
+                    >
+                      <v-list-item-title>Delete</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </template>
+            </v-data-table>
+          </v-card>
+        </v-col>
+      </v-row>
     </div>
   </div>
 </template>
@@ -173,7 +190,6 @@
 <script lang="ts">
 import {
   defineComponent,
-  onMounted,
   ref,
   watch,
   useRouter,
@@ -185,50 +201,46 @@ import {
 } from '@nuxtjs/composition-api'
 // import swalMixin, { showConfirmDialog, showToast } from '~/utils/swalMixin'
 import useClientRecords from '@/services/useClientRecords'
-import useClientLocations from '~/services/useClientLocations'
-import ClientRecordsForm from '@/components/forms/ClientRecordsForm.vue'
+
+import useLocationRecords from '@/services/useLocationRecords'
+
 // import { AM_ROLE } from '~/utils/UserEnums'
 // import { Dictionary } from '~/node_modules/@types/lodash'
 import FormattedDate from '~/components/FormattedDate.vue'
-import ClientStatusChip from '~/components/ClientStatusChip.vue'
-import useUsers from '~/services/useUsers'
+
 import useAxios from '~/plugins/useAxios'
-import UnauthorizedUser from '~/components/UnauthorizedUser.vue'
-import VpnSetupForm from '@/components/forms/VpnSetupForm.vue'
+
 // import LocationForm from './LocationForm.vue'
 // import StaffForm from './StaffForm.vue'
 import swalMixin, { showConfirmDialog, showToast } from '~/utils/swalMixin'
 // import useUsers from '~/services/useUsers'
 import useApi from '~/services/useApi'
-import useLocationRecords from '@/services/useLocationRecords'
 // import useAxios from '~/plugins/useAxios'
 
 let timeout: any
 
 interface Client {
-      url?: string
-      ip?: string
-      location_ids?: any[]
-    }
+  url?: string
+  ip?: string
+  location_ids?: any[]
+}
 
 export default defineComponent({
   components: {
-    VpnSetupForm,
-    ClientRecordsForm,
     FormattedDate,
-    ClientStatusChip,
-    UnauthorizedUser,
   },
+  middleware: 'isAuthenticated',
   props: {
     id: {
       type: [String, Number],
+      default: undefined,
     },
     name: {
       type: [String, Number],
+      default: undefined,
     },
   },
-  middleware: 'isAuthenticated',
-  setup(_props, { parent, emit }) {
+  setup(_props, { parent }) {
     const { $auth } = useContext()
 
     const breadcrumbs = [
@@ -247,15 +259,15 @@ export default defineComponent({
     const pageTitle = `VPN Setup`
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
 
-    //Added for VPN Activity Log
-    const nonAccountManagerUserRole = computed(() =>
-      !$auth.hasScope('vpn access')
+    // Added for VPN Activity Log
+    const nonAccountManagerUserRole = computed(
+      () => !$auth.hasScope('vpn access')
     )
     const axios = useAxios()
 
     const statusOptions = ref([])
     const statusOptionsLoading = ref(false)
-    const { deleteLocation } = useClientLocations()
+
     const loadingAccountManagers = ref(false)
     const route = useRoute()
     // const $swal2 = swalMixin((parent as any).$swal as any)
@@ -269,8 +281,8 @@ export default defineComponent({
     })
     const router = useRouter()
     // const store = useStore()
-    const { list, listStatus } = useClientRecords()
-    const { list: listUsers } = useUsers()
+    const { list } = useClientRecords()
+
     const busy = ref(false)
 
     const items: any = ref([])
@@ -297,7 +309,7 @@ export default defineComponent({
     //     width: '130px',
     //     value: `user.status`,
     //   },
-      
+
     //   {
     //     text: `Site`,
     //     align: `start`,
@@ -322,88 +334,90 @@ export default defineComponent({
     // ])
 
     const tableHeaders = computed(() => {
-      return ($auth.user?.role === 'super admin' ? [
-      {
-        text: `Actions`,
-        align: `start`,
-        width: '130px',
-        sortable: false,
-        value: `actions`,
-      },
-      {
-        text: `User Name`,
-        align: `start`,
-        sortable: true,
-        value: `user.first_name`,
-        width: '200px',
-      },
-      {
-        text: `Status`,
-        align: `start`,
-        sortable: true,
-        width: '130px',
-        value: `user.status`,
-      },
-      
-      {
-        text: `Site`,
-        align: `start`,
-        sortable: true,
-        width: '130px',
-        value: `site.url`,
-      },
-      {
-        text: `IP Address`,
-        align: `start`,
-        sortable: true,
-        width: '160px',
-        value: `ip`,
-      },
-      {
-        text: `Expiry Date`,
-        align: `start`,
-        width: '130px',
-        sortable: false,
-        value: `expiry_date`,
-      },
-      ] : [
-        {
-        text: `User Name`,
-        align: `start`,
-        sortable: true,
-        value: `user.first_name`,
-        width: '200px',
-      },
-      {
-        text: `Status`,
-        align: `start`,
-        sortable: true,
-        width: '130px',
-        value: `user.status`,
-      },
-      
-      {
-        text: `Site`,
-        align: `start`,
-        sortable: true,
-        width: '130px',
-        value: `site.url`,
-      },
-      {
-        text: `IP Address`,
-        align: `start`,
-        sortable: true,
-        width: '160px',
-        value: `ip`,
-      },
-      {
-        text: `Expiry Date`,
-        align: `start`,
-        width: '130px',
-        sortable: false,
-        value: `expiry_date`,
-      },
-      ])
+      return $auth.user?.role === 'super admin'
+        ? [
+            {
+              text: `Actions`,
+              align: `start`,
+              width: '130px',
+              sortable: false,
+              value: `actions`,
+            },
+            {
+              text: `User Name`,
+              align: `start`,
+              sortable: true,
+              value: `user.first_name`,
+              width: '200px',
+            },
+            {
+              text: `Status`,
+              align: `start`,
+              sortable: true,
+              width: '130px',
+              value: `user.status`,
+            },
+
+            {
+              text: `Site`,
+              align: `start`,
+              sortable: true,
+              width: '130px',
+              value: `site.url`,
+            },
+            {
+              text: `IP Address`,
+              align: `start`,
+              sortable: true,
+              width: '160px',
+              value: `ip`,
+            },
+            {
+              text: `Expiry Date`,
+              align: `start`,
+              width: '130px',
+              sortable: false,
+              value: `expiry_date`,
+            },
+          ]
+        : [
+            {
+              text: `User Name`,
+              align: `start`,
+              sortable: true,
+              value: `user.first_name`,
+              width: '200px',
+            },
+            {
+              text: `Status`,
+              align: `start`,
+              sortable: true,
+              width: '130px',
+              value: `user.status`,
+            },
+
+            {
+              text: `Site`,
+              align: `start`,
+              sortable: true,
+              width: '130px',
+              value: `site.url`,
+            },
+            {
+              text: `IP Address`,
+              align: `start`,
+              sortable: true,
+              width: '160px',
+              value: `ip`,
+            },
+            {
+              text: `Expiry Date`,
+              align: `start`,
+              width: '130px',
+              sortable: false,
+              value: `expiry_date`,
+            },
+          ]
     })
 
     // const handleDeleteLocation = (id: any) => {
@@ -425,7 +439,7 @@ export default defineComponent({
     //     }
     //     getClientRecords()
     //   })
-      
+
     // }
     // set the page breadcrumbs
     // const breadcrumbs = [
@@ -451,9 +465,9 @@ export default defineComponent({
     watch(
       tableOptions,
       (v: any) => {
-        tablePage.value = v.page;
+        tablePage.value = v.page
         itemsPerPage.value = v.itemsPerPage
-        
+
         // if (tableOptions.value.sortBy[0]) {
         //   filters.value.sort_by =
         //     tableOptions.value.sortBy[0] === 'fullname'
@@ -481,23 +495,22 @@ export default defineComponent({
       //       filters.value.sort_by + `:` + filters.value?.sorting?.toLowerCase(),
       //   }
 
-        busy.value = true
-        axios   
-        .get(
-          '/vpn-access',
-          {params: { 
+      busy.value = true
+      axios
+        .get('/vpn-access', {
+          params: {
             limit: itemsPerPage.value,
-            page: tablePage.value
-            }, 
-            withCredentials: true})
-          .then((resp) => {
-            items.value = resp.data.data.result
-            pagination.value = resp.data.data.pagination
-            console.log('CR', items.value)
-          })
-          .finally(() => {
-            busy.value = false
-          })
+            page: tablePage.value,
+          },
+          withCredentials: true,
+        })
+        .then((resp) => {
+          items.value = resp.data.data.result
+          pagination.value = resp.data.data.pagination
+        })
+        .finally(() => {
+          busy.value = false
+        })
       // }
     }
 
@@ -518,13 +531,13 @@ export default defineComponent({
       const query = route.value.query
       if (query.page) {
         tablePage.value = +query.page
-        delete query['page']
+        delete query.page
       } else {
         tablePage.value = 1
       }
       if (query.itemsPerPage) {
         itemsPerPage.value = +query.itemsPerPage
-        delete query['itemsPerPage']
+        delete query.itemsPerPage
       } else {
         itemsPerPage.value = 20
       }
@@ -551,11 +564,11 @@ export default defineComponent({
       // getClientRecords()
     })
 
-    //Adding for VPN Setup Form
+    // Adding for VPN Setup Form
     const ipAddress = ref()
     // const { $auth } = useContext()
-    const adminUser = computed(() =>
-      $auth.user?.role === 'admin' || $auth.user?.role === 'super admin'
+    const adminUser = computed(
+      () => $auth.user?.role === 'admin' || $auth.user?.role === 'super admin'
     )
     const refreshPage = () => {
       window.location.reload()
@@ -575,17 +588,16 @@ export default defineComponent({
     const entries = ref<any>([])
     const isLoading = ref(false)
     const search = ref(null)
-    const { create} = useLocationRecords()
+    const { create } = useLocationRecords()
     // const axios = useAxios()
-    const numberOfHours  = ref([
-      {text: 72, value: 72},
-      {text: 96, value: 96},
+    const numberOfHours = ref([
+      { text: 72, value: 72 },
+      { text: 96, value: 96 },
     ])
 
-
-  watch(search, () => {
-      if (entries.length > 0) { 
-      return
+    watch(search, () => {
+      if (entries.length > 0) {
+        return
       }
       if (isLoading.value) {
         return
@@ -593,13 +605,10 @@ export default defineComponent({
 
       isLoading.value = true
       list({})
-          .then((resp) => {
-            entries.value = resp.data.data.result ? resp.data.data.result : []
-            console.log('LOCATION RECORDS', entries.value)
-          })
-        .catch(err => {
-          console.log(err)
+        .then((resp) => {
+          entries.value = resp.data.data.result ? resp.data.data.result : []
         })
+        .catch((_err) => {})
         .finally(() => (isLoading.value = false))
     })
 
@@ -611,7 +620,7 @@ export default defineComponent({
         if (searchInput.value) {
           clientsListLoading.value = true
           const res = await get(
-            `/sites?name=${searchInput.value}&date_start=2022-08-01&date_end=2022-08-31`,
+            `/sites?name=${searchInput.value}&date_start=2022-08-01&date_end=2022-08-31`
           )
           clientsList.value = res.data.data.result
           clientsListLoading.value = false
@@ -619,11 +628,7 @@ export default defineComponent({
       }, 300)
     }
 
-    const onChange = () => {
-      const client = clientsList.value.find(
-        (c: any) => c.id === formData.value.url
-      )
-    }
+    const onChange = () => {}
 
     watch(searchInput, () => {
       if (!searchInput.value) {
@@ -631,24 +636,22 @@ export default defineComponent({
       }
     })
 
-    const locationId = ref(
-      router.currentRoute.query.id
-    )
-    
-    const locationName = ref(
-      router.currentRoute.query.name
-    )
-    const formData = ref<Client>({
-    })
+    const locationId = ref(router.currentRoute.query.id)
+
+    const locationName = ref(router.currentRoute.query.name)
+    const formData = ref<Client>({})
 
     const locations = ref([])
-
 
     const rules = {
       url: [(v: string | number) => !!v || 'Client is required'],
       ip: [
         (v: string | number) => !!v || 'IP Address is required',
-        (v: string) => /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(v) || 'IP Address must be valid',],
+        (v: string) =>
+          /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(
+            v
+          ) || 'IP Address must be valid',
+      ],
       number_of_hours: [(v: string | number) => !!v || 'Period is required'],
 
       //   return !!(e.id.length > 0) || 'Location is required'
@@ -661,15 +664,15 @@ export default defineComponent({
 
     const submit = () => {
       busy.value = true
-      axios   
+      axios
         .post(
           '/vpn-access',
-          {...formData.value},
+          { ...formData.value },
           {
             withCredentials: true,
           }
         )
-        .then((resp) => {
+        .then((_resp) => {
           loadFiltersFromURL()
           showToast($swal, {
             title: `Request Successfully Sent!`,
@@ -681,19 +684,16 @@ export default defineComponent({
       busy.value = true
       create({
         url: formData.value.url,
-        location_ids: [locationId.value]
+        location_ids: [locationId.value],
       })
-        .then((resp) => {
+        .then((_resp) => {
           showToast($swal, {
             title: `Location Successfully added!`,
           })
 
           router.push(`/location-records`)
-          
         })
-        .finally(() => 
-        (busy.value = false)
-        )
+        .finally(() => (busy.value = false))
     }
 
     const handleDeleteIP = (id: any) => {
@@ -704,14 +704,13 @@ export default defineComponent({
       }).then(async (result: any) => {
         if (result.isConfirmed) {
           busy.value = true
-          await axios   
-        .delete(
-          `/vpn-access/${id}`,
-          { 
-            withCredentials: true})
+          await axios
+            .delete(`/vpn-access/${id}`, {
+              withCredentials: true,
+            })
             .finally(() => {
-            busy.value = false
-          })
+              busy.value = false
+            })
           showToast($swal, {
             title: 'IP deleted',
             icon: 'success',
@@ -719,7 +718,6 @@ export default defineComponent({
         }
         getClientRecords()
       })
-      
     }
 
     const isEditing = computed(() => {
@@ -731,15 +729,16 @@ export default defineComponent({
 
       return false
     })
-    onBeforeMount(async() => {
+    onBeforeMount(async () => {
       // isLoading.value = true
-      await axios   
-        .get(
-          '', {baseURL: 'https://api.ipify.org/?format=json'}
-        )
+      await axios
+        .get('', { baseURL: 'https://api.ipify.org/?format=json' })
         .then((resp) => {
           // isLoading.value = false
-          if ( resp.data.ip === '34.238.213.152' || resp.data.ip === '54.179.205.95' ) {
+          if (
+            resp.data.ip === '34.238.213.152' ||
+            resp.data.ip === '54.179.205.95'
+          ) {
             connectedToVpn.value = true
           } else {
             connectedToVpn.value = false

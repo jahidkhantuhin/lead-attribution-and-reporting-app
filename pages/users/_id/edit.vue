@@ -6,9 +6,9 @@
           <v-card-title> Update a user </v-card-title>
           <user-form
             scope="admin"
+            :user-id="userId"
             @done="onUpdate"
             @cancel="$router.push('/users/')"
-            :userId="userId"
           ></user-form>
         </v-card>
       </v-col>
@@ -19,7 +19,6 @@
 <script lang="ts">
 import {
   defineComponent,
-  onMounted,
   ref,
   useRoute,
   useRouter,
@@ -27,7 +26,6 @@ import {
 } from '@nuxtjs/composition-api'
 import { IBreadcrumbs } from '@/store'
 
-import useUsers from '@/services/useUsers'
 import UserForm from '~/components/forms/UserForm.vue'
 import RestrictedComponent from '~/components/RestrictedComponent.vue'
 
@@ -40,7 +38,7 @@ export default defineComponent({
   setup() {
     const store = useStore()
     const router = useRouter()
-    const usersApi = useUsers()
+
     const route = useRoute()
     const busy = ref(false)
 

@@ -1,41 +1,37 @@
 <template>
   <div>
     <v-simple-table>
-      <template>
-        <tbody>
-          <template>
-            
-            <tr>
-              <th>Conversions</th>
-              <td v-if="analytics && analytics.facebook">
-                {{ analytics.facebook.conversions }}
-              </td>
-              <td v-else></td>
-            </tr>
-            <tr>
-              <th>Impressions</th>
-              <td v-if="analytics && analytics.facebook">
-                {{ analytics.facebook.impressions }}
-              </td>
-              <td v-else></td>
-            </tr>
-            <tr>
-              <th>Clicks</th>
-              <td v-if="analytics && analytics.facebook">
-                {{ analytics.facebook.clicks }}
-              </td>
-              <td v-else></td>
-            </tr>
-            <tr>
-              <th>Total Spend</th>
-              <td v-if="analytics && analytics.facebook">
-                <b>$</b> {{ new Number(analytics.facebook.total_spend).toFixed(2) }}
-              </td>
-              <td v-else></td>
-            </tr>
-          </template>
-        </tbody>
-      </template>
+      <tbody>
+        <tr>
+          <th>Conversions</th>
+          <td v-if="analytics && analytics.facebook">
+            {{ analytics.facebook.conversions }}
+          </td>
+          <td v-else></td>
+        </tr>
+        <tr>
+          <th>Impressions</th>
+          <td v-if="analytics && analytics.facebook">
+            {{ analytics.facebook.impressions }}
+          </td>
+          <td v-else></td>
+        </tr>
+        <tr>
+          <th>Clicks</th>
+          <td v-if="analytics && analytics.facebook">
+            {{ analytics.facebook.clicks }}
+          </td>
+          <td v-else></td>
+        </tr>
+        <tr>
+          <th>Total Spend</th>
+          <td v-if="analytics && analytics.facebook">
+            <b>$</b>
+            {{ new Number(analytics.facebook.total_spend).toFixed(2) }}
+          </td>
+          <td v-else></td>
+        </tr>
+      </tbody>
     </v-simple-table>
   </div>
 </template>
@@ -47,7 +43,7 @@ export default defineComponent({
   props: {
     analytics: {
       type: Object,
-      default: {},
+      default: () => ({}),
     },
   },
   setup() {

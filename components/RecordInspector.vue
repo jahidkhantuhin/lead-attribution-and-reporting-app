@@ -2,24 +2,50 @@
   <div class="site-inspector">
     <section class="site-results" :aria-label="title + ' results'">
       <button
-        v-for="site in records" :key="site.id" type="button" class="site-result"
+        v-for="site in records"
+        :key="site.id"
+        type="button"
+        class="site-result"
         :aria-pressed="selected && String(selected.id) === String(site.id)"
         @click="select(site)"
       >
-        <span class="site-result-name"><strong><slot name="name" :record="site" /></strong><small><slot name="subtitle" :record="site" /></small></span>
-        <span class="site-result-meta"><slot name="metric" :record="site" /><workspace-badge :value="site.status" /></span>
+        <span class="site-result-name"
+          ><strong><slot name="name" :record="site" /></strong
+          ><small><slot name="subtitle" :record="site" /></small
+        ></span>
+        <span class="site-result-meta"
+          ><slot name="metric" :record="site" /><workspace-badge
+            :value="site.status"
+        /></span>
       </button>
-      <p v-if="!records.length && !loading" class="site-empty">No records match these filters.</p>
+      <p v-if="!records.length && !loading" class="site-empty">
+        No records match these filters.
+      </p>
     </section>
 
-    <v-dialog v-if="mobile" v-model="open" fullscreen transition="dialog-bottom-transition">
+    <v-dialog
+      v-if="mobile"
+      v-model="open"
+      fullscreen
+      transition="dialog-bottom-transition"
+    >
       <v-card>
-        <v-toolbar flat><v-toolbar-title>{{ title }}</v-toolbar-title><v-spacer /><v-btn icon :aria-label="'Close ' + title.toLowerCase()" @click="open = false"><v-icon>mdi-close</v-icon></v-btn></v-toolbar>
+        <v-toolbar flat
+          ><v-toolbar-title>{{ title }}</v-toolbar-title
+          ><v-spacer /><v-btn
+            icon
+            :aria-label="'Close ' + title.toLowerCase()"
+            @click="open = false"
+            ><v-icon>mdi-close</v-icon></v-btn
+          ></v-toolbar
+        >
         <slot v-if="selected && open" name="detail" :record="selected" />
       </v-card>
     </v-dialog>
     <slot v-else-if="selected" name="detail" :record="selected" />
-    <p v-else-if="!mobile && records.length" class="site-empty">Select a record to see its details.</p>
+    <p v-else-if="!mobile && records.length" class="site-empty">
+      Select a record to see its details.
+    </p>
   </div>
 </template>
 
@@ -36,16 +62,21 @@ export default defineComponent({
     const selectedId = ref(null)
     const open = ref(false)
     const mobile = computed(() => root.$vuetify.breakpoint.width < 800)
-    const selected = computed(() => props.records.find(site => String(site.id) === String(selectedId.value)) || (!mobile.value ? props.records[0] : null))
-    const select = site => {
+    const selected = computed(
+      () =>
+        props.records.find(
+          (site) => String(site.id) === String(selectedId.value)
+        ) || (!mobile.value ? props.records[0] : null)
+    )
+    const select = (site) => {
       selectedId.value = site.id
       if (mobile.value) open.value = true
     }
 
-    watch(selected, site => {
+    watch(selected, (site) => {
       if (!site) open.value = false
     })
-    watch(mobile, isMobile => {
+    watch(mobile, (isMobile) => {
       if (!isMobile) open.value = false
     })
 
@@ -78,7 +109,7 @@ export default defineComponent({
   text-align: left;
 }
 .site-result:hover,
-.site-result[aria-pressed="true"] {
+.site-result[aria-pressed='true'] {
   background: var(--workspace-tint);
   border-color: var(--workspace-blue);
 }

@@ -1,12 +1,12 @@
 <template>
-  <span >
+  <span>
     <!-- <v-avatar :height="height" :width="width" size="" max-width=""> -->
     <img
       :src="src"
       :style="{
         height: `${height}px`,
         width: `${width}px`,
-        borderRadius: `${radius}`
+        borderRadius: `${radius}`,
       }"
       alt="Profile Photo"
     />
@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@nuxtjs/composition-api'
+import { defineComponent } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   props: {
@@ -28,13 +28,13 @@ export default defineComponent({
       type: [String, Number],
     },
     radius: {
-      default: "",
+      default: '',
       type: String,
     },
     src: {
       default: '',
-      type: String
-    }
+      type: String,
+    },
   },
 })
 </script>

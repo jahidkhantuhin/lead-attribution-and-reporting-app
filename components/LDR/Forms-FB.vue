@@ -15,13 +15,13 @@
       :fixed-header="true"
       height="700px"
     >
-      <template v-slot:item.lead.phone_number="props">
+      <template #item.lead.phone_number="props">
         <span> {{ props.item.lead.phone_number | usPhone }}</span>
       </template>
-      <template v-slot:item.date="props">
+      <template #item.date="props">
         <formatted-date :date="props.item.date"></formatted-date>
       </template>
-      <template v-slot:item.phone_number="props">
+      <template #item.phone_number="props">
         <span v-if="props.item && props.item.lead">
           {{ props.item.lead.phone_number | usPhone }}
         </span>
@@ -32,15 +32,13 @@
 
 <script lang="ts">
 import { defineComponent } from '@nuxtjs/composition-api'
-import { ldr_FB_FormsColumns } from '~/utils/reports-upload/ldr/columns'
+import { ldrFbFormsColumns } from '~/utils/reports-upload/ldr/columns'
 
 import FormattedDate from '~/components/FormattedDate.vue'
-import TruncateText from '~/components/TruncateText.vue'
 
 export default defineComponent({
   components: {
     FormattedDate,
-    TruncateText,
   },
   props: {
     items: {
@@ -51,7 +49,7 @@ export default defineComponent({
   },
   setup() {
     return {
-      facebookHeader: ldr_FB_FormsColumns(),
+      facebookHeader: ldrFbFormsColumns(),
     }
   },
 })

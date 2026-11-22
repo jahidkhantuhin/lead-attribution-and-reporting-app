@@ -8,10 +8,18 @@
       <div class="profile-identity">
         <h2 id="profile-name">{{ userData.fullName }}</h2>
         <p v-if="userData.email">{{ userData.email }}</p>
-        <workspace-badge v-if="userData.role" :value="userData.role" kind="role" />
+        <workspace-badge
+          v-if="userData.role"
+          :value="userData.role"
+          kind="role"
+        />
       </div>
       <div class="profile-actions">
-        <v-btn color="primary" :disabled="!userData.id" @click="showUpdateForm = true">
+        <v-btn
+          color="primary"
+          :disabled="!userData.id"
+          @click="showUpdateForm = true"
+        >
           <v-icon left small>mdi-pencil-outline</v-icon>
           Edit profile
         </v-btn>
@@ -26,13 +34,21 @@
       <section class="profile-panel" aria-labelledby="profile-account">
         <h2 id="profile-account">Account details</h2>
         <dl class="profile-fields">
-          <div><dt>Full name</dt><dd>{{ userData.fullName }}</dd></div>
-          <div><dt>Email address</dt><dd>{{ userData.email || '—' }}</dd></div>
+          <div>
+            <dt>Full name</dt>
+            <dd>{{ userData.fullName }}</dd>
+          </div>
+          <div>
+            <dt>Email address</dt>
+            <dd>{{ userData.email || '—' }}</dd>
+          </div>
           <div v-if="userData.role">
-            <dt>Role</dt><dd><workspace-badge :value="userData.role" kind="role" /></dd>
+            <dt>Role</dt>
+            <dd><workspace-badge :value="userData.role" kind="role" /></dd>
           </div>
           <div v-if="userData.status != null">
-            <dt>Status</dt><dd><workspace-badge :value="userData.status" /></dd>
+            <dt>Status</dt>
+            <dd><workspace-badge :value="userData.status" /></dd>
           </div>
         </dl>
       </section>
@@ -40,7 +56,9 @@
       <section class="profile-panel" aria-labelledby="profile-permissions">
         <div class="profile-panel-heading">
           <h2 id="profile-permissions">Permissions</h2>
-          <span v-if="permissions.length" class="profile-count">{{ permissions.length }}</span>
+          <span v-if="permissions.length" class="profile-count">{{
+            permissions.length
+          }}</span>
         </div>
         <ul v-if="permissions.length" class="profile-permissions">
           <li v-for="permission in permissions" :key="permission">
@@ -52,13 +70,17 @@
       </section>
     </div>
 
-    <v-dialog v-model="showUpdateForm" max-width="560" aria-labelledby="profile-edit-title">
+    <v-dialog
+      v-model="showUpdateForm"
+      max-width="560"
+      aria-labelledby="profile-edit-title"
+    >
       <v-card class="profile-edit-dialog">
         <v-card-title id="profile-edit-title">Edit profile</v-card-title>
         <user-form
           v-if="showUpdateForm && userData.id"
           scope="profile"
-          :userId="userData.id"
+          :user-id="userData.id"
           @cancel="showUpdateForm = false"
           @done="finishProfileUpdate"
         />
@@ -72,7 +94,9 @@
       aria-labelledby="profile-photo-title"
     >
       <v-card>
-        <v-card-title id="profile-photo-title">Change profile photo</v-card-title>
+        <v-card-title id="profile-photo-title"
+          >Change profile photo</v-card-title
+        >
         <v-card-text>
           <v-file-input
             v-if="!selectedImage"
@@ -89,18 +113,32 @@
           <div v-else class="profile-crop">
             <vue-croppie
               ref="croppieRef"
-              :enableOrientation="true"
+              :enable-orientation="true"
               :boundary="{ width: cropSize, height: cropSize }"
-              :viewport="{ width: cropSize - 48, height: cropSize - 48, type: 'circle' }"
+              :viewport="{
+                width: cropSize - 48,
+                height: cropSize - 48,
+                type: 'circle',
+              }"
             />
           </div>
         </v-card-text>
         <v-card-actions>
-          <v-btn v-if="selectedImage" text :disabled="uploadingImage" @click="handleClearPicture">
+          <v-btn
+            v-if="selectedImage"
+            text
+            :disabled="uploadingImage"
+            @click="handleClearPicture"
+          >
             Choose another
           </v-btn>
           <v-spacer />
-          <v-btn text :disabled="uploadingImage" @click="showUpdatePictureForm = false">Cancel</v-btn>
+          <v-btn
+            text
+            :disabled="uploadingImage"
+            @click="showUpdatePictureForm = false"
+            >Cancel</v-btn
+          >
           <v-btn
             color="primary"
             :loading="uploadingImage"
@@ -125,11 +163,11 @@ import {
   useStore,
   watch,
 } from '@nuxtjs/composition-api'
-import UserForm from '~/components/forms/UserForm.vue'
 
 // @ts-ignore
 import * as VueCroppie from 'vue-croppie'
 import Compressor from 'compressorjs'
+import UserForm from '~/components/forms/UserForm.vue'
 import 'croppie/croppie.css'
 
 import { IBreadcrumbs } from '~/store'
@@ -151,9 +189,9 @@ interface ProfileUser {
 }
 
 export default defineComponent({
-  props: { user: { type: Object, default: null } },
   components: { UserForm, VueCroppie: VueCroppie.VueCroppieComponent },
   middleware: 'isAuthenticated',
+  props: { user: { type: Object, default: null } },
   setup(props, { root, parent }) {
     const { $auth } = useContext()
     const store = useStore()
@@ -162,17 +200,34 @@ export default defineComponent({
 
     const userData = computed(() => {
       const user = (props.user ?? $auth.user ?? {}) as ProfileUser
-      const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ')
-      return { ...user, fullName: fullName || user.fullName || user.fullname || 'Profile' }
+      const fullName = [user.first_name, user.last_name]
+        .filter(Boolean)
+        .join(' ')
+      return {
+        ...user,
+        fullName: fullName || user.fullName || user.fullname || 'Profile',
+      }
     })
-    const initials = computed(() => userData.value.fullName.split(/\s+/).slice(0, 2)
-      .map((word: string) => word.charAt(0).toUpperCase()).join(''))
-    const profilePicture = computed(() => store.getters['users/userProfilePicture'])
+    const initials = computed(() =>
+      userData.value.fullName
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((word: string) => word.charAt(0).toUpperCase())
+        .join('')
+    )
+    const profilePicture = computed(
+      () => store.getters['users/userProfilePicture']
+    )
     const permissions = computed(() => {
       const scopes = userData.value.scope
       if (!Array.isArray(scopes)) return []
-      return [...new Set<string>(scopes.filter(scope => typeof scope === 'string' && scope.trim()))]
-        .map(scope => scope.replace(/_/g, ' ').replace(/^./, first => first.toUpperCase()))
+      return [
+        ...new Set<string>(
+          scopes.filter((scope) => typeof scope === 'string' && scope.trim())
+        ),
+      ].map((scope) =>
+        scope.replace(/_/g, ' ').replace(/^./, (first) => first.toUpperCase())
+      )
     })
 
     const breadcrumbs: IBreadcrumbs[] = [
@@ -189,7 +244,9 @@ export default defineComponent({
     const selectedImage = ref('')
     const cropReady = ref(false)
     const croppieRef = ref()
-    const cropSize = computed(() => (root as any).$vuetify.breakpoint.width < 360 ? 200 : 256)
+    const cropSize = computed(() =>
+      (root as any).$vuetify.breakpoint.width < 360 ? 200 : 256
+    )
     let imageRequest = 0
 
     const finishProfileUpdate = () => {
@@ -205,7 +262,7 @@ export default defineComponent({
       cropReady.value = false
     }
 
-    watch(showUpdatePictureForm, open => {
+    watch(showUpdatePictureForm, (open) => {
       if (!open) handleClearPicture()
     })
 
@@ -213,7 +270,10 @@ export default defineComponent({
       if (!file) return
       if (!file.type.startsWith('image/')) {
         handleClearPicture()
-        showToast($swal, { title: 'Please choose an image file.', icon: 'warning' })
+        showToast($swal, {
+          title: 'Please choose an image file.',
+          icon: 'warning',
+        })
         return
       }
 
@@ -221,12 +281,19 @@ export default defineComponent({
       preparingImage.value = true
       try {
         const compressed = await new Promise<Blob>((resolve, reject) => {
-          new Compressor(file, { quality: 0.3, success: resolve, error: reject })
+          return new Compressor(file, {
+            quality: 0.3,
+            success: resolve,
+            error: reject,
+          })
         })
         if (request !== imageRequest) return
         if (compressed.size > 500 * 1024) {
           handleClearPicture()
-          showToast($swal, { title: 'Choose a smaller image.', icon: 'warning' })
+          showToast($swal, {
+            title: 'Choose a smaller image.',
+            icon: 'warning',
+          })
           return
         }
 
@@ -245,7 +312,10 @@ export default defineComponent({
       } catch {
         if (request === imageRequest) {
           handleClearPicture()
-          showToast($swal, { title: 'Unable to open that image.', icon: 'error' })
+          showToast($swal, {
+            title: 'Unable to open that image.',
+            icon: 'error',
+          })
         }
       } finally {
         if (request === imageRequest) preparingImage.value = false
@@ -256,22 +326,46 @@ export default defineComponent({
       if (!cropReady.value || uploadingImage.value) return
       uploadingImage.value = true
       try {
-        const output = await croppieRef.value.result({ format: 'jpeg', circle: false, quality: 0.3 })
-        await put('/meta/profile_picture', { meta_name: 'profile_picture', meta_value: output })
+        const output = await croppieRef.value.result({
+          format: 'jpeg',
+          circle: false,
+          quality: 0.3,
+        })
+        await put('/meta/profile_picture', {
+          meta_name: 'profile_picture',
+          meta_value: output,
+        })
         await $auth.fetchUser()
         showUpdatePictureForm.value = false
         showToast($swal, { title: 'Profile photo updated.' })
       } catch {
-        showToast($swal, { title: 'Unable to save the profile photo.', icon: 'error' })
+        showToast($swal, {
+          title: 'Unable to save the profile photo.',
+          icon: 'error',
+        })
       } finally {
         uploadingImage.value = false
       }
     }
 
     return {
-      userData, initials, profilePicture, permissions, showUpdateForm, finishProfileUpdate,
-      showUpdatePictureForm, preparingImage, uploadingImage, selectedFile, selectedImage,
-      cropReady, cropSize, croppieRef, handleSelectFile, handleClearPicture, handleSave,
+      userData,
+      initials,
+      profilePicture,
+      permissions,
+      showUpdateForm,
+      finishProfileUpdate,
+      showUpdatePictureForm,
+      preparingImage,
+      uploadingImage,
+      selectedFile,
+      selectedImage,
+      cropReady,
+      cropSize,
+      croppieRef,
+      handleSelectFile,
+      handleClearPicture,
+      handleSave,
     }
   },
   head: { title: pageTitle },
@@ -292,7 +386,11 @@ export default defineComponent({
   padding: clamp(18px, 3vw, 32px);
   border: 1px solid var(--workspace-border);
   border-radius: 18px;
-  background: linear-gradient(125deg, var(--workspace-tint), var(--workspace-surface) 60%);
+  background: linear-gradient(
+    125deg,
+    var(--workspace-tint),
+    var(--workspace-surface) 60%
+  );
   box-shadow: var(--workspace-shadow);
 }
 
@@ -322,7 +420,7 @@ export default defineComponent({
     margin: 0;
     font-size: clamp(1.35rem, 3.8vw, 2rem);
     line-height: 1.15;
-    letter-spacing: -.035em;
+    letter-spacing: -0.035em;
   }
   p {
     margin: 4px 0 9px;
@@ -337,7 +435,7 @@ export default defineComponent({
 
 .profile-grid {
   display: grid;
-  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
   gap: 16px;
   margin-top: 16px;
 }
@@ -351,7 +449,7 @@ export default defineComponent({
   h2 {
     margin: 0 0 12px;
     font-size: 1.1rem;
-    letter-spacing: -.015em;
+    letter-spacing: -0.015em;
   }
 }
 .profile-panel-heading {
@@ -364,7 +462,7 @@ export default defineComponent({
   padding: 0 6px;
   background: var(--workspace-tint);
   color: var(--workspace-blue);
-  font-size: .8125rem;
+  font-size: 0.8125rem;
   font-weight: 700;
 }
 .profile-fields {
@@ -374,10 +472,12 @@ export default defineComponent({
     gap: 8px;
     padding: 10px 0;
   }
-  div + div { border-top: 1px solid var(--workspace-border); }
+  div + div {
+    border-top: 1px solid var(--workspace-border);
+  }
   dt {
     color: var(--workspace-muted);
-    font-size: .875rem;
+    font-size: 0.875rem;
   }
   dd {
     min-width: 0;
@@ -400,7 +500,7 @@ export default defineComponent({
     border: 1px solid var(--workspace-border);
     border-radius: 8px;
     background: var(--workspace-subtle);
-    font-size: .875rem;
+    font-size: 0.875rem;
     overflow-wrap: anywhere;
   }
   .v-icon {
@@ -408,7 +508,9 @@ export default defineComponent({
     flex-shrink: 0;
   }
 }
-.profile-empty { color: var(--workspace-muted); }
+.profile-empty {
+  color: var(--workspace-muted);
+}
 .v-application.workspace-app .profile-edit-dialog .v-card {
   border: none;
   box-shadow: none !important;
@@ -419,12 +521,16 @@ export default defineComponent({
 }
 
 @media (max-width: 760px) {
-  .profile-grid { grid-template-columns: minmax(0, 1fr); }
+  .profile-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .profile-hero {
     grid-template-columns: auto minmax(0, 1fr);
     gap: 14px;
   }
-  .profile-actions { grid-column: 1 / -1; }
+  .profile-actions {
+    grid-column: 1 / -1;
+  }
 }
 @media (max-width: 390px) {
   .profile-avatar {
@@ -432,7 +538,11 @@ export default defineComponent({
     height: 62px;
     font-size: 1.25rem;
   }
-  .profile-identity p { font-size: .875rem; }
-  .v-application .profile-permissions { grid-template-columns: minmax(0, 1fr); }
+  .profile-identity p {
+    font-size: 0.875rem;
+  }
+  .v-application .profile-permissions {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 </style>

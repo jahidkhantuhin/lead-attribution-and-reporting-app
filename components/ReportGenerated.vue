@@ -6,18 +6,18 @@
   </v-alert>
 </template>
 <script>
-import { defineComponent, ref } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   props: {
-    scorer: String,
-    date: String,
+    scorer: { type: String, default: undefined },
+    date: { type: String, default: undefined },
     loading: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  setup(props) {
+  setup(_props) {
     return {}
   },
 })

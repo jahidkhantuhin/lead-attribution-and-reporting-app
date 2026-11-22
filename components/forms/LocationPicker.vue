@@ -1,6 +1,7 @@
 <template>
   <span>
     <v-autocomplete
+      v-model="inputValue"
       :placeholder="
         (multiple && inputValue.length === 0) || !inputValue
           ? 'Select location'
@@ -21,23 +22,24 @@
       item-value="id"
       small-chips
       deletable-chips
-      v-model="inputValue"
       :multiple="multiple"
-      @change="onChange"
       :filter="() => true"
+      @change="onChange"
     >
-    <v-list-tile
+      <v-list-tile
+        v-if="locationList.length > 1 && showButton"
         slot="prepend-item"
         class="grey--text"
-        v-if="locationList.length > 1 && showButton">
-      <v-btn color="success" @click="selectAll">Select all</v-btn>
-    </v-list-tile>
-    <v-list-tile
+      >
+        <v-btn color="success" @click="selectAll">Select all</v-btn>
+      </v-list-tile>
+      <v-list-tile
+        v-if="locationList.length > 1 && showButton"
         slot="prepend-item"
         class="grey--text ml-2"
-        v-if="locationList.length > 1 && showButton">
-      <v-btn color="error" @click="deSelectAll">Deselect all</v-btn>
-    </v-list-tile>
+      >
+        <v-btn color="error" @click="deSelectAll">Deselect all</v-btn>
+      </v-list-tile>
     </v-autocomplete>
   </span>
 </template>
@@ -46,7 +48,6 @@
 import {
   defineComponent,
   onBeforeMount,
-  onMounted,
   ref,
   useRouter,
   watch,
@@ -66,7 +67,7 @@ export default defineComponent({
     showButton: {
       type: [Boolean],
       default: false,
-    }
+    },
   },
   setup(props, { emit }) {
     const searchInput = ref('')
@@ -100,16 +101,19 @@ export default defineComponent({
           const firstOption = (locationList.value.sort((a: any, b: any) =>
             a.name.localeCompare(b.name)
           )[0] as any).id
-          const selected = router.currentRoute.query.location_ids ?? inputValue.value
-          const locationFromUrl = (Array.isArray(selected) ? selected : [selected])
-            .filter(Boolean).map(item => Number(item))
+          const selected =
+            router.currentRoute.query.location_ids ?? inputValue.value
+          const locationFromUrl = (Array.isArray(selected)
+            ? selected
+            : [selected]
+          )
+            .filter(Boolean)
+            .map((item) => Number(item))
           if (locationList.value.length === 1) {
             inputValue.value = props.multiple ? [firstOption] : firstOption
             onChange()
           } else if (locationList.value.length > 1) {
-            inputValue.value = props.multiple
-              ? locationFromUrl
-              : firstOption
+            inputValue.value = props.multiple ? locationFromUrl : firstOption
             onChange()
             // selectAll()
           }
@@ -121,15 +125,15 @@ export default defineComponent({
 
     onBeforeMount(() => {
       if (props.multiple) {
-        let location_ids = router.currentRoute.query
+        let locationIds = router.currentRoute.query
           .location_ids as Array<string>
 
-        if (typeof location_ids === 'string') {
-          location_ids = [location_ids]
+        if (typeof locationIds === 'string') {
+          locationIds = [locationIds]
         }
 
-        if (location_ids) {
-          inputValue.value = location_ids.map((item) => +item) as Array<
+        if (locationIds) {
+          inputValue.value = locationIds.map((item) => +item) as Array<
             string | number
           >
         }

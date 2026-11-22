@@ -29,29 +29,26 @@
 import {
   defineComponent,
   ref,
-  computed,
   onMounted,
   useRouter,
-  onBeforeMount,
   watch,
 } from '@nuxtjs/composition-api'
 import { omit } from 'lodash'
 import useApi from '~/services/useApi'
 import useClientRecords from '~/services/useClientRecords'
-import { filters } from '~/utils/ClientStatusEnums'
 
 let timeout: any
 
 export default defineComponent({
   props: {
-    value: [String, Number],
-    URLQueryParam: {
+    value: { type: [String, Number], default: undefined },
+    urlQueryParam: {
       type: String,
       default: 'client',
     },
   },
-  setup(props, { parent, emit }) {
-    const { URLQueryParam } = props
+  setup(props, { emit }) {
+    const { urlQueryParam } = props
     const router = useRouter()
     const clientsListLoading = ref(false)
     const searchInput = ref(router.currentRoute.query.client_name)
@@ -98,14 +95,18 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      const id = router.currentRoute.query[URLQueryParam]
+      const id = router.currentRoute.query[urlQueryParam]
       if (typeof id === 'string' && id) fetchSelectedClient(id)
     })
 
     if (process.env.SHOWCASE_MODE === 'true') {
-      watch(() => props.value, id => {
-        if (id && Number(id) !== inputValue.value) fetchSelectedClient(id)
-      }, { immediate: true })
+      watch(
+        () => props.value,
+        (id) => {
+          if (id && Number(id) !== inputValue.value) fetchSelectedClient(id)
+        },
+        { immediate: true }
+      )
     }
 
     const onChange = () => {

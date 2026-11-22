@@ -4,9 +4,9 @@
       <span>{{ staffData.name }}</span>
       <v-spacer></v-spacer>
       <v-btn
+        v-if="showAllButton"
         color="white"
         :to="`/client-records/${clientId}/`"
-        v-if="showAllButton"
         class="mr-3"
       >
         Show all staff
@@ -101,14 +101,14 @@ export default defineComponent({
     },
     staffData: {
       type: Object,
-      default: {},
+      default: () => ({}),
     },
     cardProps: {
       type: Object,
-      default: {},
+      default: () => ({}),
     },
   },
-  setup(props, { parent }: any) {
+  setup(_props, { parent }: any) {
     const $swal = swalMixin(parent.$swal)
     const route = useRoute()
     const clientId = route.value.params.client_id

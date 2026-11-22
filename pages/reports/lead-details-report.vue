@@ -1,74 +1,79 @@
 <template>
   <div>
     <!-- <SessionExpired v-if="sessionExpired"/> -->
-    <UnauthorizedUser v-if="unAuthorizedToPullReport"/>
+    <UnauthorizedUser v-if="unAuthorizedToPullReport" />
     <v-row
+      v-if="!unAuthorizedToPullReport"
       :class="{
         'my-5': true,
         'dark-page': $vuetify.theme.dark,
       }"
-      v-if="!unAuthorizedToPullReport"
     >
       <v-col cols="12">
         <!-- <v-alert class="mb-5" type="info" dismissible v-if="sectionProgressAlert">
           {{ $t('message.wip') }}
         </v-alert> -->
-        <v-card color="default" rounded elevation="1" class="workspace-filter-panel">
+        <v-card
+          color="default"
+          rounded
+          elevation="1"
+          class="workspace-filter-panel"
+        >
           <v-card-title>{{ $t('message.filters') }}</v-card-title>
           <v-card-text>
             <v-row>
               <v-col cols="12" xl="3" lg="3" md="3" sm="12" xs="12">
                 <client-picker
-                  @achange="onClientChange"
                   v-model="filters.client"
-                  URLQueryParam="client"
+                  u-r-l-query-param="client"
+                  @achange="onClientChange"
                 ></client-picker>
               </v-col>
               <v-col cols="12" xl="4" lg="4" md="4" sm="12" xs="12">
                 <location-picker
                   v-model="filters.location_ids"
                   :client="filters.client"
-                  :showButton= "showButton"
+                  :show-button="showButton"
                 ></location-picker>
               </v-col>
               <v-col cols="12" xl="3" lg="3" md="3" sm="12" xs="12">
                 <Datepicker
-                  @achange="push"
-                  @clear="
-                    filters.dates = []
-                    push()
-                  "
+                  v-model="filters.dates"
                   :disabled="
                     filters.location_ids && filters.location_ids.length > 0
                       ? false
                       : true
                   "
-                  :dateHelpButtons="[
+                  :date-help-buttons="[
                     'thisWeek',
                     'lastWeek',
                     'last14Days',
                     'thisMonth',
                     'lastMonth',
                   ]"
-                  v-model="filters.dates"
+                  @achange="push"
+                  @clear="
+                    filters.dates = []
+                    push()
+                  "
                 ></Datepicker>
               </v-col>
               <v-col cols="12" md="2">
-                  <v-btn
-                    :loading="LDRReportLoading"
-                    color="primary"
-                    class="my-2"
-                    block
-                    :disabled="
-                      !filters.client ||
-                      !(filters.location_ids && !!filters.location_ids.length) ||
-                      !(filters.dates && !!filters.dates.length)
-                    "
-                    @click="fetchLDRReport"
-                  >
-                    <v-icon left>mdi-check</v-icon>
-                    Apply
-                  </v-btn>
+                <v-btn
+                  :loading="LDRReportLoading"
+                  color="primary"
+                  class="my-2"
+                  block
+                  :disabled="
+                    !filters.client ||
+                    !(filters.location_ids && !!filters.location_ids.length) ||
+                    !(filters.dates && !!filters.dates.length)
+                  "
+                  @click="fetchLDRReport"
+                >
+                  <v-icon left>mdi-check</v-icon>
+                  Apply
+                </v-btn>
               </v-col>
             </v-row>
             <v-form> </v-form>
@@ -115,11 +120,11 @@
                 <v-icon>mdi-refresh</v-icon>
               </v-btn>
               <v-btn
-                @click="uploadReport"
                 :loading="uploadReportLoading"
                 icon
                 title="Upload to Google Drive"
                 :color="googleDocLink ? 'info' : 'normal'"
+                @click="uploadReport"
               >
                 <v-icon>mdi-upload</v-icon>
               </v-btn>
@@ -128,8 +133,11 @@
             <!-- CLient Info -->
             <v-card-text v-if="loaded" class="text-h5">
               Client:
-              <nuxt-link class="client-link" :to="`/client-records/${LDRReport.id}`">
-              {{ LDRReport.name }}
+              <nuxt-link
+                class="client-link"
+                :to="`/client-records/${LDRReport.id}`"
+              >
+                {{ LDRReport.name }}
               </nuxt-link>
             </v-card-text>
             <v-card-text
@@ -139,12 +147,15 @@
               Locations:
               <v-chip
                 v-for="(location, index) in LDRReport.locations"
+                :key="index"
                 small
                 class="mr-2"
-                :key="index"
               >
-              <nuxt-link class="client-link" :to="`/client-records/${LDRReport.id}/locations/${location.location.id}`">
-                {{ location.location.name }}
+                <nuxt-link
+                  class="client-link"
+                  :to="`/client-records/${LDRReport.id}/locations/${location.location.id}`"
+                >
+                  {{ location.location.name }}
                 </nuxt-link>
               </v-chip>
             </v-card-text>
@@ -161,15 +172,35 @@
             </v-card-text>
 
             <div v-if="loaded" class="lead-report-sections">
-              <v-tabs v-model="activeSection" class="lead-section-tabs" hide-slider>
-                <v-tab><v-icon left small>mdi-chart-box-outline</v-icon>Lead Summary</v-tab>
-                <v-tab><v-icon left small>mdi-chart-donut</v-icon>Summary by Source</v-tab>
-                <v-tab><v-icon left small>mdi-format-list-bulleted</v-icon>Lead Details</v-tab>
+              <v-tabs
+                v-model="activeSection"
+                class="lead-section-tabs"
+                hide-slider
+              >
+                <v-tab
+                  ><v-icon left small>mdi-chart-box-outline</v-icon>Lead
+                  Summary</v-tab
+                >
+                <v-tab
+                  ><v-icon left small>mdi-chart-donut</v-icon>Summary by
+                  Source</v-tab
+                >
+                <v-tab
+                  ><v-icon left small>mdi-format-list-bulleted</v-icon>Lead
+                  Details</v-tab
+                >
               </v-tabs>
 
-              <v-tabs-items v-model="activeSection" class="lead-section-content" touchless>
+              <v-tabs-items
+                v-model="activeSection"
+                class="lead-section-content"
+                touchless
+              >
                 <v-tab-item>
-                  <LeadReportOverview :summary="summary" :analytics="computedReport.lead_analytics" />
+                  <LeadReportOverview
+                    :summary="summary"
+                    :analytics="computedReport.lead_analytics"
+                  />
                 </v-tab-item>
                 <v-tab-item>
                   <LeadSourceSummary :report="computedReport" />
@@ -194,9 +225,9 @@
                   <v-tabs-items v-model="tab">
                     <v-tab-item key="all">
                       <LDRAllReports
-                        :callItemClass="callItemClass"
-                        :allReportsList="allReportsList"
-                        :allDetails="computedReport"
+                        :call-item-class="callItemClass"
+                        :all-reports-list="allReportsList"
+                        :all-details="computedReport"
                       ></LDRAllReports>
                     </v-tab-item>
                     <!-- <v-tab-item key="calls">
@@ -215,7 +246,7 @@
                       <!--  -->
                       <div v-if="loaded">
                         <LDRCallsPPC
-                          :callItemClass="callItemClass"
+                          :call-item-class="callItemClass"
                           :items="
                             computedReport &&
                             computedReport.details &&
@@ -223,12 +254,12 @@
                           "
                         ></LDRCallsPPC>
                       </div>
-                      </v-tab-item>
-                      <v-tab-item key="facebook_calls">
+                    </v-tab-item>
+                    <v-tab-item key="facebook_calls">
                       <!--  -->
                       <div v-if="loaded">
                         <LDRCallsFB
-                          :callItemClass="callItemClass"
+                          :call-item-class="callItemClass"
                           :items="
                             computedReport &&
                             computedReport.details &&
@@ -241,7 +272,7 @@
                       <!--  -->
                       <div v-if="loaded">
                         <LDRCallsSEO
-                          :callItemClass="callItemClass"
+                          :call-item-class="callItemClass"
                           :items="
                             computedReport &&
                             computedReport.details &&
@@ -364,8 +395,8 @@
             <v-card-text>
               <span class="google-doc-link">{{ googleDocLink }}</span>
               <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                  <a @click="copy('.google-doc-link')" v-bind="attrs" v-on="on">
+                <template #activator="{ on, attrs }">
+                  <a v-bind="attrs" @click="copy('.google-doc-link')" v-on="on">
                     <v-icon> mdi-content-copy </v-icon>
                   </a>
                 </template>
@@ -390,11 +421,15 @@
           <v-card-title class=""> Email body </v-card-title>
 
           <v-card-text
-            v-if="currentEmail && currentEmail.lead && currentEmail.lead.message"
+            v-if="
+              currentEmail && currentEmail.lead && currentEmail.lead.message
+            "
             class="pl-6 mb-4"
           >
             <blockquote class="blockquote">
-              <span v-html="currentEmail.lead.message"></span>
+              <span style="white-space: pre-wrap">{{
+                currentEmail.lead.message
+              }}</span>
             </blockquote>
           </v-card-text>
           <v-card-text v-else> Lead Message is empty. </v-card-text>
@@ -436,12 +471,12 @@ import { get, sortBy } from 'lodash'
 import moment from 'moment-timezone'
 import useAxios from '~/plugins/useAxios'
 import { IBreadcrumbs } from '~/store'
-import ldrEmails from '~/components/LDR/Emails.vue'
+
 import FormattedDate from '~/components/FormattedDate.vue'
 import DatesAndDiff from '~/components/DatesAndDiff.vue'
 import ClientPicker from '~/components/forms/ClientPicker.vue'
 import Datepicker from '~/components/forms/DatePicker.vue'
-import TruncateText from '~/components/TruncateText.vue'
+
 import swalMixin, { showToast } from '~/utils/swalMixin'
 import defaultTimezone from '~/utils/defaultTimezone'
 import VuetifyColorsPallete from '~/shared/VuetifyColorsPallete'
@@ -470,21 +505,17 @@ import LDRFormsFB from '~/components/LDR/Forms-FB.vue'
 import LDRFormsSEO from '~/components/LDR/Forms-SEO.vue'
 
 import UnauthorizedUser from '~/components/UnauthorizedUser.vue'
-import SessionExpired from '~/components/SessionExpired.vue'
+
 import { callStatus } from '~/plugins/callStatus'
 import { callAudio } from '~/plugins/callAudio'
-
 
 export default defineComponent({
   components: {
     LeadReportOverview,
     LeadSourceSummary,
-    ldrEmails,
     FormattedDate,
     DatesAndDiff,
     Datepicker,
-    TruncateText,
-
     ClientPicker,
     LocationPicker,
     LDRAllReports,
@@ -500,19 +531,16 @@ export default defineComponent({
     LDRFormsFB,
     LDRFormsSEO,
     UnauthorizedUser,
-    SessionExpired,
   },
   // middleware: 'isAuthenticated',
   setup(_props, { parent }) {
     const { $auth } = useContext()
-    const unAuthorizedToPullReport = computed(() =>
-      !$auth.hasScope('create report') && $auth.hasScope('vpn access')
+    const unAuthorizedToPullReport = computed(
+      () => !$auth.hasScope('create report') && $auth.hasScope('vpn access')
     )
-    const sessionExpired = computed(() =>
-      !$auth.user
-    )
+    const sessionExpired = computed(() => !$auth.user)
     const store = useStore()
-    const isAllowed = store.getters['users/isAuthenticated'] ? true : false
+    const isAllowed = !!store.getters['users/isAuthenticated']
     const currentEmail = ref(null)
     const sectionProgressAlert = ref(true)
     const emailDialog = ref(false)
@@ -527,11 +555,15 @@ export default defineComponent({
     const tab = ref(0)
     const activeSection = ref(0)
     const LDRReport: any = ref({})
-    const reportUpdatedAt = computed(() => LDRReport.value?.cache?.created_at ?? LDRReport.value?.cache?.cache?.created_at)
+    const reportUpdatedAt = computed(
+      () =>
+        LDRReport.value?.cache?.created_at ??
+        LDRReport.value?.cache?.cache?.created_at
+    )
     const LDRReportLoading = ref(false)
     const isCopied = ref(false)
 
-    const copy = (element: string) => {
+    const copy = (_element: string) => {
       window.navigator.clipboard.writeText(googleDocLink.value)
       showToast($swal, {
         title: 'Copied to clipboard',
@@ -596,7 +628,7 @@ export default defineComponent({
       }
     })
 
-    const callItemClass = (item: any, b: any) => {
+    const callItemClass = (item: any, _b: any) => {
       return item.rowColor
     }
 
@@ -640,7 +672,8 @@ export default defineComponent({
                 : '',
               local_date: item.call_start,
               campaign: item.campaign,
-              timezone: item.campaign == null ? "US/Eastern" : item.campaign.timezone,
+              timezone:
+                item.campaign == null ? 'US/Eastern' : item.campaign.timezone,
               email: null,
               phone: item.caller_number,
               location_name: item.location_name,
@@ -731,7 +764,7 @@ export default defineComponent({
       allReportsList.value = sortBy(allReports, ['timestamp']).reverse()
     }
 
-    const fetchLDRReport = async function () {
+    const fetchLDRReport = function () {
       router
         .replace({
           query: filters.value,
@@ -755,7 +788,7 @@ export default defineComponent({
         .get(`/leads`, {
           withCredentials: true,
           headers: {
-          'Authorization': `Bearer ${(store.state as any).cred.cred}`
+            Authorization: `Bearer ${(store.state as any).cred.cred}`,
           },
           params: {
             date_start: `${dateOne}`,
@@ -766,7 +799,7 @@ export default defineComponent({
         })
         .then((resp) => {
           const data = resp.data.data
-          console.log('LDR', data)
+
           if (data) {
             LDRReport.value = data
             loaded.value = true
@@ -829,11 +862,11 @@ export default defineComponent({
               LDRReport.value
             ),
             {
-            withCredentials: true,
-            headers: {
-              'Authorization': `Bearer ${(store.state as any).cred.cred}`
+              withCredentials: true,
+              headers: {
+                Authorization: `Bearer ${(store.state as any).cred.cred}`,
+              },
             }
-          }
           )
           .then((res) => {
             googleDocLink.value = res.data?.data?.url
@@ -867,7 +900,7 @@ export default defineComponent({
       })
     }
 
-    const onClientChange = (id: Number, client: any) => {
+    const onClientChange = (_id: Number, client: any) => {
       router.push({
         path: router.currentRoute.path,
         query: {
@@ -879,7 +912,7 @@ export default defineComponent({
       })
     }
 
-    const onLocationChange = (id: Number, client: any) => {
+    const onLocationChange = (_id: Number, _client: any) => {
       router.push({
         path: router.currentRoute.path,
         query: {
@@ -897,7 +930,7 @@ export default defineComponent({
     }
 
     const transformReport = computed(() => {
-      let report: any = {
+      const report: any = {
         date_start: null,
         date_end: null,
         lead_analytics: {
@@ -978,7 +1011,6 @@ export default defineComponent({
               },
               impressions: 0,
               total_spend: 0,
-
             },
             facebook: {
               call_summary: {
@@ -1005,8 +1037,8 @@ export default defineComponent({
               },
               impressions: 0,
               total_spend: 0,
-            }
-          }
+            },
+          },
         },
       }
 
@@ -1014,29 +1046,35 @@ export default defineComponent({
         report.date_start = location.date_start
         report.date_end = location.date_end
 
-        let adwordsTotalSpend = !location.lead_analytics.adwords.account_shared ? location.lead_analytics.adwords.total_spend : 0
+        const adwordsTotalSpend = !location.lead_analytics.adwords
+          .account_shared
+          ? location.lead_analytics.adwords.total_spend
+          : 0
         report.lead_analytics.adwords.total_spend =
-          report.lead_analytics.adwords.total_spend +
-          adwordsTotalSpend
+          report.lead_analytics.adwords.total_spend + adwordsTotalSpend
 
-        let adwordsClicks = !location.lead_analytics.adwords.account_shared ? location.lead_analytics.adwords.clicks : 0      
+        const adwordsClicks = !location.lead_analytics.adwords.account_shared
+          ? location.lead_analytics.adwords.clicks
+          : 0
         report.lead_analytics.adwords.clicks =
-          report.lead_analytics.adwords.clicks +
-          adwordsClicks
+          report.lead_analytics.adwords.clicks + adwordsClicks
 
         report.lead_analytics.adwords.conversions =
           report.lead_analytics.adwords.conversions +
           location.lead_analytics.adwords.conversions
 
-        let adwordsImpressions = !location.lead_analytics.adwords.account_shared ? location.lead_analytics.adwords.impressions : 0              
+        const adwordsImpressions = !location.lead_analytics.adwords
+          .account_shared
+          ? location.lead_analytics.adwords.impressions
+          : 0
         report.lead_analytics.adwords.impressions =
-          report.lead_analytics.adwords.impressions +
-          adwordsImpressions
+          report.lead_analytics.adwords.impressions + adwordsImpressions
 
-        let aggregateClicks = !location.lead_analytics.adwords.account_shared ? location.lead_analytics.aggregate.clicks : 0
+        const aggregateClicks = !location.lead_analytics.adwords.account_shared
+          ? location.lead_analytics.aggregate.clicks
+          : 0
         report.lead_analytics.aggregate.clicks =
-          report.lead_analytics.aggregate.clicks +
-          aggregateClicks
+          report.lead_analytics.aggregate.clicks + aggregateClicks
 
         report.lead_analytics.aggregate.conversions =
           report.lead_analytics.aggregate.conversions +
@@ -1046,15 +1084,19 @@ export default defineComponent({
           report.lead_analytics.aggregate.cpl +
           location.lead_analytics.aggregate.cpl
 
-        let aggregateImpressions = !location.lead_analytics.adwords.account_shared ? location.lead_analytics.aggregate.impressions : 0
+        const aggregateImpressions = !location.lead_analytics.adwords
+          .account_shared
+          ? location.lead_analytics.aggregate.impressions
+          : 0
         report.lead_analytics.aggregate.impressions =
-          report.lead_analytics.aggregate.impressions +
-          aggregateImpressions
+          report.lead_analytics.aggregate.impressions + aggregateImpressions
 
-        let aggregateTotalSpend = !location.lead_analytics.adwords.account_shared ? location.lead_analytics.aggregate.total_spend : 0
+        const aggregateTotalSpend = !location.lead_analytics.adwords
+          .account_shared
+          ? location.lead_analytics.aggregate.total_spend
+          : 0
         report.lead_analytics.aggregate.total_spend =
-          report.lead_analytics.aggregate.total_spend +
-          aggregateTotalSpend
+          report.lead_analytics.aggregate.total_spend + aggregateTotalSpend
 
         report.lead_analytics.aggregate.total_unique_leads =
           report.lead_analytics.aggregate.total_unique_leads +
@@ -1104,24 +1146,30 @@ export default defineComponent({
             ...calls,
           }
         })
-        location.details.adwords_calls = location.details.adwords_calls.map((adwords_calls: any) => {
-          return {
-            location_name: location?.location?.name,
-            ...adwords_calls,
+        location.details.adwords_calls = location.details.adwords_calls.map(
+          (adwordsCalls: any) => {
+            return {
+              location_name: location?.location?.name,
+              ...adwordsCalls,
+            }
           }
-        })
-        location.details.facebook_calls = location.details.facebook_calls.map((facebook_calls: any) => {
-          return {
-            location_name: location?.location?.name,
-            ...facebook_calls,
+        )
+        location.details.facebook_calls = location.details.facebook_calls.map(
+          (facebookCalls: any) => {
+            return {
+              location_name: location?.location?.name,
+              ...facebookCalls,
+            }
           }
-        })
-        location.details.seo_calls = location.details.seo_calls ? location.details.seo_calls.map((seo_calls: any) => {
-          return {
-            location_name: location?.location?.name,
-            ...seo_calls,
-          }
-        }) : []
+        )
+        location.details.seo_calls = location.details.seo_calls
+          ? location.details.seo_calls.map((seoCalls: any) => {
+              return {
+                location_name: location?.location?.name,
+                ...seoCalls,
+              }
+            })
+          : []
 
         // Filtered calls which has no campaign.
 
@@ -1161,26 +1209,31 @@ export default defineComponent({
             ...chats,
           }
         })
-        location.details.adwords_chats = location.details.adwords_chats.map((adwords_chats: any) => {
-          return {
-            location_name: location?.location?.name,
-            ...adwords_chats,
+        location.details.adwords_chats = location.details.adwords_chats.map(
+          (adwordsChats: any) => {
+            return {
+              location_name: location?.location?.name,
+              ...adwordsChats,
+            }
           }
-        })
-        location.details.facebook_chats = location.details.facebook_chats.map((facebook_chats: any) => {
-          return {
-            location_name: location?.location?.name,
-            ...facebook_chats,
+        )
+        location.details.facebook_chats = location.details.facebook_chats.map(
+          (facebookChats: any) => {
+            return {
+              location_name: location?.location?.name,
+              ...facebookChats,
+            }
           }
-        })
-        location.details.seo_chats = location.details.seo_chats ? location.details.seo_chats.map((seo_chats: any) => {
-          return {
-            location_name: location?.location?.name,
-            ...seo_chats,
-          }
-        }) : []
+        )
+        location.details.seo_chats = location.details.seo_chats
+          ? location.details.seo_chats.map((seoChats: any) => {
+              return {
+                location_name: location?.location?.name,
+                ...seoChats,
+              }
+            })
+          : []
 
-        
         location.details.emails = location.details.emails.map((emails: any) => {
           return {
             location_name: location?.location?.name,
@@ -1188,32 +1241,43 @@ export default defineComponent({
           }
         })
         location.details.facebook_leads = location.details.facebook_leads.map(
-          (facebook_leads: any) => {
+          (facebookLeads: any) => {
             return {
               location_name: location?.location?.name,
-              ...facebook_leads,
+              ...facebookLeads,
             }
           }
         )
-        location.details.seo_emails = location.details.seo_emails ? location.details.seo_emails.map(
-          (seo_emails: any) => {
-            return {
-              location_name: location?.location?.name,
-              ...seo_emails,
-            }
-          }
-        ) : []
-                
+        location.details.seo_emails = location.details.seo_emails
+          ? location.details.seo_emails.map((seoEmails: any) => {
+              return {
+                location_name: location?.location?.name,
+                ...seoEmails,
+              }
+            })
+          : []
 
         report.details.calls.push(...(location.details.calls as Array<any>))
-        report.details.adwords_calls.push(...(location.details.adwords_calls as Array<any>))
-        report.details.facebook_calls.push(...(location.details.facebook_calls as Array<any>))
-        report.details.seo_calls.push(...(location.details.seo_calls as Array<any>))
+        report.details.adwords_calls.push(
+          ...(location.details.adwords_calls as Array<any>)
+        )
+        report.details.facebook_calls.push(
+          ...(location.details.facebook_calls as Array<any>)
+        )
+        report.details.seo_calls.push(
+          ...(location.details.seo_calls as Array<any>)
+        )
 
         report.details.chats.push(...(location.details.chats as Array<any>))
-        report.details.adwords_chats.push(...(location.details.adwords_chats as Array<any>))
-        report.details.facebook_chats.push(...(location.details.facebook_chats as Array<any>))
-        report.details.seo_chats.push(...(location.details.seo_chats as Array<any>))
+        report.details.adwords_chats.push(
+          ...(location.details.adwords_chats as Array<any>)
+        )
+        report.details.facebook_chats.push(
+          ...(location.details.facebook_chats as Array<any>)
+        )
+        report.details.seo_chats.push(
+          ...(location.details.seo_chats as Array<any>)
+        )
 
         report.details.emails.push(...(location.details.emails as Array<any>))
         report.details.facebook_leads.push(
@@ -1222,103 +1286,129 @@ export default defineComponent({
         report.details.seo_emails.push(
           ...(location.details.seo_emails as Array<any>)
         )
-        
+
         report.details.am.adwords.call_summary.booked =
-        report.details.am.adwords.call_summary.booked + location.details.am.adwords.call_summary.booked
+          report.details.am.adwords.call_summary.booked +
+          location.details.am.adwords.call_summary.booked
 
         report.details.am.adwords.call_summary.irrelevant =
-        report.details.am.adwords.call_summary.irrelevant + location.details.am.adwords.call_summary.irrelevant
+          report.details.am.adwords.call_summary.irrelevant +
+          location.details.am.adwords.call_summary.irrelevant
 
         report.details.am.adwords.call_summary.missed =
-        report.details.am.adwords.call_summary.missed + location.details.am.adwords.call_summary.missed
+          report.details.am.adwords.call_summary.missed +
+          location.details.am.adwords.call_summary.missed
 
         report.details.am.adwords.call_summary.not_booked =
-        report.details.am.adwords.call_summary.not_booked + location.details.am.adwords.call_summary.not_booked
+          report.details.am.adwords.call_summary.not_booked +
+          location.details.am.adwords.call_summary.not_booked
 
         report.details.am.adwords.call_summary.unscored =
-        report.details.am.adwords.call_summary.unscored + location.details.am.adwords.call_summary.unscored
+          report.details.am.adwords.call_summary.unscored +
+          location.details.am.adwords.call_summary.unscored
 
         report.details.am.adwords.calls.total =
-        report.details.am.adwords.calls.total + location.details.am.adwords.calls.total
+          report.details.am.adwords.calls.total +
+          location.details.am.adwords.calls.total
 
         report.details.am.adwords.calls.unique =
-        report.details.am.adwords.calls.unique + location.details.am.adwords.calls.unique
+          report.details.am.adwords.calls.unique +
+          location.details.am.adwords.calls.unique
 
         report.details.am.adwords.chats.total =
-        report.details.am.adwords.chats.total + location.details.am.adwords.chats.total
+          report.details.am.adwords.chats.total +
+          location.details.am.adwords.chats.total
 
         report.details.am.adwords.chats.unique =
-        report.details.am.adwords.chats.unique + location.details.am.adwords.chats.unique
+          report.details.am.adwords.chats.unique +
+          location.details.am.adwords.chats.unique
 
         report.details.am.adwords.clicks =
-        report.details.am.adwords.clicks + location.details.am.adwords.clicks
+          report.details.am.adwords.clicks + location.details.am.adwords.clicks
 
         report.details.am.adwords.conversions =
-        report.details.am.adwords.conversions + location.details.am.adwords.conversions
+          report.details.am.adwords.conversions +
+          location.details.am.adwords.conversions
 
         report.details.am.adwords.cpl =
-        report.details.am.adwords.cpl + location.details.am.adwords.cpl
+          report.details.am.adwords.cpl + location.details.am.adwords.cpl
 
         report.details.am.adwords.forms.total =
-        report.details.am.adwords.forms.total + location.details.am.adwords.forms.total
+          report.details.am.adwords.forms.total +
+          location.details.am.adwords.forms.total
 
         report.details.am.adwords.forms.unique =
-        report.details.am.adwords.forms.unique + location.details.am.adwords.forms.unique
+          report.details.am.adwords.forms.unique +
+          location.details.am.adwords.forms.unique
 
         report.details.am.adwords.impressions =
-        report.details.am.adwords.impressions + location.details.am.adwords.impressions
+          report.details.am.adwords.impressions +
+          location.details.am.adwords.impressions
 
         // For Facebook
 
         report.details.am.facebook.call_summary.booked =
-        report.details.am.facebook.call_summary.booked + location.details.am.facebook.call_summary.booked
+          report.details.am.facebook.call_summary.booked +
+          location.details.am.facebook.call_summary.booked
 
         report.details.am.facebook.call_summary.irrelevant =
-        report.details.am.facebook.call_summary.irrelevant + location.details.am.facebook.call_summary.irrelevant
+          report.details.am.facebook.call_summary.irrelevant +
+          location.details.am.facebook.call_summary.irrelevant
 
         report.details.am.facebook.call_summary.missed =
-        report.details.am.facebook.call_summary.missed + location.details.am.facebook.call_summary.missed
+          report.details.am.facebook.call_summary.missed +
+          location.details.am.facebook.call_summary.missed
 
         report.details.am.facebook.call_summary.not_booked =
-        report.details.am.facebook.call_summary.not_booked + location.details.am.facebook.call_summary.not_booked
+          report.details.am.facebook.call_summary.not_booked +
+          location.details.am.facebook.call_summary.not_booked
 
         report.details.am.facebook.call_summary.unscored =
-        report.details.am.facebook.call_summary.unscored + location.details.am.adwords.call_summary.unscored
+          report.details.am.facebook.call_summary.unscored +
+          location.details.am.adwords.call_summary.unscored
 
         report.details.am.facebook.calls.total =
-        report.details.am.facebook.calls.total + location.details.am.facebook.calls.total
+          report.details.am.facebook.calls.total +
+          location.details.am.facebook.calls.total
 
         report.details.am.facebook.calls.unique =
-        report.details.am.facebook.calls.unique + location.details.am.facebook.calls.unique
+          report.details.am.facebook.calls.unique +
+          location.details.am.facebook.calls.unique
 
         report.details.am.facebook.chats.total =
-        report.details.am.facebook.chats.total + location.details.am.facebook.chats.total
+          report.details.am.facebook.chats.total +
+          location.details.am.facebook.chats.total
 
         report.details.am.facebook.chats.unique =
-        report.details.am.facebook.chats.unique + location.details.am.facebook.chats.unique
+          report.details.am.facebook.chats.unique +
+          location.details.am.facebook.chats.unique
 
         report.details.am.facebook.clicks =
-        report.details.am.facebook.clicks + location.details.am.facebook.clicks
+          report.details.am.facebook.clicks +
+          location.details.am.facebook.clicks
 
         report.details.am.facebook.conversions =
-        report.details.am.facebook.conversions + location.details.am.facebook.conversions
+          report.details.am.facebook.conversions +
+          location.details.am.facebook.conversions
 
         report.details.am.facebook.cpl =
-        report.details.am.facebook.cpl + location.details.am.facebook.cpl
+          report.details.am.facebook.cpl + location.details.am.facebook.cpl
 
         report.details.am.facebook.forms.total =
-        report.details.am.facebook.forms.total + location.details.am.facebook.forms.total
+          report.details.am.facebook.forms.total +
+          location.details.am.facebook.forms.total
 
         report.details.am.facebook.forms.unique =
-        report.details.am.facebook.forms.unique + location.details.am.facebook.forms.unique
+          report.details.am.facebook.forms.unique +
+          location.details.am.facebook.forms.unique
 
         report.details.am.facebook.impressions =
-        report.details.am.facebook.impressions + location.details.am.facebook.impressions
-
+          report.details.am.facebook.impressions +
+          location.details.am.facebook.impressions
       })
 
       const client = { ...LDRReport.value }
-      delete client['locations']
+      delete client.locations
 
       report.client = client
 
@@ -1326,7 +1416,7 @@ export default defineComponent({
     })
 
     const computedReport = computed(() => {
-      let report = transformReport.value
+      const report = transformReport.value
 
       if (report && report.details && report.details.calls) {
         report.details.all = allReportsList.value
@@ -1334,52 +1424,76 @@ export default defineComponent({
           item.call_duration = new Date(item.call_duration * 1000)
             .toISOString()
             .substr(11, 8)
-          let color = getColorForScoredCall(item)
+          const color = getColorForScoredCall(item)
           item.rowColor = color
           item.rowColorHex = (VuetifyColorsPallete as any)[color]
           item.color = color.split(' ')[0]
           return item
         })
-        report.details.adwords_calls = report.details.adwords_calls.map((item: any) => {
-          item.call_duration = new Date(item.call_duration * 1000)
-            .toISOString()
-            .substr(11, 8)
-          let color = getColorForScoredCall(item)
-          item.rowColor = color
-          item.rowColorHex = (VuetifyColorsPallete as any)[color]
-          item.color = color.split(' ')[0]
-          // item.cs_name = item.score ? item.score.scorer.first_name.charAt(0) + ',' + ' ' + item.score.scorer.last_name : 'No scorer'
-          item.cs_name = item.score && item.score.scorer && item.score.scorer.first_name ? item.score.scorer.first_name.charAt(0) + ',' + ' ' + item.score.scorer.last_name : 'No scorer'
-          item.call_status = item.score && item.score.call_status ? callStatus(item.score.call_status) : 'No status available'
-          // call_url changes based on development stages
-          item.call_url = item.score && item.call_url ? callAudio(item.call_url) : item.call_url
-          return item
-        })
+        report.details.adwords_calls = report.details.adwords_calls.map(
+          (item: any) => {
+            item.call_duration = new Date(item.call_duration * 1000)
+              .toISOString()
+              .substr(11, 8)
+            const color = getColorForScoredCall(item)
+            item.rowColor = color
+            item.rowColorHex = (VuetifyColorsPallete as any)[color]
+            item.color = color.split(' ')[0]
+            // item.cs_name = item.score ? item.score.scorer.first_name.charAt(0) + ',' + ' ' + item.score.scorer.last_name : 'No scorer'
+            item.cs_name =
+              item.score && item.score.scorer && item.score.scorer.first_name
+                ? item.score.scorer.first_name.charAt(0) +
+                  ',' +
+                  ' ' +
+                  item.score.scorer.last_name
+                : 'No scorer'
+            item.call_status =
+              item.score && item.score.call_status
+                ? callStatus(item.score.call_status)
+                : 'No status available'
+            // call_url changes based on development stages
+            item.call_url =
+              item.score && item.call_url
+                ? callAudio(item.call_url)
+                : item.call_url
+            return item
+          }
+        )
 
-        report.details.facebook_calls = report.details.facebook_calls.map((item: any) => {
-          item.call_duration = new Date(item.call_duration * 1000)
-            .toISOString()
-            .substr(11, 8)
-          let color = getColorForScoredCall(item)
-          item.rowColor = color
-          item.rowColorHex = (VuetifyColorsPallete as any)[color]
-          item.color = color.split(' ')[0]
-          item.call_status = item.score && item.score.call_status ? callStatus(item.score.call_status) : 'No status available'
-          // call_url changes based on development stages
-          item.call_url = item.score && item.call_url ? callAudio(item.call_url) : item.call_url
-          return item
-        })
+        report.details.facebook_calls = report.details.facebook_calls.map(
+          (item: any) => {
+            item.call_duration = new Date(item.call_duration * 1000)
+              .toISOString()
+              .substr(11, 8)
+            const color = getColorForScoredCall(item)
+            item.rowColor = color
+            item.rowColorHex = (VuetifyColorsPallete as any)[color]
+            item.color = color.split(' ')[0]
+            item.call_status =
+              item.score && item.score.call_status
+                ? callStatus(item.score.call_status)
+                : 'No status available'
+            // call_url changes based on development stages
+            item.call_url =
+              item.score && item.call_url
+                ? callAudio(item.call_url)
+                : item.call_url
+            return item
+          }
+        )
 
-        report.details.seo_calls = report.details.seo_calls ? report.details.seo_calls.map((item: any) => {
-          item.call_duration = new Date(item.call_duration * 1000)
-            .toISOString()
-            .substr(11, 8)
-          let color = getColorForScoredCall(item)
-          item.rowColor = color
-          item.rowColorHex = (VuetifyColorsPallete as any)[color]
-          item.color = color.split(' ')[0]
-          return item
-        }) : ''
+        report.details.seo_calls = report.details.seo_calls
+          ? report.details.seo_calls.map((item: any) => {
+              item.call_duration = new Date(item.call_duration * 1000)
+                .toISOString()
+                .substr(11, 8)
+              const color = getColorForScoredCall(item)
+              item.rowColor = color
+              item.rowColorHex = (VuetifyColorsPallete as any)[color]
+              item.color = color.split(' ')[0]
+              return item
+            })
+          : ''
 
         report.details.emails = report.details.emails.map((item: any) => {
           const isWeekend = isDateWeekend(item.date)
@@ -1396,17 +1510,19 @@ export default defineComponent({
               : ''
             item.rowColorHex = color
             return item
-          })
+          }
+        )
 
-          report.details.seo_emails = report.details.seo_emails ? report.details.seo_emails.map(
-          (item: any) => {
-            const isWeekend = isDateWeekend(item.date)
-            const color = isWeekend
-              ? VuetifyColorsPallete['grey lighten-3']
-              : ''
-            item.rowColorHex = color
-            return item
-          }) : ''
+        report.details.seo_emails = report.details.seo_emails
+          ? report.details.seo_emails.map((item: any) => {
+              const isWeekend = isDateWeekend(item.date)
+              const color = isWeekend
+                ? VuetifyColorsPallete['grey lighten-3']
+                : ''
+              item.rowColorHex = color
+              return item
+            })
+          : ''
 
         report.details.chats = report.details.chats.map((item: any) => {
           const isWeekend = isDateWeekend(item.chat_date)
@@ -1415,26 +1531,38 @@ export default defineComponent({
           return item
         })
 
-        report.details.adwords_chats = report.details.adwords_chats.map((item: any) => {
-          const isWeekend = isDateWeekend(item.chat_date)
-          const color = isWeekend ? VuetifyColorsPallete['grey lighten-3'] : ''
-          item.rowColorHex = color
-          return item
-        })
+        report.details.adwords_chats = report.details.adwords_chats.map(
+          (item: any) => {
+            const isWeekend = isDateWeekend(item.chat_date)
+            const color = isWeekend
+              ? VuetifyColorsPallete['grey lighten-3']
+              : ''
+            item.rowColorHex = color
+            return item
+          }
+        )
 
-        report.details.facebook_chats = report.details.facebook_chats.map((item: any) => {
-          const isWeekend = isDateWeekend(item.chat_date)
-          const color = isWeekend ? VuetifyColorsPallete['grey lighten-3'] : ''
-          item.rowColorHex = color
-          return item
-        })
+        report.details.facebook_chats = report.details.facebook_chats.map(
+          (item: any) => {
+            const isWeekend = isDateWeekend(item.chat_date)
+            const color = isWeekend
+              ? VuetifyColorsPallete['grey lighten-3']
+              : ''
+            item.rowColorHex = color
+            return item
+          }
+        )
 
-        report.details.seo_chats = report.details.seo_chats ? report.details.seo_chats.map((item: any) => {
-          const isWeekend = isDateWeekend(item.chat_date)
-          const color = isWeekend ? VuetifyColorsPallete['grey lighten-3'] : ''
-          item.rowColorHex = color
-          return item
-        }) : ''
+        report.details.seo_chats = report.details.seo_chats
+          ? report.details.seo_chats.map((item: any) => {
+              const isWeekend = isDateWeekend(item.chat_date)
+              const color = isWeekend
+                ? VuetifyColorsPallete['grey lighten-3']
+                : ''
+              item.rowColorHex = color
+              return item
+            })
+          : ''
       }
 
       return report

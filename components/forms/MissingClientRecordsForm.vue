@@ -15,32 +15,34 @@
           :filter="() => true"
           item-value="id"
           :no-data-text="
-            clientsListLoading === false && searchInput && searchInput.length > 0
+            clientsListLoading === false &&
+            searchInput &&
+            searchInput.length > 0
               ? 'No Results found'
               : clientsListLoading
               ? 'Loading'
               : 'Search something'
           "
           :search-input.sync="searchInput"
+          :rules="rules.client_id"
           @keydown="fetchClients(searchInput)"
           @change="onChange"
-          :rules="rules.client_id"
           @keydown.enter="formValid && submit()"
         >
         </v-autocomplete>
       </v-card-text>
       <v-card-text v-if="!locationId">
         <v-autocomplete
-          v-model="formData.location_ids" 
-          :items="entries" 
-          :loading="isLoading" 
+          v-model="formData.location_ids"
+          :items="entries"
+          :loading="isLoading"
           :search-input.sync="search"
           hide-no-data
-          hide-selected 
-          item-text="name" 
+          hide-selected
+          item-text="name"
           :filter="() => true"
-          item-value="id" 
-          label="Search for locations *" 
+          item-value="id"
+          label="Search for locations *"
           placeholder="Start typing to Search"
           chips
           deletable-chips
@@ -55,7 +57,7 @@
         <v-text-field
           label="Location Name"
           class="mb-3"
-          :value="''+locationName+ ''"
+          :value="'' + locationName + ''"
           readonly
         >
         </v-text-field>
@@ -68,7 +70,9 @@
           :disabled="!formValid"
           :loading="busy"
           color="primary"
-          @click.prevent="!locationId ? formValid && submit() : formValid && submit2()"
+          @click.prevent="
+            !locationId ? formValid && submit() : formValid && submit2()
+          "
         >
           Add Client
         </v-btn>
@@ -79,39 +83,38 @@
 
 <script lang="ts">
 import {
-  onMounted,
   defineComponent,
   ref,
   computed,
   useRouter,
   watch,
 } from '@nuxtjs/composition-api'
-import LocationForm from './LocationForm.vue'
-import StaffForm from './StaffForm.vue'
-import SwalMixin, { showToast } from '~/utils/swalMixin'
-import useUsers from '~/services/useUsers'
-import useApi from '~/services/useApi'
 import useLocationRecords from '@/services/useLocationRecords'
 
+import SwalMixin, { showToast } from '~/utils/swalMixin'
+
+import useApi from '~/services/useApi'
 
 let timeout: any
 
 interface Client {
-      client_id?: string
-      location_ids?: any[]
-    }
+  client_id?: string
+  location_ids?: any[]
+}
 
 export default defineComponent({
-  components: { LocationForm, StaffForm },
+  components: {},
   props: {
     id: {
       type: [String, Number],
+      default: undefined,
     },
     name: {
       type: [String, Number],
+      default: undefined,
     },
   },
-  setup(_props, { parent, emit }) {
+  setup(_props, { parent }) {
     const $swal = SwalMixin((parent as any).$swal as any)
     const formValid = ref(false)
     const busy = ref(false)
@@ -126,12 +129,11 @@ export default defineComponent({
     const entries = ref<any>([])
     const isLoading = ref(false)
     const search = ref(null)
-    const { list, create} = useLocationRecords()
+    const { list, create } = useLocationRecords()
 
-
-  watch(search, () => {
-      if (entries.length > 0) { 
-      return
+    watch(search, () => {
+      if (entries.length > 0) {
+        return
       }
       if (isLoading.value) {
         return
@@ -139,13 +141,10 @@ export default defineComponent({
 
       isLoading.value = true
       list({})
-          .then((resp) => {
-            entries.value = resp.data.data.result ? resp.data.data.result : []
-            console.log('LOCATION SETTINGS', entries.value)
-          })
-        .catch(err => {
-          console.log(err)
+        .then((resp) => {
+          entries.value = resp.data.data.result ? resp.data.data.result : []
         })
+        .catch((_err) => {})
         .finally(() => (isLoading.value = false))
     })
 
@@ -168,11 +167,7 @@ export default defineComponent({
       }, 300)
     }
 
-    const onChange = () => {
-      const client = clientsList.value.find(
-        (c: any) => c.id === formData.value.client_id
-      )
-    }
+    const onChange = () => {}
 
     watch(searchInput, () => {
       if (!searchInput.value) {
@@ -180,18 +175,12 @@ export default defineComponent({
       }
     })
 
-    const locationId = ref(
-      router.currentRoute.query.id
-    )
-    
-    const locationName = ref(
-      router.currentRoute.query.name
-    )
-    const formData = ref<Client>({
-    })
+    const locationId = ref(router.currentRoute.query.id)
+
+    const locationName = ref(router.currentRoute.query.name)
+    const formData = ref<Client>({})
 
     const locations = ref([])
-
 
     const rules = {
       client_id: [(v: string | number) => !!v || 'Client is required'],
@@ -208,9 +197,9 @@ export default defineComponent({
     const submit = () => {
       busy.value = true
       create({
-        ...formData.value
+        ...formData.value,
       })
-        .then((resp) => {
+        .then((_resp) => {
           showToast($swal, {
             title: `Location Successfully added!`,
           })
@@ -223,9 +212,9 @@ export default defineComponent({
       busy.value = true
       create({
         client_id: formData.value.client_id,
-        location_ids: [locationId.value]
+        location_ids: [locationId.value],
       })
-        .then((resp) => {
+        .then((_resp) => {
           showToast($swal, {
             title: `Location Successfully added!`,
           })

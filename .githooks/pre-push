@@ -1,0 +1,13 @@
+#!/bin/sh
+
+echo 'Running pre-push quality checks…'
+status=0
+npm run lint:js || status=1
+npm run lint:style || status=1
+npm test -- --runInBand --coverage=false || status=1
+
+if [ "$status" -ne 0 ]; then
+  echo 'Push blocked because a quality check failed.' >&2
+fi
+
+exit "$status"

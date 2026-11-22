@@ -28,8 +28,8 @@
           ></v-text-field>
 
           <v-text-field
-            :rules="rules.email"
             v-model="data['email']"
+            :rules="rules.email"
             :disabled="loading || scope === 'profile'"
             :label="scope === 'profile' ? 'Email address' : undefined"
             :outlined="scope === 'profile'"
@@ -38,8 +38,8 @@
           ></v-text-field>
 
           <v-text-field
-            v-model="data['old_password']"
             v-if="isEditing && isEditingOtherUser === false"
+            v-model="data['old_password']"
             type="password"
             :rules="rules.old_password"
             :label="scope === 'profile' ? 'Current password' : undefined"
@@ -84,16 +84,16 @@
           ></v-text-field>
 
           <v-radio-group
-            class="radio-group"
             v-if="scope != 'profile'"
             v-model="data['role_id']"
+            class="radio-group"
             :disabled="loading"
             :rules="rules.role_id"
           >
             <v-radio
-              :value="n.id"
               v-for="n in rolesList"
               :key="n.id"
+              :value="n.id"
               :label="n.name"
             ></v-radio>
           </v-radio-group>
@@ -103,7 +103,9 @@
         <v-spacer></v-spacer>
         <v-btn
           :text="scope === 'profile'"
-          :color="scope === 'profile' ? undefined : (isEditing ? 'primary' : 'normal')"
+          :color="
+            scope === 'profile' ? undefined : isEditing ? 'primary' : 'normal'
+          "
           :disabled="loading || loadingRoles"
           @click="$emit('cancel')"
           >Cancel</v-btn
@@ -113,7 +115,13 @@
           :loading="loading"
           :color="isEditing && scope !== 'profile' ? 'warning' : 'primary'"
           @click="submit"
-          >{{ scope === 'profile' ? 'Save changes' : (isEditing ? 'Update' : 'Create') }}</v-btn
+          >{{
+            scope === 'profile'
+              ? 'Save changes'
+              : isEditing
+              ? 'Update'
+              : 'Create'
+          }}</v-btn
         >
       </v-card-actions>
 
@@ -172,7 +180,7 @@ import swalMixin, { showToast } from '~/utils/swalMixin'
 
 export default defineComponent({
   props: {
-    userId: [Number, String],
+    userId: { type: [Number, String], default: undefined },
     scope: {
       type: String,
       default: 'profile',
@@ -186,7 +194,7 @@ export default defineComponent({
     const userImage = ref('')
     const userId: any = props.userId
     const route = useRoute()
-    const toast = (parent as any).$toast
+
     const data = ref({
       password: '',
       password_confirmation: '',
@@ -207,7 +215,7 @@ export default defineComponent({
         loading.value = true
         const res = await userById(userId)
         const userData = res.data?.data
-        delete userData['scope']
+        delete userData.scope
 
         data.value = userData
         loading.value = false
@@ -255,7 +263,6 @@ export default defineComponent({
       } catch (e) {
         loading.value = false
         passwordEditConfirmDialog.value = false
-        console.log(e.response)
       }
     }
 
@@ -267,7 +274,8 @@ export default defineComponent({
 
           if (isEditing) {
             if (
-              route.value.path.includes('profile') === false && data.value?.password
+              route.value.path.includes('profile') === false &&
+              data.value?.password
             ) {
               passwordEditConfirmDialog.value = true
               return
@@ -289,9 +297,7 @@ export default defineComponent({
             icon: 'warning',
           })
         }
-      } catch (e) {
-        console.log(e.response)
-      }
+      } catch (e) {}
     }
     const commonPasswordRules = [
       (v: string) => {
@@ -326,7 +332,7 @@ export default defineComponent({
           data.value.password
             ? !!v || 'Password confirmation is required'
             : true,
-        (v: string) =>
+        (_v: string) =>
           data.value.password === data.value.password_confirmation ||
           'Passwords donot match.',
         ...commonPasswordRules,
@@ -337,7 +343,7 @@ export default defineComponent({
       ],
       pay_rate: [
         (v: string) =>
-          data.value['role_id'] === 4 ? !!v || 'Pay rate is required' : true,
+          data.value.role_id === 4 ? !!v || 'Pay rate is required' : true,
         (v: string) => {
           if (v === undefined || v === null) return true
           return parseInt(v) > 0.1 || 'Pay rate must be greater 0.1'
@@ -362,11 +368,11 @@ export default defineComponent({
     const handleSelectProfilePicture = (file: any) => {
       if (file) {
         if (file.type.startsWith('image')) {
-          var reader = new FileReader()
-          var baseString: string = ''
+          const reader = new FileReader()
+          let baseString: string = ''
           reader.onloadend = function () {
             baseString = reader.result as string
-            let sizeInKB: number = +(file.size / 1024).toFixed(0)
+            const sizeInKB: number = +(file.size / 1024).toFixed(0)
 
             if (sizeInKB > 500) {
               showToast($swal, {
@@ -401,7 +407,7 @@ export default defineComponent({
     })
 
     return {
-      //state
+      // state
       data,
       isEditing,
       loadingRoles,
@@ -415,7 +421,7 @@ export default defineComponent({
       isAllowedToEdit,
       isEditingOtherUser,
 
-      //methods
+      // methods
       submit,
       handleUpdateUser,
       handleSelectProfilePicture,
@@ -423,7 +429,6 @@ export default defineComponent({
   },
 })
 </script>
-
 
 <style lang="scss">
 // .body {

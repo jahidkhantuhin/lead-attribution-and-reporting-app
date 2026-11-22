@@ -1,8 +1,8 @@
 <template>
   <site-details
     :loading="busy"
-    :siteData="siteData"
-    :siteID="siteID"
+    :site-data="siteData"
+    :site-i-d="siteID"
   ></site-details>
 </template>
 
@@ -15,7 +15,7 @@ import {
   onMounted,
 } from '@nuxtjs/composition-api'
 import SiteDetails from '~/components/SiteRecords/SiteDetails.vue'
-import useClientLocations from '~/services/useClientLocations'
+
 import useSiteRecords from '~/services/useSiteRecords'
 
 export default defineComponent({
@@ -30,7 +30,6 @@ export default defineComponent({
     const busy = ref(false)
 
     const { siteById } = useSiteRecords()
-    const { locationById } = useClientLocations()
 
     const siteID = route.value.params.site_id
     const clientId = route.value.params.client_id
@@ -57,7 +56,7 @@ export default defineComponent({
                 disabled: false,
               },
               {
-                text:  'Details of' + ' ' + (siteData.value as any).url,
+                text: 'Details of' + ' ' + (siteData.value as any).url,
                 to: ``,
                 disabled: true,
               },

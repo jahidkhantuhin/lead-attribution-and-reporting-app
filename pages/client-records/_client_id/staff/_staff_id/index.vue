@@ -1,7 +1,7 @@
 <template>
   <v-row class="my-6" justify="center">
     <v-col cols="12" lg="8" md="10">
-      <staff-details :loading="busy" :staffData="staffData"></staff-details>
+      <staff-details :loading="busy" :staff-data="staffData"></staff-details>
     </v-col>
   </v-row>
 </template>
@@ -14,7 +14,7 @@ import {
   ref,
   onMounted,
 } from '@nuxtjs/composition-api'
-import useClientRecords from '~/services/useClientRecords'
+
 import useClientStaff from '~/services/useClientStaff'
 import StaffDetails from '~/components/ClientRecords/StaffDetails.vue'
 
@@ -30,7 +30,6 @@ export default defineComponent({
     const staffData = ref({})
     const busy = ref(false)
 
-    const { clientById } = useClientRecords()
     const { staffById } = useClientStaff()
 
     const staffID = route.value.params.staff_id
@@ -79,7 +78,6 @@ export default defineComponent({
           busy.value = false
         })
     }
-
 
     onMounted(() => {
       fetchStaff()

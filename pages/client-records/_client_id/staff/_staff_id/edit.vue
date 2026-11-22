@@ -2,9 +2,9 @@
   <v-row class="my-6" justify="center">
     <v-col cols="12" lg="4" md="6">
       <staff-form
+        :id="editId"
         @cancel="$router.push(`/client-records/${clientId}/staff/${editId}`)"
         @onFetchClient="onFetchClient"
-        :id="editId"
       ></staff-form>
     </v-col>
   </v-row>
@@ -27,8 +27,6 @@ export default defineComponent({
     const clientId = route.value.params.client_id
 
     const onFetchClient = (client, staff) => {
-      console.log(client, staff)
-
       const pageTitle = 'Edit Staff'
 
       store.dispatch('setPageHeading', {

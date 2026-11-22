@@ -41,7 +41,7 @@
     >
       <v-icon>mdi-chevron-up</v-icon>
     </v-btn>
-    <div class="fetch-user" v-if="fetchingUser">
+    <div v-if="fetchingUser" class="fetch-user">
       <v-container class="auth-page" fill-height fluid>
         <v-row align="center" justify="center">
           <div class="inner">
@@ -92,9 +92,17 @@ export default defineComponent({
     const breadcrumbs = computed<IBreadcrumbs>(() => store.state.breadcrumbs)
 
     // controls the left sidebar
-    const desktop = computed(() => Boolean((root as any).$vuetify.breakpoint.lgAndUp))
+    const desktop = computed(() =>
+      Boolean((root as any).$vuetify.breakpoint.lgAndUp)
+    )
     const sidebarOpen = ref(false)
-    watch(desktop, value => { sidebarOpen.value = value }, { immediate: true })
+    watch(
+      desktop,
+      (value) => {
+        sidebarOpen.value = value
+      },
+      { immediate: true }
+    )
     const fetchingUser = ref<boolean>(true)
 
     const changeSidebar = (val?: boolean | null | undefined) => {
@@ -140,7 +148,7 @@ export default defineComponent({
       }
     })
 
-    const fetchUser = async () => {
+    const fetchUser = () => {
       if (process.env.SHOWCASE_MODE === 'true') {
         fetchingUser.value = false
         return
@@ -163,7 +171,7 @@ export default defineComponent({
       fetchUser()
     })
 
-    onMounted(async () => {
+    onMounted(() => {
       $axios.get('/sanctum/csrf-cookie', {
         headers: {
           'X-Requested-With': 'XMLHttpRequest',

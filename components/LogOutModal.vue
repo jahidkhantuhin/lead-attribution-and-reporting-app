@@ -30,7 +30,12 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, useRouter } from '@nuxtjs/composition-api'
+import {
+  computed,
+  defineComponent,
+  ref,
+  useRouter,
+} from '@nuxtjs/composition-api'
 import swalMixin, { showToast } from '~/utils/swalMixin'
 export default defineComponent({
   props: {
@@ -64,7 +69,7 @@ export default defineComponent({
       })
       open.value = !open.value
       busy.value = false
-      router.push("/login");
+      router.push('/login')
     }
     return {
       open,

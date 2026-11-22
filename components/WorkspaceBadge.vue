@@ -1,5 +1,8 @@
 <template>
-  <span class="workspace-badge" :class="'workspace-badge--' + presentation.tone">
+  <span
+    class="workspace-badge"
+    :class="'workspace-badge--' + presentation.tone"
+  >
     {{ presentation.label }}
   </span>
 </template>
@@ -51,14 +54,25 @@ export default defineComponent({
   setup(props) {
     const presentation = computed(() => {
       const value: unknown = props.value
-      const record = typeof value === 'object' && value ? value as Record<string, unknown> : null
-      const raw = record ? record.key ?? record.value ?? record.label ?? record.name : value
+      const record =
+        typeof value === 'object' && value
+          ? (value as Record<string, unknown>)
+          : null
+      const raw = record
+        ? record.key ?? record.value ?? record.label ?? record.name
+        : value
       const text = raw == null ? '' : String(raw).trim()
       const key = text.toLowerCase().replace(/[\s-]+/g, '_')
       const labels = props.kind === 'role' ? roles : statuses
-      const known = Object.prototype.hasOwnProperty.call(labels, key) && labels[key]
-      const readable = text.replace(/_/g, ' ').replace(/^./, letter => letter.toUpperCase())
-      return { label: known ? known[0] : readable || 'Unknown', tone: known ? known[1] : 'neutral' }
+      const known =
+        Object.prototype.hasOwnProperty.call(labels, key) && labels[key]
+      const readable = text
+        .replace(/_/g, ' ')
+        .replace(/^./, (letter) => letter.toUpperCase())
+      return {
+        label: known ? known[0] : readable || 'Unknown',
+        tone: known ? known[1] : 'neutral',
+      }
     })
     return { presentation }
   },

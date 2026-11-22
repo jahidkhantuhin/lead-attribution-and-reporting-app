@@ -4,7 +4,7 @@
       IDs
       <v-spacer></v-spacer>
     </v-card-title>
-  <v-card-text>
+    <v-card-text>
       <v-simple-table>
         <template #default>
           <tbody>
@@ -16,16 +16,15 @@
               <td><strong>LH2</strong></td>
               <td><strong>Apexchat</strong></td>
               <td><strong>Hubspot</strong></td>
-
             </tr>
             <tr>
-              <td> </td>
-              <td > {{ locationData.adwords_id }} </td>
-              <td > {{ locationData.facebook_id }} </td>
-              <td> {{ locationData.account_id }}  </td>
-              <td> {{ locationData.lh2_api_key }}  </td>
-              <td> {{ locationData.apexchat_id }} </td>
-              <td> {{ locationData.hubspot_id }} </td>
+              <td></td>
+              <td>{{ locationData.adwords_id }}</td>
+              <td>{{ locationData.facebook_id }}</td>
+              <td>{{ locationData.account_id }}</td>
+              <td>{{ locationData.lh2_api_key }}</td>
+              <td>{{ locationData.apexchat_id }}</td>
+              <td>{{ locationData.hubspot_id }}</td>
             </tr>
           </tbody>
         </template>
@@ -35,30 +34,20 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  ref,
-  useRoute,
-} from '@nuxtjs/composition-api'
-import FormattedDate from '~/components/FormattedDate.vue'
+import { defineComponent, ref } from '@nuxtjs/composition-api'
 
 export default defineComponent({
-  components: {
-    FormattedDate,
-  },
+  components: {},
   props: {
     locationData: {
       type: Object,
-        default() {
-            return {}
-        }
+      default() {
+        return {}
+      },
     },
-    },
+  },
   setup() {
     const busy = ref(false)
-    const route = useRoute()
-
 
     return {
       busy,

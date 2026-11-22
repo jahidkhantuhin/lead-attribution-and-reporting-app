@@ -1,5 +1,5 @@
 <template>
-  <v-form v-model="formValid" ref="form">
+  <v-form ref="form" v-model="formValid">
     <v-card>
       <v-card-title>
         <h4 class="heading">{{ title }}</h4>
@@ -11,9 +11,9 @@
         <v-row class="mt-n10">
           <v-col cols="12" md="6">
             <v-text-field
+              v-model="formData.name"
               label="Name *"
               clearable
-              v-model="formData.name"
               :rules="rules.name"
               maxlength="50"
               counter="50"
@@ -23,9 +23,9 @@
           </v-col>
           <v-col cols="12" md="6">
             <v-text-field
+              v-model="formData.address"
               label="Address *"
               clearable
-              v-model="formData.address"
               :rules="rules.address"
               maxlength="50"
               counter="50"
@@ -35,9 +35,9 @@
           </v-col>
           <v-col cols="12" md="6" class="mt-n8">
             <v-text-field
+              v-model="formData.city"
               label="City"
               clearable
-              v-model="formData.city"
               :rules="rules.city"
               maxlength="50"
               counter="50"
@@ -47,9 +47,9 @@
           </v-col>
           <v-col cols="12" md="6" class="mt-n8">
             <v-text-field
+              v-model="formData.state"
               label="State"
               clearable
-              v-model="formData.state"
               :rules="rules.state"
               maxlength="50"
               counter="50"
@@ -59,9 +59,9 @@
           </v-col>
           <v-col cols="12" md="6" class="mt-n8">
             <v-text-field
+              v-model="formData.zip"
               label="Zip Code *"
               clearable
-              v-model="formData.zip"
               :rules="rules.zipcode"
               maxlength="50"
               counter="50"
@@ -71,9 +71,9 @@
           </v-col>
           <v-col cols="12" md="6" class="mt-n8">
             <v-text-field
+              v-model="formData.website"
               label="Location Website *"
               clearable
-              v-model="formData.website"
               :rules="rules.website"
               maxlength="50"
               counter="50"
@@ -85,10 +85,10 @@
         <v-row>
           <v-col cols="12" md="6">
             <v-autocomplete
+              v-model="formData.account_manager_id"
               :items="accountManagers"
               item-value="id"
               :loading="loadingAccountManagers"
-              v-model="formData.account_manager_id"
               item-text="fullname"
               label="Account Manager *"
               :rules="rules.account_manager"
@@ -97,11 +97,11 @@
           </v-col>
           <v-col cols="12" md="6">
             <v-select
+              v-model="formData.status"
               :items="statusOptions"
               placeholder="Select Status *"
               item-value="id"
               item-text="value"
-              v-model="formData.status"
               :rules="rules.status"
             >
             </v-select>
@@ -115,27 +115,27 @@
         <v-row>
           <v-col cols="12" md="6" class="mt-n10">
             <v-text-field
+              v-model="formData.apexchat_id"
               label="Apex chat ID"
               clearable
-              v-model="formData.apexchat_id"
               :rules="rules.apexchat_id"
             >
             </v-text-field>
           </v-col>
           <v-col cols="12" md="6" class="mt-n10">
             <v-text-field
+              v-model="formData.account_id"
               label="Call Service id *"
               clearable
-              v-model="formData.account_id"
               :rules="rules.account_id"
             >
             </v-text-field>
           </v-col>
           <v-col cols="12" md="6" class="mt-n8">
             <v-text-field
+              v-model="formData.reporting_mail"
               label="Reporting Email Address *"
               clearable
-              v-model="formData.reporting_mail"
               :rules="rules.reporting_mail"
             >
             </v-text-field>
@@ -169,27 +169,27 @@
         <v-row>
           <v-col cols="12" md="6" class="mt-n8">
             <v-text-field
+              v-model="formData.facebook_id"
               label="Facebook ID"
               clearable
-              v-model="formData.facebook_id"
               :rules="rules.facebook_id"
             >
             </v-text-field>
           </v-col>
           <v-col cols="12" md="6" class="mt-n8">
             <v-text-field
+              v-model="formData.adwords_id"
               label="Adwords ID"
               clearable
-              v-model="formData.adwords_id"
               :rules="rules.adwords_id"
             >
             </v-text-field>
           </v-col>
           <v-col cols="12" md="6" class="mt-n8">
             <v-text-field
+              v-model="formData.adwords_budget"
               label="Adwords Budget"
               clearable
-              v-model="formData.adwords_budget"
               :rules="rules.adwords_budget"
               maxlength="50"
               counter="50"
@@ -199,9 +199,9 @@
           </v-col>
           <v-col cols="12" md="6" class="mt-n8">
             <v-text-field
+              v-model="formData.facebook_budget"
               label="Facebook Budget"
               clearable
-              v-model="formData.facebook_budget"
               :rules="rules.facebook_budget"
               maxlength="50"
               counter="50"
@@ -211,9 +211,9 @@
           </v-col>
           <v-col cols="12" md="6" class="mt-n8">
             <v-text-field
+              v-model="formData.monthly_fee"
               label="Monthly Fee"
               clearable
-              v-model="formData.monthly_fee"
               :rules="rules.monthly_fee"
               maxlength="50"
               counter="50"
@@ -252,18 +252,14 @@
       <v-card-actions v-if="editForm">
         <span class="red--text text--darken-1"> * required </span>
         <v-spacer></v-spacer>
-        <v-dialog
-          v-model="dialog"
-          persistent
-          max-width="600px"
-        >
-          <template v-slot:activator="{ on, attrs }">
+        <v-dialog v-model="dialog" persistent max-width="600px">
+          <template #activator="{ on, attrs }">
             <v-btn :disabled="busy" @click="$emit('cancel')">Cancel</v-btn>
             <v-btn
               color="primary"
               v-bind="attrs"
-              v-on="on"
               :disabled="!formValid"
+              v-on="on"
             >
               Go Ahead
             </v-btn>
@@ -275,14 +271,10 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col
-                    cols="12"
-                    sm="12"
-                    md="12"
-                  >
+                  <v-col cols="12" sm="12" md="12">
                     <v-text-field
-                      label="Reason for changes*"
                       v-model="formData.comment"
+                      label="Reason for changes*"
                       :rules="rules.comment"
                       required
                     ></v-text-field>
@@ -292,11 +284,7 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn
-                color="blue darken-1"
-                text
-                @click="dialog = false"
-              >
+              <v-btn color="blue darken-1" text @click="dialog = false">
                 Close
               </v-btn>
               <v-btn
@@ -323,25 +311,23 @@ import {
   ref,
   useRouter,
 } from '@nuxtjs/composition-api'
+
 import useClientLocations from '~/services/useClientLocations'
 import useClientRecords from '~/services/useClientRecords'
-import swalMixin, { showConfirmDialog, showToast } from '~/utils/swalMixin'
-import slugify from 'slugify'
-import ReportingEmailAddress from '~/components/ReportingEmailAddress.vue'
+import swalMixin, { showToast } from '~/utils/swalMixin'
+
 import useUsers from '~/services/useUsers'
 import { AM_ROLE } from '~/utils/UserEnums'
 
 export default defineComponent({
-  components: {
-    ReportingEmailAddress,
-  },
+  components: {},
   props: {
     id: {
       type: [String, Number],
+      default: undefined,
     },
   },
   setup(_props, { emit, parent }) {
-
     const dialog = ref(false)
     const formValid = ref(false)
     const busy = ref(false)
@@ -350,7 +336,7 @@ export default defineComponent({
     const router = useRouter()
     const $swal = swalMixin((parent as any).$swal as any)
     const { create, locationById, updateLocation } = useClientLocations()
-    const { clientById, listStatus  } = useClientRecords()
+    const { clientById, listStatus } = useClientRecords()
 
     const clientID = router.currentRoute.params.client_id
     const statusOptions = ref([])
@@ -384,7 +370,7 @@ export default defineComponent({
       return (_props.id ? 'Edit' : 'Add') + ' Location'
     })
     const editForm = computed(() => {
-      return _props.id ? true : false
+      return !!_props.id
     })
 
     const rules = computed(() => {
@@ -410,10 +396,12 @@ export default defineComponent({
           (v: string) => /.+@.+\..+/.test(v) || 'E-mail must be valid',
         ],
         adwords_budget: [
-          (v: string) =>  !v || !/\D/.test(v) || 'Adwords budget must be numeric',
+          (v: string) =>
+            !v || !/\D/.test(v) || 'Adwords budget must be numeric',
         ],
         facebook_budget: [
-          (v: string) => !v || !/\D/.test(v) || 'Facebook budget must be numeric',
+          (v: string) =>
+            !v || !/\D/.test(v) || 'Facebook budget must be numeric',
         ],
         monthly_fee: [
           (v: string) => !v || !/\D/.test(v) || 'Monthly fee must be numeric',
@@ -422,16 +410,14 @@ export default defineComponent({
         website: [
           (v: string) => !!v || 'Personal website is required',
           (v: string) =>
-            /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(v) ||
+            /^(?:\w+:)?\/\/([^\s.]+\.\S{2}|localhost[:?\d]*)\S*$/.test(v) ||
             'Website should start with https:// e.g "https://example.com"',
         ],
         reporting_mail: [
           (v: string) => !!v || 'Reporting Email is required',
           (v: string) => /.+@.+\..+/.test(v) || 'Reporting Email must be valid',
         ],
-        account_manager: [
-          (v: string) => !!v || 'Account Manager is required',
-        ],
+        account_manager: [(v: string) => !!v || 'Account Manager is required'],
       }
     })
     const getStatusOptions = () => {
@@ -486,7 +472,9 @@ export default defineComponent({
             formData.value.name = data.name
             formData.value.id = data.id
             formData.value.account_id = data.account_id
-            formData.value.website = data.website.includes('http') ? data.website : 'https://' + data.website
+            formData.value.website = data.website.includes('http')
+              ? data.website
+              : 'https://' + data.website
             formData.value.address = data.address
             formData.value.street = data.street
             formData.value.city = data.city
@@ -497,7 +485,7 @@ export default defineComponent({
             formData.value.reporting_mail = data.reporting_mail
             formData.value.facebook_id = data.facebook_id
             formData.value.adwords_id = data.adwords_id
-            formData.value.status =  data.status
+            formData.value.status = data.status
             formData.value.apexchat_id = data.apexchat_id
             formData.value.account_manager_id = data.account_manager_id
             formData.value.monthly_fee = data.monthly_fee
@@ -542,7 +530,6 @@ export default defineComponent({
       accountManagers,
       loadingAccountManagers,
       getAccountManagers,
-
     }
   },
 })

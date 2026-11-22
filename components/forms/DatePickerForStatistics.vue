@@ -16,8 +16,8 @@
           prepend-icon="mdi-calendar"
           readonly
           v-bind="attrs"
-          v-on="on"
           :disabled="disabled"
+          v-on="on"
           @click:clear="handleClickClear"
         ></v-text-field>
       </template>
@@ -25,18 +25,18 @@
         <v-date-picker
           v-model="dates"
           range
-          @change="handleDatePickerChange"
           :min="minimum"
           :max="maximum"
+          @change="handleDatePickerChange"
         ></v-date-picker>
         <v-card-text>
           <v-btn
-            @click="setDate(button)"
             v-for="button in dateHelpButtons"
-            v-bind:key="button"
+            :key="button"
             class="mr-1 mb-2"
             elevation="0"
             small
+            @click="setDate(button)"
             >{{ datePickerHelperButtons[button].label }}</v-btn
           >
         </v-card-text>
@@ -61,7 +61,7 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
-    value: [String, Array],
+    value: { type: [String, Array], default: undefined },
     disabled: {
       type: Boolean,
       default: false,
@@ -130,7 +130,9 @@ export default defineComponent({
         } else {
           if (!dates.value.length) return ''
           const range = formatDateRange(dates.value[0], dates.value[1])
-          return range ? [range.startLabel, range.endLabel].filter(Boolean).join('–') : ''
+          return range
+            ? [range.startLabel, range.endLabel].filter(Boolean).join('–')
+            : ''
         }
       },
       set: (v) => {
