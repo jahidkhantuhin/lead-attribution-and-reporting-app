@@ -23,6 +23,13 @@ const axiosConfig = {
 }
 
 export default {
+  watchers: {
+    chokidar: {
+      // README media does not participate in the Nuxt dev build.
+      ignored: /(?:^|[\\/])docs[\\/]media(?:[\\/]|$)/,
+    },
+  },
+
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
 

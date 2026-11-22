@@ -2,6 +2,10 @@
 
 A Nuxt 2 and TypeScript dashboard for lead attribution, client and location administration, and website performance reporting. Maintained by Jahid Khan Tuhin, full stack JavaScript engineer.
 
+## Showcase overview
+
+![Animated tour of the Foundation dashboard, record inspectors, reports, and account screens](docs/media/foundation-overview.gif)
+
 ## Run the local showcase
 
 Use Node.js 22 and npm. From the repository root, run:
