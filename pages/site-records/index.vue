@@ -8,117 +8,65 @@
         }"
         v-if="!nonAccountManagerUserRole"
         >
-      <v-col cols="12" md="12">
-        <v-card class="workspace-filter-panel">
-          <v-form @submit.prevent="">
-            <v-card-title>
-              <v-icon left>mdi-filter</v-icon>
-              {{ $t('message.filters') }}
-            </v-card-title>
-            <v-card-text>
-              <v-row>
-                
-                <v-col cols="12" sm="6" md="3">
-                  <v-text-field
-                    label="Search by name"
-                    clearable
-                    v-model="filters.name"
-                    maxlength="250"
-                  ></v-text-field>
+      <v-col cols="12">
+        <v-card class="workspace-filter-panel site-record-controls">
+          <v-card-title>Find sites</v-card-title>
+          <v-card-text>
+            <v-form @submit.prevent="handleFilterApply()">
+              <v-row align="center">
+                <v-col cols="12" sm="6" lg="4">
+                  <v-text-field v-model="filters.name" label="Search sites" append-icon="mdi-magnify" clearable hide-details="auto" />
                 </v-col>
-                <v-col cols="12" sm="6" md="3">
-                  <v-autocomplete
-                  v-model="filters.plugin"
-                  :items="pluginOptions"
-                  label="Plugin"
-                  item-text="name"
-                  item-value="id"
-                  clearable
-                  >
-                  </v-autocomplete>
+                <v-col cols="6" sm="3" lg="2">
+                  <v-select v-model="filters.status" label="Status" :items="statusOptions" clearable hide-details="auto" />
                 </v-col>
-                <v-col cols="12" sm="6" md="3">
-                  <v-autocomplete
-                  v-model="filters.theme"
-                  :items="themeOptions"
-                  label="Theme"
-                  item-text="name"
-                  item-value="id"
-                  clearable
-                  >
-                  </v-autocomplete>
+                <v-col cols="12" sm="6" lg="3">
+                  <Datepicker v-model="filters.date" :dateHelpButtons="['lastWeek', 'thisWeek', 'thisMonth', 'lastMonth', 'thisYear', 'lastYear']" />
                 </v-col>
-                <v-col cols="12" sm="6" md="3">
-                  <v-select
-                    label="Status"
-                    :items="statusOptions"
-                    v-model="filters.status"
-                    clearable
-                  ></v-select>
-                </v-col>
-                <v-col cols="12" sm="6" md="3">
-                  <Datepicker
-                    v-model="filters['date']"
-                    :dateHelpButtons="[
-                      'lastWeek',
-                      'thisWeek',
-                      'thisMonth',
-                      'lastMonth',
-                      'thisYear',
-                      'lastYear',
-                    ]"
-                  ></Datepicker>
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-subheader class="px-0">Min and max speed score</v-subheader>
-                  <v-range-slider
-                  v-model="filters.speed_score"
-                  :max="max"
-                  :min="min"
-                  hide-details
-                  class="align-center"
-                  >
-                    <template v-slot:prepend>
-                      <v-text-field
-                        :value="filters.speed_score[0]"
-                        class="mt-0 pt-0 workspace-score-bound"
-                        hide-details
-                        single-line
-                        type="number"
-                        aria-label="Minimum speed score"
-                        @change="$set(filters.speed_score, 0, $event)"
-                      ></v-text-field>
-                    </template>
-                    <template v-slot:append>
-                      <v-text-field
-                        :value="filters.speed_score[1]"
-                        class="mt-0 pt-0 workspace-score-bound"
-                        hide-details
-                        single-line
-                        type="number"
-                        aria-label="Maximum speed score"
-                        @change="$set(filters.speed_score, 1, $event)"
-                      ></v-text-field>
-                    </template>
-                  </v-range-slider>
+                <v-col cols="12" lg="3" class="site-filter-actions">
+                  <v-btn outlined color="primary" :aria-expanded="String(showFilters)" @click="showFilters = !showFilters">
+                    <v-icon left small>mdi-filter-variant</v-icon> Filters{{ advancedFilterCount ? ' (' + advancedFilterCount + ')' : '' }}
+                  </v-btn>
+                  <v-btn type="submit" color="primary">Apply</v-btn>
                 </v-col>
               </v-row>
-            </v-card-text>
-            <v-card-actions>
-              <v-btn color="primary" @click="handleFilterApply">
-                <v-icon left>mdi-check</v-icon>
-                {{ $t('buttons.apply') }}
-              </v-btn>
-              <v-btn link nuxt to="/site-records" plain>Clear</v-btn>
-            </v-card-actions>
-          </v-form>
+
+              <v-expand-transition>
+                <v-row v-show="showFilters">
+                  <v-col cols="12" sm="6" md="3">
+                    <v-autocomplete v-model="filters.plugin" :items="pluginOptions" label="Plugin" item-text="name" :item-value="item => String(item.id)" clearable />
+                  </v-col>
+                  <v-col cols="12" sm="6" md="3">
+                    <v-autocomplete v-model="filters.theme" :items="themeOptions" label="Theme" item-text="name" :item-value="item => String(item.id)" clearable />
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-subheader class="px-0">Mobile speed score</v-subheader>
+                    <v-range-slider v-model="filters.speed_score" :max="max" :min="min" hide-details>
+                      <template #prepend>
+                        <v-text-field :value="filters.speed_score[0]" class="workspace-score-bound" type="number" aria-label="Minimum speed score" hide-details @change="$set(filters.speed_score, 0, $event)" />
+                      </template>
+                      <template #append>
+                        <v-text-field :value="filters.speed_score[1]" class="workspace-score-bound" type="number" aria-label="Maximum speed score" hide-details @change="$set(filters.speed_score, 1, $event)" />
+                      </template>
+                    </v-range-slider>
+                  </v-col>
+                </v-row>
+              </v-expand-transition>
+            </v-form>
+
+            <div v-if="appliedChips.length" class="site-filter-chips" aria-label="Applied filters">
+              <v-chip v-for="chip in appliedChips" :key="chip.key" small close @click:close="removeFilter(chip.key)">{{ chip.label }}</v-chip>
+              <v-btn text small color="primary" @click="clearFilters">Clear filters</v-btn>
+            </div>
+          </v-card-text>
         </v-card>
       </v-col>
       <v-col md="12">
         <v-card :loading="busy">
           <v-toolbar flat>
-            <v-toolbar-title>Site Records</v-toolbar-title>
+            <v-toolbar-title>{{ pagination.total }} {{ pagination.total === 1 ? 'site' : 'sites' }}</v-toolbar-title>
             <v-spacer></v-spacer>
+            <v-btn text small @click="tableView = !tableView">{{ tableView ? 'Inspector' : 'View table' }}</v-btn>
               <v-btn icon title="Copy link to this report" @click="copyLink">
                 <v-icon>mdi-link</v-icon>
               </v-btn>
@@ -135,13 +83,19 @@
           <v-toolbar flat>
             <v-card-text class="ml-n4">
               <DatesAndDiff
-                :start="filterParams.date_start"
-                :end="filterParams.date_end"
+                :start="appliedFilters.date[0]"
+                :end="appliedFilters.date[1]"
               />
             </v-card-text>
           </v-toolbar>
+          <template v-if="loadedReport && !tableView">
+            <site-record-inspector :sites="computedReport" :loading="busy" :start="appliedFilters.date[0]" :end="appliedFilters.date[1]" />
+            <v-card-actions v-if="pageCount > 1" class="justify-end">
+              <v-pagination :value="tablePage" :length="pageCount" :total-visible="5" @input="goToPage" />
+            </v-card-actions>
+          </template>
           <v-data-table
-            v-if="loadedReport"
+            v-if="loadedReport && tableView"
             :items="computedReport"
             :headers="tableHeaders"
             @pagination="handlePaginationChange"
@@ -251,6 +205,7 @@ import moment from 'moment'
 import { extendMoment } from 'moment-range'
 const MomentRange = extendMoment(moment as any)
 import DatesAndDiff from '~/components/DatesAndDiff.vue'
+import SiteRecordInspector from '~/components/SiteRecords/SiteRecordInspector.vue'
 import UnauthorizedUser from '~/components/UnauthorizedUser.vue'
 
 interface IClientRecordsFilter {
@@ -268,6 +223,7 @@ export default defineComponent({
   components: {
     Datepicker,
     DatesAndDiff,
+    SiteRecordInspector,
     UnauthorizedUser,
   },
   //middleware: 'isAuthenticated',
@@ -306,13 +262,29 @@ export default defineComponent({
         moment().subtract('1', 'month').startOf('month').format('YYYY-MM-DD'),
         moment().subtract('1', 'month').endOf('month').format('YYYY-MM-DD'),
       ],
-      name: [],
-      plugin: [],
-      theme: [],
+      name: '',
+      plugin: null,
+      theme: null,
       // status: 'all',
       speed_score: [0, 100]
     }
-    const filters = ref<IClientRecordsFilter>(defaultFilterValues)
+    const filters = ref<IClientRecordsFilter>({ ...defaultFilterValues })
+    const appliedFilters = ref<IClientRecordsFilter>({ ...defaultFilterValues })
+    const showFilters = ref(false)
+    const tableView = ref(false)
+    const appliedChips = computed(() => {
+      const { name, status, plugin, theme, speed_score } = appliedFilters.value
+      const optionName = (options: any, id: any) => options?.find((option: any) => String(option.id) === String(id))?.name || id
+      return [
+        name ? { key: 'name', label: 'Search: ' + name } : null,
+        status ? { key: 'status', label: 'Status: ' + (status === 'active' ? 'Active' : 'Inactive') } : null,
+        plugin ? { key: 'plugin', label: 'Plugin: ' + optionName(pluginOptions.value, plugin) } : null,
+        theme ? { key: 'theme', label: 'Theme: ' + optionName(themeOptions.value, theme) } : null,
+        speed_score && (Number(speed_score[0]) !== 0 || Number(speed_score[1]) !== 100)
+          ? { key: 'speed_score', label: 'Score: ' + speed_score.join('–') } : null,
+      ].filter(Boolean)
+    })
+    const advancedFilterCount = computed(() => appliedChips.value.filter(chip => chip && ['plugin', 'theme', 'speed_score'].includes(chip.key)).length)
     const filterParams = computed(() => {
       return {
         date_start: filters.value.date[0],
@@ -330,6 +302,7 @@ export default defineComponent({
     const pagination = ref({
       total: 0,
     })
+    const pageCount = computed(() => Math.max(1, Math.ceil(pagination.value.total / itemsPerPage.value)))
     const router = useRouter()
     const store = useStore()
     const { list, pluginList, themeList} = useSiteRecords()
@@ -350,7 +323,8 @@ export default defineComponent({
       return (
         data.result.map((reportItem: any) => {
           reportItem.siteURL = reportItem.url ? reportItem.url : ''
-          reportItem.clientName = reportItem?.location?.client?.name || ''
+          const client = reportItem?.location?.client
+          reportItem.clientName = typeof client === 'string' ? client : client?.name || ''
           reportItem.status = reportItem?.status || ''
           reportItem.accountManager = reportItem.accountManager || reportItem?.location?.client?.account_manager_id || ''
         const item = {
@@ -398,7 +372,7 @@ export default defineComponent({
             : 'asc'
         }
 
-        handleFilterApply()
+        handleFilterApply(false)
       },
       { deep: true }
     )
@@ -407,8 +381,10 @@ export default defineComponent({
 
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
 
+    let recordsRequest = 0
     const getSiteRecords = () => {
-      if (busy.value === false) {
+      const request = ++recordsRequest
+      {
         const appliedFilters = {
           ...filterParams.value,
           // sort_by:
@@ -423,6 +399,7 @@ export default defineComponent({
           page: tablePage.value,
         })
           .then((resp) => {
+            if (request !== recordsRequest) return
             report.value = resp.data.data ? resp.data.data : []
             resp.data.data.result.map((item:any) => {
               return (
@@ -437,13 +414,17 @@ export default defineComponent({
             loadedReport.value = true
             console.log('SITE RECORDS', report.value)
           })
+          .catch(() => {
+            if (request === recordsRequest) loadedReport.value = false
+          })
           .finally(() => {
-            busy.value = false
+            if (request === recordsRequest) busy.value = false
           })
       }
     }
 
-    const handleFilterApply = () => {
+    const handleFilterApply = (resetPage = true) => {
+      if (resetPage) tablePage.value = 1
       router.push({
         path: router.currentRoute.path,
         query: {
@@ -453,11 +434,26 @@ export default defineComponent({
             string | (string | null)[] | null | undefined
           >),
         },
-      })
+      })?.catch(error => { if (error.name !== 'NavigationDuplicated') throw error })
+    }
+
+    const goToPage = (page: number) => {
+      tablePage.value = page
+      handleFilterApply(false)
+    }
+
+    const removeFilter = (key: keyof IClientRecordsFilter) => {
+      filters.value = { ...appliedFilters.value, [key]: defaultFilterValues[key] }
+      handleFilterApply()
+    }
+
+    const clearFilters = () => {
+      filters.value = { ...defaultFilterValues }
+      handleFilterApply()
     }
 
     const loadFiltersFromURL = () => {
-      const query = route.value.query
+      const query = { ...route.value.query }
       if (query.page) {
         tablePage.value = +query.page
         delete query['page']
@@ -473,7 +469,10 @@ export default defineComponent({
       }
       console.log('ItemsPerPage', itemsPerPage.value)
 
-      filters.value = { ...defaultFilterValues, ...query }
+      const dates = Array.isArray(query.date) && query.date.length ? query.date : defaultFilterValues.date
+      const scores = Array.isArray(query.speed_score) && query.speed_score.length === 2 ? query.speed_score.map(Number) : [0, 100]
+      filters.value = { ...defaultFilterValues, ...query, date: dates, speed_score: scores }
+      appliedFilters.value = { ...filters.value, speed_score: [...scores] }
       getSiteRecords()
     }
 
@@ -550,6 +549,16 @@ export default defineComponent({
 
     return {
       tableOptions,
+      tableView,
+      showFilters,
+      appliedFilters,
+      appliedChips,
+      advancedFilterCount,
+      clearFilters,
+      removeFilter,
+      tablePage,
+      pageCount,
+      goToPage,
       tableHeaders,
       getSiteRecords,
       busy,
@@ -655,3 +664,16 @@ export default defineComponent({
 
 </style>
 
+
+<style scoped>
+.site-filter-actions,
+.site-filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.site-filter-chips {
+  padding-top: 8px;
+}
+</style>
