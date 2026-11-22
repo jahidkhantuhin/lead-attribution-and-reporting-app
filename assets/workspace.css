@@ -487,3 +487,20 @@ body:has(.v-application.theme--dark) .swal2-popup { background: #192438; color: 
 .v-application.workspace-app .workspace-date-meta {
   width: auto;
 }
+
+@media (max-width: 499px) {
+  .v-application.workspace-app .directory-toolbar,
+  .v-application.workspace-app .directory-toolbar .v-toolbar__content {
+    height: auto !important;
+  }
+
+  .v-application.workspace-app .directory-toolbar .v-toolbar__content {
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-block: 10px;
+  }
+
+  .v-application.workspace-app .directory-toolbar .v-toolbar__title {
+    flex-basis: 100%;
+  }
+}

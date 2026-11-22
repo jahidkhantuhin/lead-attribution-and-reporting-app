@@ -10,34 +10,59 @@
     >
       <v-col  md="12">
         <v-card class="workspace-filter-panel">
-          <v-card-title>Filters</v-card-title>
-          <v-card-text class="workspace-filter-search">
+          <v-card-title>Find clients</v-card-title>
+          <v-card-text>
+            <v-row align="center">
+              <v-col cols="12" sm="7" md="5">
             <v-text-field
               label="Search clients"
               append-icon="mdi-magnify"
               clearable
               v-model="filters.name"
-              @keydown.enter="handleFilterApply"
+              @keydown.enter.prevent="handleFilterApply(true)"
               maxlength="250"
               >
             </v-text-field>
+              </v-col>
+              <v-col cols="12" sm="5" md="3">
+                <v-select v-model="filters.status" label="Status" :items="statusOptions" item-text="id" item-value="value" clearable hide-details="auto" />
+              </v-col>
+            </v-row>
           </v-card-text>
           <v-card-actions>
-            <v-btn color="primary" @click="handleFilterApply">Apply</v-btn>
+            <v-btn color="primary" @click="handleFilterApply(true)">Apply</v-btn>
+            <v-chip v-if="appliedName" small close @click:close="clearSearch">Search: {{ appliedName }}</v-chip>
+            <v-chip v-if="appliedStatus" small close @click:close="clearStatus">Status: {{ appliedStatusLabel }}</v-chip>
           </v-card-actions>
         </v-card>
       </v-col>
       <v-col md="12">
         <v-card :loading="busy">
-          <v-toolbar flat>
+          <v-toolbar flat class="directory-toolbar">
             <v-toolbar-title>Client Records</v-toolbar-title>
             <!-- <v-spacer></v-spacer> -->
-            <v-btn class="ml-5" color="primary" nuxt to="/client-records/add">
+            <v-btn class="mr-2" color="primary" nuxt to="/client-records/add">
               <v-icon left>mdi-account-plus</v-icon>
               Add
             </v-btn>
+            <v-spacer />
+            <v-btn text small @click="tableView = !tableView">{{ tableView ? 'Inspector' : 'View table' }}</v-btn>
           </v-toolbar>
-      <v-data-table
+          <template v-if="!tableView">
+            <v-card-text class="pb-0">{{ pagination.total }} clients</v-card-text>
+            <record-inspector :records="items" :loading="busy" title="Client inspector">
+              <template #name="{ record }">{{ record.name || [record.first_name, record.last_name].filter(Boolean).join(' ') }}</template>
+              <template #subtitle="{ record }">{{ record.email || '' }}</template>
+              <template #detail="{ record }">
+                <directory-record-detail :key="record.id" :record="record" kind="client" />
+              </template>
+            </record-inspector>
+            <v-card-actions v-if="pageCount > 1" class="justify-end">
+              <v-pagination :value="tablePage" :length="pageCount" :total-visible="5" @input="goToPage" />
+            </v-card-actions>
+          </template>
+          <v-data-table
+            v-else
             :items="items"
             :headers="tableHeaders"
             @pagination="handlePaginationChange"
@@ -129,6 +154,8 @@ import { Dictionary } from '~/node_modules/@types/lodash'
 import FormattedDate from '~/components/FormattedDate.vue'
 import ClientStatusChip from '~/components/ClientStatusChip.vue'
 import useUsers from '~/services/useUsers'
+import RecordInspector from '~/components/RecordInspector.vue'
+import DirectoryRecordDetail from '~/components/DirectoryRecordDetail.vue'
 import UnauthorizedUser from '~/components/UnauthorizedUser.vue'
 
 
@@ -142,6 +169,8 @@ interface IClientRecordsFilter {
 
 export default defineComponent({ 
   components: {
+    RecordInspector,
+    DirectoryRecordDetail,
     ClientRecordsForm,
     FormattedDate,
     ClientStatusChip,
@@ -153,7 +182,7 @@ export default defineComponent({
     const nonAccountManagerUserRole = computed(() =>
       !$auth.hasScope('create report')
     )
-    const statusOptions = ref([])
+    const statusOptions = ref<Array<{ id: string; value: string }>>([])
     const statusOptionsLoading = ref(false)
     const { deleteLocation } = useClientLocations()
     const loadingAccountManagers = ref(false)
@@ -171,9 +200,14 @@ export default defineComponent({
     }
     const filters = ref<IClientRecordsFilter>(defaultFilterValues)
     const tablePage = ref(1)
+    const tableView = ref(false)
+    const appliedName = ref('')
+    const appliedStatus = ref('')
+    const appliedStatusLabel = computed(() => statusOptions.value.find(option => option.value === appliedStatus.value)?.id || appliedStatus.value.replace(/_/g, ' '))
     const pagination = ref({
       total: 0,
     })
+    const pageCount = computed(() => Math.max(1, Math.ceil(pagination.value.total / itemsPerPage.value)))
     const router = useRouter()
     const store = useStore()
     const { list, listStatus } = useClientRecords()
@@ -295,32 +329,39 @@ export default defineComponent({
 
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
 
+    let recordsRequest = 0
     const getClientRecords = () => {
-      if (busy.value === false) {
-        const appliedFilters = {
-          ...filters.value,
-          sort_by:
-            filters.value.sort_by + `:` + filters.value?.sorting?.toLowerCase(),
-        }
-
-        busy.value = true
-        list({
-          ...appliedFilters,
-          limit: itemsPerPage.value,
-          page: tablePage.value,
-        })
-          .then((resp) => {
-            items.value = resp.data.data.result
-            pagination.value = resp.data.data.pagination
-            console.log('CR', items.value)
-          })
-          .finally(() => {
-            busy.value = false
-          })
+      const request = ++recordsRequest
+      const appliedFilters = {
+        ...filters.value,
+        sort_by:
+          filters.value.sort_by + `:` + filters.value?.sorting?.toLowerCase(),
       }
+
+      busy.value = true
+      list({
+        ...appliedFilters,
+        limit: itemsPerPage.value,
+        page: tablePage.value,
+      })
+        .then((resp) => {
+          if (request !== recordsRequest) return
+          items.value = resp.data.data.result
+          pagination.value = resp.data.data.pagination
+        })
+        .catch(() => {
+          if (request === recordsRequest) {
+            items.value = []
+            pagination.value = { total: 0 }
+          }
+        })
+        .finally(() => {
+          if (request === recordsRequest) busy.value = false
+        })
     }
 
-    const handleFilterApply = () => {
+    const handleFilterApply = (resetPage = false) => {
+      if (resetPage) tablePage.value = 1
       router.push({
         path: router.currentRoute.path,
         query: {
@@ -371,8 +412,23 @@ export default defineComponent({
         })
     }
 
+    const clearSearch = () => {
+      filters.value.name = ''
+      handleFilterApply(true)
+    }
+
+    const clearStatus = () => {
+      filters.value.status = null
+      handleFilterApply(true)
+    }
+
+    const goToPage = (page: number) => {
+      tablePage.value = page
+      handleFilterApply()
+    }
+
     const loadFiltersFromURL = () => {
-      const query = route.value.query
+      const query = { ...route.value.query }
       if (query.page) {
         tablePage.value = +query.page
         delete query['page']
@@ -387,6 +443,8 @@ export default defineComponent({
       }
 
       filters.value = { ...defaultFilterValues, ...query }
+      appliedName.value = typeof query.name === 'string' ? query.name : ''
+      appliedStatus.value = typeof query.status === 'string' ? query.status : ''
       getClientRecords()
     }
 
@@ -414,6 +472,15 @@ export default defineComponent({
 
     return {
       tableOptions,
+      tableView,
+      appliedName,
+      appliedStatus,
+      appliedStatusLabel,
+      clearStatus,
+      clearSearch,
+      tablePage,
+      pageCount,
+      goToPage,
       statusOptionsLoading,
       statusOptions,
       sortingOptions,
