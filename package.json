@@ -33,7 +33,7 @@
     "moment": "^2.29.1",
     "moment-range": "^4.0.2",
     "moment-timezone": "^0.5.33",
-    "nuxt": "^2.14.12",
+    "nuxt": "^2.18.1",
     "nuxt-i18n": "^6.20.6",
     "slugify": "^1.6.0",
     "vue-apexcharts": "^1.6.1",
@@ -47,7 +47,7 @@
     "yarn": "^1.22.17"
   },
   "devDependencies": {
-    "@nuxt/types": "^2.14.12",
+    "@nuxt/types": "^2.18.1",
     "@nuxt/typescript-build": "^2.0.4",
     "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/eslint-config-typescript": "^5.0.0",
@@ -67,7 +67,7 @@
     "eslint-plugin-vue": "^7.5.0",
     "jest": "^26.6.3",
     "prettier": "^2.2.1",
-    "stylelint": "^13.9.0",
+    "stylelint": "^18.1.0",
     "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-standard": "^20.0.0",
     "ts-jest": "^26.4.4",
