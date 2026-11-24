@@ -5,7 +5,7 @@
       :headers="tableHeaders"
       :items="rows"
       :items-per-page="100"
-      :fixed-header="true"
+      no-data-text="No KPI results for this period."
       :footer-props="{
         itemsPerPageOptions: [100, 200, 500, -1],
         itemsPerPage: -1,
@@ -15,7 +15,7 @@
       :disable-pagination="true"
       :disable-filtering="true"
       hide-default-footer
-      class="v-table-compact kpi-table"
+      class="workspace-report-table kpi-table"
     >
       <template #item.date="{ item }">
         <span>
@@ -26,15 +26,15 @@
         </span>
       </template>
       <template #item.adwords_clicks="{ item }">
-        <span data-color-span class="red lighten-5">{{
+        <span class="kpi-value kpi-value--search">{{
           item.adwords_clicks
         }}</span>
       </template>
       <template #item.fb_clicks="{ item }">
-        <span data-color-span class="blue lighten-5">{{ item.fb_clicks }}</span>
+        <span class="kpi-value kpi-value--social">{{ item.fb_clicks }}</span>
       </template>
       <template #item.fb_conversions="{ item }">
-        <span data-color-span class="blue lighten-5">
+        <span class="kpi-value kpi-value--social">
           <abbr :title="item.fb_conversions">{{ item.fb_conversions }}</abbr>
         </span>
       </template>
@@ -46,12 +46,12 @@
         </span>
       </template>
       <template #item.fb_impressions="{ item }">
-        <span data-color-span class="blue lighten-5">{{
+        <span class="kpi-value kpi-value--social">{{
           item.fb_impressions
         }}</span>
       </template>
       <template #item.adwords_impressions="{ item }">
-        <span data-color-span class="red lighten-5">{{
+        <span class="kpi-value kpi-value--search">{{
           item.adwords_impressions
         }}</span>
       </template>
@@ -83,28 +83,28 @@
         </span>
       </template>
       <template #item.adwords_cpl="{ item }">
-        <span data-color-span class="red lighten-5">
+        <span class="kpi-value kpi-value--search">
           <abbr :title="`$${item.adwords_cpl}`"
             >${{ new Number(item.adwords_cpl).toFixed(2) }}</abbr
           >
         </span>
       </template>
       <template #item.fb_cpl="{ item }">
-        <span data-color-span class="blue lighten-5">
+        <span class="kpi-value kpi-value--social">
           <abbr :title="`$${item.fb_cpl}`"
             >${{ new Number(item.fb_cpl).toFixed(2) }}</abbr
           >
         </span>
       </template>
       <template #item.adwords_cost="{ item }">
-        <span data-color-span class="red lighten-5">
+        <span class="kpi-value kpi-value--search">
           <abbr :title="`$${item.adwords_cost}`"
             >${{ new Number(item.adwords_cost).toFixed(2) }}
           </abbr>
         </span>
       </template>
       <template #item.total_adwords_cpc="{ item }">
-        <span data-color-span class="red lighten-5">
+        <span class="kpi-value kpi-value--search">
           <abbr :title="`$${item.total_adwords_cpc}`"
             >${{
               item.total_adwords_cpc
@@ -115,28 +115,28 @@
         </span>
       </template>
       <template #item.adwords_conversions="{ item }">
-        <span data-color-span class="red lighten-5">
+        <span class="kpi-value kpi-value--search">
           <abbr :title="item.adwords_conversions">
             {{ item.adwords_conversions }}
           </abbr>
         </span>
       </template>
       <template #item.fb_avg_cost="{ item }">
-        <span data-color-span class="blue lighten-5">
+        <span class="kpi-value kpi-value--social">
           <abbr :title="`$${item.fb_avg_cost}`">
             ${{ new Number(item.fb_avg_cost).toFixed(2) }}
           </abbr>
         </span>
       </template>
       <template #item.fb_avg_cpc="{ item }">
-        <span data-color-span class="blue lighten-5">
+        <span class="kpi-value kpi-value--social">
           <abbr :title="`$${item.fb_avg_cpc}`">
             ${{ new Number(item.fb_avg_cpc).toFixed(2) }}
           </abbr>
         </span>
       </template>
       <template #item.fb_cost="{ item }">
-        <span data-color-span class="blue lighten-5">
+        <span class="kpi-value kpi-value--social">
           <abbr :title="`$${item.fb_cost}`">
             ${{ new Number(item.fb_cost).toFixed(2) }}
           </abbr>
@@ -176,6 +176,7 @@
 <script lang="ts">
 import { computed, defineComponent } from '@nuxtjs/composition-api'
 import FormattedDate from '~/components/FormattedDate.vue'
+import { reportTableHeaders } from '~/utils/reportTableHeaders'
 import { KPIColumnSections } from '~/utils/reports-upload/kpi'
 
 export default defineComponent({
@@ -203,13 +204,13 @@ export default defineComponent({
     })
 
     const tableHeaders = computed(() => {
-      return [
+      return reportTableHeaders([
         dateColumn.value,
         ...KPIColumnSections.leads,
         ...KPIColumnSections.adwords,
         ...KPIColumnSections.fb,
         ...KPIColumnSections.score,
-      ]
+      ])
     })
 
     return {
@@ -219,48 +220,18 @@ export default defineComponent({
 })
 </script>
 <style lang="scss">
-// @todo Wait for Vuetify table fixed column feature. Remove this code when that's done. so we can use configuration.
 .kpi-table {
-  table > tbody > tr {
-    &:hover {
-      span,
-      td {
-        background: white !important;
-      }
-    }
+  .kpi-value {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 6px;
+    background: var(--workspace-tint);
+    color: var(--workspace-ink);
   }
 
-  table > tbody > tr > td:nth-child(1),
-  table > thead > tr > th:nth-child(1) {
-    position: sticky !important;
-    position: -webkit-sticky !important;
-    left: 0;
-    z-index: 4;
-    background: white;
-  }
-  table > thead > tr > th:nth-child(1) {
-    z-index: 5;
-  }
-}
-.theme--dark {
-  .kpi-table {
-    table > tbody > tr {
-      &:hover {
-        span,
-        td {
-          background: rgb(138, 134, 134) !important;
-        }
-      }
-    }
-
-    table > tbody > tr > td:nth-child(1),
-    table > thead > tr > th:nth-child(1) {
-      position: sticky !important;
-      position: -webkit-sticky !important;
-      left: 0;
-      z-index: 4;
-      background: rgb(29, 28, 28);
-    }
+  .kpi-value--search {
+    background: var(--workspace-subtle);
+    border: 1px solid var(--workspace-border);
   }
 }
 </style>

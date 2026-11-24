@@ -6,13 +6,13 @@
 
 <script lang="ts">
 import { defineComponent } from '@nuxtjs/composition-api'
+import { reportPages } from '~/shared/PageNames'
 import ClientOverview from '~/components/ClientOverview.vue'
 
 export default defineComponent({
   components: {
     ClientOverview,
   },
-  // middleware: 'isAuthenticated',
-  setup() {},
+  head: { title: reportPages.client.title },
 })
 </script>

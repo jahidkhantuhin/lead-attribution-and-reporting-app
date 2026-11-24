@@ -8,16 +8,13 @@
       }"
       :headers="callsHeader"
       :no-data-text="`No Calls`"
+      :items-per-page="10"
       :footer-props="{
-        itemsPerPageOptions: [100, 200, 500, -1],
-        itemsPerPage: 100,
+        itemsPerPageOptions: [10, 25, 50, 100],
       }"
       :item-class="callItemClass"
       :items="items"
-      :disable-pagination="false"
       :disable-filtering="true"
-      :fixed-header="true"
-      height="700px"
     >
       <template #item.other_details.lead_source="props">
         <span style="text-transform: capitalize">

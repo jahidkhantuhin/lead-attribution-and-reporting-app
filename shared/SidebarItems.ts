@@ -1,3 +1,5 @@
+import { pageNames, reportPages } from '~/shared/PageNames'
+
 export interface ISidebarItem {
   constructor: Function
   title: String
@@ -9,106 +11,70 @@ export interface ISidebarItem {
 }
 const LeftMenuItems: ISidebarItem[] = [
   {
-    title: 'Home',
+    title: pageNames.dashboard,
     link: '/',
     scope: null,
     icon: 'mdi-home',
   },
   {
-    title: 'Reports',
+    title: pageNames.reports,
     link: '',
     scope: 'view reports',
-    icon: 'mdi-graph',
+    icon: 'mdi-chart-box-outline',
     children: [
       {
-        title: 'Payment',
-        link: '/reports/payment-report',
+        title: 'All Reports',
+        link: '/reports',
         scope: 'view reports',
-        icon: 'mdi-graph',
+        icon: 'mdi-view-grid-outline',
       },
-      {
-        title: 'Lead Details',
-        link: '/reports/lead-details-report',
+      ...Object.values(reportPages).map(({ title, link, icon }) => ({
+        title,
+        link,
+        icon,
         scope: 'view reports',
-        icon: 'mdi-graph',
-      },
-      {
-        title: 'Client Overview',
-        link: '/reports/client-overview',
-        scope: 'view reports',
-        icon: 'mdi-graph',
-      },
-      {
-        title: 'KPI ',
-        link: '/reports/kpi',
-        scope: 'view reports',
-        icon: 'mdi-graph',
-      },
-      {
-        title: 'Statistics',
-        link: '/reports/statistics',
-        scope: 'view reports',
-        icon: 'mdi-graph',
-      },
-      // {
-      //   title: 'Reports',
-      //   link: '/reports',
-      //   scope: 'view reports',
-      //   icon: 'mdi-graph',
-      // },
-      // {
-      //   title: 'Reports',
-      //   link: '/reports',
-      //   scope: 'view reports',
-      //   icon: 'mdi-graph',
-      // },
-      // {
-      //   title: 'Reports',
-      //   link: '/reports',
-      //   scope: 'view reports',
-      //   icon: 'mdi-graph',
-      // },
+      })),
     ],
   },
   {
-    title: 'Client Records',
+    title: pageNames.clients,
     link: '/client-records',
     scope: 'view client records',
     icon: 'mdi-earth',
   },
   {
-    title: 'Site Records',
+    title: pageNames.sites,
     link: '/site-records',
     scope: 'view site records',
     icon: 'mdi-web',
   },
   {
-    title: 'Location Settings',
+    title: pageNames.locationSetup,
     link: '/location-settings',
     scope: 'view location settings',
     icon: 'mdi-earth',
   },
   {
-    title: 'VPN Setup',
+    title: pageNames.vpn,
     link: '/vpn-setup',
     scope: 'view vpn setup',
     icon: 'mdi-earth',
   },
   {
-    title: 'All Active Locations',
+    title: pageNames.locations,
     link: '/all-locations',
     scope: 'view all active locations',
     icon: 'mdi-earth',
   },
   {
-    title: 'Users',
+    title: pageNames.users,
     link: '/users',
     scope: 'view users',
     icon: 'mdi-account-group',
   },
 
   {
-    title: 'Profile',
+    title: pageNames.profile,
     link: '/profile',
     scope: 'view profile',
     icon: 'mdi-account',
@@ -119,23 +85,26 @@ export default (user: any) => {
   if (
     user &&
     user.role === 'super admin' &&
-    LeftMenuItems.filter((c: ISidebarItem) => c.title === 'Settings').length ===
+    LeftMenuItems.filter((c: ISidebarItem) => c.link === '/settings').length ===
       0
   ) {
     LeftMenuItems.push({
-      title: 'Settings',
+      title: pageNames.settings,
       link: '/settings',
       scope: 'manage settings',
       icon: 'mdi-cog',
     })
-  } 
-  else if (
-    !user.hasScope('create report') && user.hasScope('vpn access')) {
-      return LeftMenuItems.filter((c: ISidebarItem) => c.title === 'VPN Setup' || c.title === 'Profile')
-    }
-    // else if (
-    //   !user.hasScope('create report') || !user.hasScope('vpn access')) {
-    //     return LeftMenuItems.filter((c: ISidebarItem) => c.title === 'VPN Setup' || c.title === 'Profile')
-    //   }
+  } else if (
+    user?.hasScope?.('vpn access') &&
+    !user.hasScope('create report')
+  ) {
+    return LeftMenuItems.filter(
+      (c: ISidebarItem) => c.link === '/vpn-setup' || c.link === '/profile'
+    )
+  }
+  // else if (
+  //   !user.hasScope('create report') || !user.hasScope('vpn access')) {
+  //     return LeftMenuItems.filter((c: ISidebarItem) => c.link === '/vpn-setup' || c.link === '/profile')
+  //   }
   return LeftMenuItems
 }

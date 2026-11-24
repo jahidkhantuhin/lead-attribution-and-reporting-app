@@ -1,13 +1,14 @@
 <template>
   <v-form v-model="formValid">
-    <v-card>
-      <v-card-title> {{ title }} </v-card-title>
-      <v-card-text>
+    <RecordFormCard :title="title" :loading="busy">
+      <v-card-text class="record-form-grid">
         <v-text-field
           v-model="formData.last_name"
+          dense
+          outlined
+          hide-details="auto"
           label="Last name *"
           clearable
-          class="mb-3"
           maxlength="50"
           counter="50"
           :rules="formData.status === 'inactive' ? false : rules.last_name"
@@ -17,9 +18,11 @@
         </v-text-field>
         <v-text-field
           v-model="formData.first_name"
+          dense
+          outlined
+          hide-details="auto"
           label="First name *"
           clearable
-          class="mb-3"
           maxlength="50"
           counter="50"
           :rules="formData.status === 'inactive' ? false : rules.first_name"
@@ -29,9 +32,11 @@
         </v-text-field>
         <v-text-field
           v-model="formData.email"
+          dense
+          outlined
+          hide-details="auto"
           label="Email *"
           clearable
-          class="mb-3"
           maxlength="250"
           :rules="formData.status === 'inactive' ? false : rules.email"
           @keydown.enter="formValid && submit()"
@@ -39,9 +44,11 @@
         </v-text-field>
         <v-text-field
           v-model="formData.phone_number"
+          dense
+          outlined
+          hide-details="auto"
           label="Phone number *"
           clearable
-          class="mb-3"
           :rules="formData.status === 'inactive' ? false : rules.phone_number"
           maxlength="250"
           @keydown.enter="formValid && submit()"
@@ -49,9 +56,11 @@
         </v-text-field>
         <v-text-field
           v-model="formData.personal_website"
+          dense
+          outlined
+          hide-details="auto"
           label="Personal website"
           clearable
-          class="mb-3"
           :rules="
             formData.status === 'inactive' ? false : rules.personal_website
           "
@@ -61,6 +70,9 @@
         </v-text-field>
         <v-autocomplete
           v-model="formData['account_manager_id']"
+          dense
+          outlined
+          hide-details="auto"
           :items="accountManagers"
           item-value="id"
           :rules="
@@ -73,6 +85,9 @@
         </v-autocomplete>
         <v-select
           v-model="formData['status']"
+          dense
+          outlined
+          hide-details="auto"
           :items="statusOptions"
           placeholder="Select Status"
           item-value="value"
@@ -81,7 +96,7 @@
         </v-select>
       </v-card-text>
       <v-card-actions>
-        <span class="red--text text--darken-1"> * required </span>
+        <RequiredFieldsNote />
         <v-spacer></v-spacer>
         <v-btn :disabled="busy" @click="$emit('cancel')">Cancel</v-btn>
         <v-btn
@@ -93,7 +108,7 @@
           Save Changes
         </v-btn>
       </v-card-actions>
-    </v-card>
+    </RecordFormCard>
   </v-form>
 </template>
 
@@ -105,6 +120,8 @@ import {
   computed,
   useRouter,
 } from '@nuxtjs/composition-api'
+import RecordFormCard from './RecordFormCard.vue'
+import RequiredFieldsNote from '~/components/RequiredFieldsNote.vue'
 
 import useClientRecords from '~/services/useClientRecords'
 import SwalMixin, { showToast } from '~/utils/swalMixin'
@@ -113,7 +130,7 @@ import { AM_ROLE } from '~/utils/UserEnums'
 import { Client } from '~/shared/Types'
 
 export default defineComponent({
-  components: {},
+  components: { RecordFormCard, RequiredFieldsNote },
   props: {
     id: {
       type: [String, Number],

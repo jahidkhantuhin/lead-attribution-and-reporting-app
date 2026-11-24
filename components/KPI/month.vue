@@ -1,15 +1,17 @@
 <template>
-  <div v-if="response">
-    <!-- <pre>{{ JSON.stringify(summaryTransformed, null, 2) }}</pre> -->
-
-    <div
-      v-for="(year, index) in Object.keys(summaryTransformed)"
-      :key="index"
-      class=""
+  <div v-if="response" class="kpi-year-list">
+    <section
+      v-for="(rows, year) in summaryTransformed"
+      :key="year"
+      class="kpi-year-section"
+      :aria-label="`Monthly KPIs for ${year}`"
     >
-      <h1 class="heading">{{ year }}</h1>
-      <KPITable mode="month" :rows="summaryTransformed[year]"></KPITable>
-    </div>
+      <h3>{{ year }}</h3>
+      <KPITable mode="month" :rows="rows" />
+    </section>
+    <p v-if="!Object.keys(summaryTransformed).length" class="kpi-year-empty">
+      No KPI results for this period.
+    </p>
   </div>
 </template>
 
@@ -41,8 +43,30 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.heading {
-  font-size: 30px;
-  margin: 50px 0;
+.kpi-year-list {
+  display: grid;
+  min-width: 0;
+  gap: 12px;
+  padding: 12px;
+}
+
+.kpi-year-section {
+  min-width: 0;
+}
+
+.kpi-year-section h3 {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: var(--workspace-tint);
+  color: var(--workspace-ink);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.kpi-year-empty {
+  margin: 0;
+  color: var(--workspace-muted);
 }
 </style>
