@@ -2,19 +2,16 @@
   <v-data-table
     class="elevation-1 data-table"
     :headers="allReportsHeader"
-    :no-data-text="`No Items`"
+    no-data-text="No leads in this view."
+    :items-per-page="10"
     :footer-props="{
-      itemsPerPageOptions: [100, 200, 500, -1],
-      itemsPerPage: 100,
+      itemsPerPageOptions: [10, 25, 50, 100],
     }"
     :item-class="callItemClass"
     :sort-by="['timestamp']"
     :sort-desc="[true]"
     :items="allReportsList"
-    :disable-pagination="false"
     :disable-filtering="true"
-    :fixed-header="true"
-    height="700px"
   >
     <template #item.phone="props">
       <span> {{ props.item.phone | usPhone }}</span>
@@ -29,7 +26,7 @@
       ></formatted-date>
     </template>
     <template #item.type="props">
-      <span class="text-capitialize">{{ props.item.type }}</span>
+      <span class="text-capitalize">{{ props.item.type }}</span>
     </template>
   </v-data-table>
 </template>

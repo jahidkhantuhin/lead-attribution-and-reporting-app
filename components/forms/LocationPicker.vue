@@ -2,6 +2,9 @@
   <span>
     <v-autocomplete
       v-model="inputValue"
+      :dense="compact"
+      :outlined="compact"
+      :hide-details="compact"
       :placeholder="
         (multiple && inputValue.length === 0) || !inputValue
           ? 'Select location'
@@ -12,7 +15,7 @@
           ? 'Select location'
           : ''
       "
-      style="margin-top: 8px"
+      :style="compact ? undefined : { marginTop: '8px' }"
       no-data-text="Search locations"
       :search-input.sync="searchInput"
       :loading="busy"
@@ -56,6 +59,10 @@ import useClientLocations from '~/services/useClientLocations'
 
 export default defineComponent({
   props: {
+    compact: {
+      type: Boolean,
+      default: false,
+    },
     client: {
       type: [String, Number],
       default: null,

@@ -1,377 +1,193 @@
 <template>
   <div>
-    <!-- <SessionExpired v-if="sessionExpired"/> -->
     <UnauthorizedUser v-if="unAuthorizedToPullReport" />
-    <v-row
-      v-if="!unAuthorizedToPullReport"
-      :class="{
-        'my-5': true,
-        'dark-page': $vuetify.theme.dark,
-      }"
-    >
-      <v-col cols="12">
-        <!-- <v-alert class="mb-5" type="info" dismissible v-if="sectionProgressAlert">
-          {{ $t('message.wip') }}
-        </v-alert> -->
-        <v-card
-          color="default"
-          rounded
-          elevation="1"
-          class="workspace-filter-panel"
-        >
-          <v-card-title>{{ $t('message.filters') }}</v-card-title>
-          <v-card-text>
-            <v-row>
-              <v-col cols="12" xl="3" lg="3" md="3" sm="12" xs="12">
-                <client-picker
-                  v-model="filters.client"
-                  u-r-l-query-param="client"
-                  @achange="onClientChange"
-                ></client-picker>
-              </v-col>
-              <v-col cols="12" xl="4" lg="4" md="4" sm="12" xs="12">
-                <location-picker
-                  v-model="filters.location_ids"
-                  :client="filters.client"
-                  :show-button="showButton"
-                ></location-picker>
-              </v-col>
-              <v-col cols="12" xl="3" lg="3" md="3" sm="12" xs="12">
-                <Datepicker
-                  v-model="filters.dates"
-                  :disabled="
-                    filters.location_ids && filters.location_ids.length > 0
-                      ? false
-                      : true
-                  "
-                  :date-help-buttons="[
-                    'thisWeek',
-                    'lastWeek',
-                    'last14Days',
-                    'thisMonth',
-                    'lastMonth',
-                  ]"
-                  @achange="push"
-                  @clear="
-                    filters.dates = []
-                    push()
-                  "
-                ></Datepicker>
-              </v-col>
-              <v-col cols="12" md="2">
-                <v-btn
-                  :loading="LDRReportLoading"
-                  color="primary"
-                  class="my-2"
-                  block
-                  :disabled="
-                    !filters.client ||
-                    !(filters.location_ids && !!filters.location_ids.length) ||
-                    !(filters.dates && !!filters.dates.length)
-                  "
-                  @click="fetchLDRReport"
-                >
-                  <v-icon left>mdi-check</v-icon>
-                  Apply
-                </v-btn>
-              </v-col>
-            </v-row>
-            <v-form> </v-form>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <!-- <pre>{{ JSON.stringify(computedReport, null, 2) }}</pre> -->
-      <v-col cols="12">
-        <v-expand-transition>
-          <v-card v-if="!loaded && LDRReportLoading === false">
-            <v-card-text>
-              {{ $t('message.supplyFilters') }}
-            </v-card-text>
-          </v-card>
-        </v-expand-transition>
-        <v-expand-transition>
-          <v-card v-if="LDRReportLoading">
-            <v-card-text>
-              <v-skeleton-loader
-                type="table-heading, list-item-two-line, image, table-tfoot"
-              ></v-skeleton-loader>
-            </v-card-text>
-          </v-card>
-        </v-expand-transition>
-        <v-expand-transition>
-          <v-card v-if="LDRReportLoading === false && loaded" class="min-h-300">
-            <v-toolbar flat>
-              <v-toolbar-title> Report Details: </v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-btn
-                v-show="loaded && LDRReportLoading === false"
-                icon
-                title="Copy link to this report"
-                @click="copyReportLink"
-              >
-                <v-icon>mdi-link</v-icon>
-              </v-btn>
-              <v-btn
-                v-show="loaded"
-                icon
-                title="Reload the report"
-                @click="fetchLDRReport"
-              >
-                <v-icon>mdi-refresh</v-icon>
-              </v-btn>
-              <v-btn
-                :loading="uploadReportLoading"
-                icon
-                title="Upload to Google Drive"
-                :color="googleDocLink ? 'info' : 'normal'"
-                @click="uploadReport"
-              >
-                <v-icon>mdi-upload</v-icon>
-              </v-btn>
-            </v-toolbar>
+    <div v-else class="lead-report">
+      <v-card flat class="lead-report-surface workspace-filter-inline">
+        <div class="lead-report-filters">
+          <client-picker
+            v-model="filters.client"
+            compact
+            u-r-l-query-param="client"
+            @achange="onClientChange"
+          />
+          <location-picker
+            v-model="filters.location_ids"
+            compact
+            :client="filters.client"
+            :show-button="showButton"
+          />
+          <Datepicker
+            v-model="filters.dates"
+            compact
+            :disabled="!filters.location_ids || !filters.location_ids.length"
+            :date-help-buttons="[
+              'thisWeek',
+              'lastWeek',
+              'last14Days',
+              'thisMonth',
+              'lastMonth',
+            ]"
+            @achange="push"
+            @clear="
+              filters.dates = []
+              push()
+            "
+          />
+          <v-btn
+            :loading="LDRReportLoading"
+            :disabled="
+              !filters.client ||
+              !filters.location_ids ||
+              !filters.location_ids.length ||
+              !filters.dates.length
+            "
+            color="primary"
+            depressed
+            @click="fetchLDRReport"
+          >
+            Apply filters
+          </v-btn>
+        </div>
+      </v-card>
 
-            <!-- CLient Info -->
-            <v-card-text v-if="loaded" class="text-h5">
-              Client:
+      <v-card
+        v-if="!ready || LDRReportLoading"
+        flat
+        class="lead-report-surface lead-report-state"
+        role="status"
+        aria-label="Loading lead report"
+      >
+        <v-skeleton-loader
+          type="table-heading, table-row-divider, table-row-divider"
+        />
+      </v-card>
+      <v-card
+        v-else-if="!loaded"
+        flat
+        class="lead-report-surface lead-report-state"
+      >
+        <h2>
+          {{ reportError ? 'Report unavailable' : 'Generate a lead report' }}
+        </h2>
+        <p>
+          {{
+            reportError
+              ? 'Apply the filters again to retry.'
+              : 'Choose a client, location and date range to get started.'
+          }}
+        </p>
+      </v-card>
+      <v-card v-else flat class="lead-report-surface">
+        <header class="lead-report-heading">
+          <div>
+            <h2>
+              <nuxt-link :to="`/client-records/${LDRReport.id}`">{{
+                LDRReport.name
+              }}</nuxt-link>
+            </h2>
+            <DatesAndDiff
+              :start="transformReport.date_start"
+              :end="transformReport.date_end"
+            />
+            <div class="lead-report-locations">
               <nuxt-link
-                class="client-link"
-                :to="`/client-records/${LDRReport.id}`"
+                v-for="{ location } in LDRReport.locations"
+                :key="location.id"
+                :to="`/client-records/${LDRReport.id}/locations/${location.id}`"
               >
-                {{ LDRReport.name }}
+                {{ location.name }}
               </nuxt-link>
-            </v-card-text>
-            <v-card-text
-              v-if="loaded && LDRReport && LDRReport.locations"
-              class="subtitle-1"
-            >
-              Locations:
-              <v-chip
-                v-for="(location, index) in LDRReport.locations"
-                :key="index"
-                small
-                class="mr-2"
-              >
-                <nuxt-link
-                  class="client-link"
-                  :to="`/client-records/${LDRReport.id}/locations/${location.location.id}`"
-                >
-                  {{ location.location.name }}
-                </nuxt-link>
-              </v-chip>
-            </v-card-text>
-            <v-card-text v-if="loaded">
-              <DatesAndDiff
-                :start="transformReport.date_start"
-                :end="transformReport.date_end"
-              />
-            </v-card-text>
-
-            <v-card-text v-if="reportUpdatedAt" class="workspace-date-meta">
-              <span>Last updated</span>
-              <formatted-date :date="reportUpdatedAt" />
-            </v-card-text>
-
-            <div v-if="loaded" class="lead-report-sections">
-              <v-tabs
-                v-model="activeSection"
-                class="lead-section-tabs"
-                hide-slider
-              >
-                <v-tab
-                  ><v-icon left small>mdi-chart-box-outline</v-icon>Lead
-                  Summary</v-tab
-                >
-                <v-tab
-                  ><v-icon left small>mdi-chart-donut</v-icon>Summary by
-                  Source</v-tab
-                >
-                <v-tab
-                  ><v-icon left small>mdi-format-list-bulleted</v-icon>Lead
-                  Details</v-tab
-                >
-              </v-tabs>
-
-              <v-tabs-items
-                v-model="activeSection"
-                class="lead-section-content"
-                touchless
-              >
-                <v-tab-item>
-                  <LeadReportOverview
-                    :summary="summary"
-                    :analytics="computedReport.lead_analytics"
-                  />
-                </v-tab-item>
-                <v-tab-item>
-                  <LeadSourceSummary :report="computedReport" />
-                </v-tab-item>
-                <v-tab-item class="lead-detail-panel">
-                  <v-tabs v-model="tab" class="lead-detail-tabs" show-arrows>
-                    <v-tab key="all">All</v-tab>
-                    <!-- <v-tab key="calls">Calls</v-tab> -->
-                    <v-tab key="adwords_calls">Calls-ppc</v-tab>
-                    <v-tab key="facebook_calls">Calls-fb</v-tab>
-                    <v-tab key="seo_calls">Calls-seo</v-tab>
-
-                    <!-- <v-tab key="chats">Chats</v-tab> -->
-                    <v-tab key="chats-ppc">Chats-ppc</v-tab>
-                    <v-tab key="chats-fb">Chats-fb</v-tab>
-                    <v-tab key="chats-seo">Chats-seo</v-tab>
-                    <v-tab key="forms-ppc">Forms-ppc</v-tab>
-                    <v-tab key="forms-fb">Forms-fb</v-tab>
-                    <v-tab key="forms-seo">Forms-seo</v-tab>
-                  </v-tabs>
-                  <div class="mb-2"></div>
-                  <v-tabs-items v-model="tab">
-                    <v-tab-item key="all">
-                      <LDRAllReports
-                        :call-item-class="callItemClass"
-                        :all-reports-list="allReportsList"
-                        :all-details="computedReport"
-                      ></LDRAllReports>
-                    </v-tab-item>
-                    <!-- <v-tab-item key="calls">
-                      <div v-if="loaded">
-                        <LDRCalls
-                          :callItemClass="callItemClass"
-                          :items="
-                            computedReport &&
-                            computedReport.details &&
-                            computedReport.details.calls
-                          "
-                        ></LDRCalls>
-                      </div>
-                    </v-tab-item> -->
-                    <v-tab-item key="adwords_calls">
-                      <!--  -->
-                      <div v-if="loaded">
-                        <LDRCallsPPC
-                          :call-item-class="callItemClass"
-                          :items="
-                            computedReport &&
-                            computedReport.details &&
-                            computedReport.details.adwords_calls
-                          "
-                        ></LDRCallsPPC>
-                      </div>
-                    </v-tab-item>
-                    <v-tab-item key="facebook_calls">
-                      <!--  -->
-                      <div v-if="loaded">
-                        <LDRCallsFB
-                          :call-item-class="callItemClass"
-                          :items="
-                            computedReport &&
-                            computedReport.details &&
-                            computedReport.details.facebook_calls
-                          "
-                        ></LDRCallsFB>
-                      </div>
-                    </v-tab-item>
-                    <v-tab-item key="seo_calls">
-                      <!--  -->
-                      <div v-if="loaded">
-                        <LDRCallsSEO
-                          :call-item-class="callItemClass"
-                          :items="
-                            computedReport &&
-                            computedReport.details &&
-                            computedReport.details.seo_calls
-                          "
-                        ></LDRCallsSEO>
-                      </div>
-                    </v-tab-item>
-                    <!-- <v-tab-item key="chats">
-                      <div v-if="loaded">
-                        <LDRChats
-                          :items="
-                            computedReport &&
-                            computedReport.details &&
-                            computedReport.details.chats
-                          "
-                        ></LDRChats>
-                      </div>
-                    </v-tab-item> -->
-                    <v-tab-item key="chats-ppc">
-                      <div v-if="loaded">
-                        <!--  -->
-                        <LDRChatsPPC
-                          :items="
-                            computedReport &&
-                            computedReport.details &&
-                            computedReport.details.adwords_chats
-                          "
-                        ></LDRChatsPPC>
-                      </div>
-                    </v-tab-item>
-                    <v-tab-item key="chats-fb">
-                      <div v-if="loaded">
-                        <!--  -->
-                        <LDRChatsFB
-                          :items="
-                            computedReport &&
-                            computedReport.details &&
-                            computedReport.details.facebook_chats
-                          "
-                        ></LDRChatsFB>
-                      </div>
-                    </v-tab-item>
-                    <v-tab-item key="chats-seo">
-                      <!--  -->
-                      <div v-if="loaded">
-                        <LDRChatsSEO
-                          :items="
-                            computedReport &&
-                            computedReport.details &&
-                            computedReport.details.seo_chats
-                          "
-                        ></LDRChatsSEO>
-                      </div>
-                    </v-tab-item>
-                    <v-tab-item key="forms-ppc">
-                      <div v-if="loaded">
-                        <!--  -->
-                        <LDRFormsPPC
-                          :items="
-                            computedReport &&
-                            computedReport.details &&
-                            computedReport.details.emails
-                          "
-                        ></LDRFormsPPC>
-                      </div>
-                    </v-tab-item>
-
-                    <v-tab-item key="forms-fb">
-                      <div v-if="loaded">
-                        <!--  -->
-                        <LDRFormsFB
-                          :items="
-                            computedReport &&
-                            computedReport.details &&
-                            computedReport.details.facebook_leads
-                          "
-                        ></LDRFormsFB>
-                      </div>
-                    </v-tab-item>
-                    <v-tab-item key="forms-seo">
-                      <!--  -->
-                      <div v-if="loaded">
-                        <LDRFormsSEO
-                          :items="
-                            computedReport &&
-                            computedReport.details &&
-                            computedReport.details.seo_emails
-                          "
-                        ></LDRFormsSEO>
-                      </div>
-                    </v-tab-item>
-                  </v-tabs-items>
-                </v-tab-item>
-              </v-tabs-items>
             </div>
-          </v-card>
-        </v-expand-transition>
-      </v-col>
+            <p v-if="reportUpdatedAt" class="lead-report-updated">
+              Updated <formatted-date :date="reportUpdatedAt" />
+            </p>
+          </div>
+          <div class="lead-report-actions">
+            <v-btn small outlined @click="copyReportLink">
+              <v-icon left small>mdi-link</v-icon> Copy link
+            </v-btn>
+            <v-btn small outlined @click="fetchLDRReport">
+              <v-icon left small>mdi-refresh</v-icon> Reload
+            </v-btn>
+            <v-btn
+              small
+              depressed
+              color="primary"
+              :loading="uploadReportLoading"
+              @click="uploadReport"
+            >
+              <v-icon left small>mdi-google-drive</v-icon>
+              {{ googleDocLink ? 'View export' : 'Export to Drive' }}
+            </v-btn>
+          </div>
+        </header>
+
+        <div class="lead-report-sections">
+          <v-tabs v-model="activeSection" class="lead-section-tabs" hide-slider>
+            <v-tab
+              ><v-icon left small>mdi-chart-box-outline</v-icon>Lead
+              Summary</v-tab
+            >
+            <v-tab
+              ><v-icon left small>mdi-chart-donut</v-icon>Summary by
+              Source</v-tab
+            >
+            <v-tab
+              ><v-icon left small>mdi-format-list-bulleted</v-icon>Lead
+              Details</v-tab
+            >
+          </v-tabs>
+          <v-tabs-items
+            v-model="activeSection"
+            class="lead-section-content"
+            touchless
+          >
+            <v-tab-item>
+              <LeadReportOverview
+                :summary="summary"
+                :analytics="computedReport.lead_analytics"
+              />
+            </v-tab-item>
+            <v-tab-item>
+              <LeadSourceSummary :report="computedReport" />
+            </v-tab-item>
+            <v-tab-item class="lead-detail-panel">
+              <section class="lead-records">
+                <header class="lead-records-heading">
+                  <div>
+                    <h3>Lead records</h3>
+                    <p>
+                      {{ detailRows.length }}
+                      {{ detailRows.length === 1 ? 'record' : 'records' }}
+                    </p>
+                  </div>
+                  <v-select
+                    v-model="detailView"
+                    :items="detailViews"
+                    label="Lead type and source"
+                    dense
+                    outlined
+                    hide-details
+                    class="lead-records-select"
+                  />
+                </header>
+                <LDRAllReports
+                  v-if="detailView === 'all'"
+                  :call-item-class="callItemClass"
+                  :all-reports-list="detailRows"
+                />
+                <component
+                  :is="selectedDetailView.component"
+                  v-else
+                  :items="detailRows"
+                  v-bind="selectedDetailView.calls ? { callItemClass } : {}"
+                />
+              </section>
+            </v-tab-item>
+          </v-tabs-items>
+        </div>
+      </v-card>
+
       <v-dialog v-model="reportLoadingDialog" persistent width="500">
         <v-expand-transition>
           <v-card v-show="uploadReportLoading">
@@ -415,43 +231,7 @@
           </v-card>
         </v-expand-transition>
       </v-dialog>
-
-      <v-dialog v-model="emailDialog" width="500">
-        <v-card>
-          <v-card-title class=""> Email body </v-card-title>
-
-          <v-card-text
-            v-if="
-              currentEmail && currentEmail.lead && currentEmail.lead.message
-            "
-            class="pl-6 mb-4"
-          >
-            <blockquote class="blockquote">
-              <span style="white-space: pre-wrap">{{
-                currentEmail.lead.message
-              }}</span>
-            </blockquote>
-          </v-card-text>
-          <v-card-text v-else> Lead Message is empty. </v-card-text>
-
-          <v-divider></v-divider>
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              color="primary"
-              text
-              @click="
-                emailDialog = false
-                currentEmail = null
-              "
-            >
-              Close
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-row>
+    </div>
   </div>
 </template>
 
@@ -491,11 +271,11 @@ import LocationPicker from '~/components/forms/LocationPicker.vue'
 import LDRAllReports from '~/components/LDR/AllReports.vue'
 import LeadReportOverview from '~/components/LDR/LeadReportOverview.vue'
 import LeadSourceSummary from '~/components/LDR/LeadSourceSummary.vue'
-// import LDRCalls from '~/components/LDR/Calls.vue'
+
 import LDRCallsPPC from '~/components/LDR/Calls-PPC.vue'
 import LDRCallsFB from '~/components/LDR/Calls-FB.vue'
 import LDRCallsSEO from '~/components/LDR/Calls-SEO.vue'
-// import LDRChats from '~/components/LDR/Chats.vue'
+
 import LDRChatsPPC from '~/components/LDR/Chats-PPC.vue'
 import LDRChatsFB from '~/components/LDR/Chats-FB.vue'
 import LDRChatsSEO from '~/components/LDR/Chats-SEO.vue'
@@ -519,11 +299,11 @@ export default defineComponent({
     ClientPicker,
     LocationPicker,
     LDRAllReports,
-    // LDRCalls,
+
     LDRCallsPPC,
     LDRCallsFB,
     LDRCallsSEO,
-    // LDRChats,
+
     LDRChatsPPC,
     LDRChatsFB,
     LDRChatsSEO,
@@ -532,18 +312,13 @@ export default defineComponent({
     LDRFormsSEO,
     UnauthorizedUser,
   },
-  // middleware: 'isAuthenticated',
+
   setup(_props, { parent }) {
     const { $auth } = useContext()
     const unAuthorizedToPullReport = computed(
       () => !$auth.hasScope('create report') && $auth.hasScope('vpn access')
     )
-    const sessionExpired = computed(() => !$auth.user)
     const store = useStore()
-    const isAllowed = !!store.getters['users/isAuthenticated']
-    const currentEmail = ref(null)
-    const sectionProgressAlert = ref(true)
-    const emailDialog = ref(false)
     const showButton = ref(true)
 
     const filters: any = ref({
@@ -552,7 +327,6 @@ export default defineComponent({
     })
 
     const allReportsList = ref([])
-    const tab = ref(0)
     const activeSection = ref(0)
     const LDRReport: any = ref({})
     const reportUpdatedAt = computed(
@@ -561,20 +335,17 @@ export default defineComponent({
         LDRReport.value?.cache?.cache?.created_at
     )
     const LDRReportLoading = ref(false)
-    const isCopied = ref(false)
 
     const copy = (_element: string) => {
       window.navigator.clipboard.writeText(googleDocLink.value)
       showToast($swal, {
         title: 'Copied to clipboard',
       })
-      isCopied.value = true
-      setTimeout(() => {
-        isCopied.value = false
-      }, 5000)
     }
 
     const loaded = ref(false)
+    const ready = ref(false)
+    const reportError = ref(false)
     const axios = useAxios()
     const $swal = swalMixin((parent as any).$swal as any)
 
@@ -600,8 +371,6 @@ export default defineComponent({
     })
 
     // state
-    const busy = ref<boolean>(false)
-    const report = ref(null)
 
     const summary = computed(() => {
       return {
@@ -728,14 +497,6 @@ export default defineComponent({
         allReports?.push(getDataForAllReports(item, `call`))
       )
 
-      // adwords_calls?.forEach((item: any) =>
-      //   allReports?.push(getDataForAllReports(item, `google_call`))
-      // )
-
-      // facebook_calls?.forEach((item: any) =>
-      //   allReports?.push(getDataForAllReports(item, `facebook_call`))
-      // )
-
       emails?.forEach((item: any) =>
         allReports?.push(getDataForAllReports(item, `email`))
       )
@@ -743,14 +504,6 @@ export default defineComponent({
       chats?.forEach((item: any) =>
         allReports?.push(getDataForAllReports(item, `chat`))
       )
-
-      // adwords_chats?.forEach((item: any) =>
-      //   allReports?.push(getDataForAllReports(item, `chat-ppc`))
-      // )
-
-      // facebook_chats?.forEach((item: any) =>
-      //   allReports?.push(getDataForAllReports(item, `chat-fb`))
-      // )
 
       facebook_leads?.forEach((item: any) =>
         allReports?.push(getDataForAllReports(item, `facebook`))
@@ -765,6 +518,13 @@ export default defineComponent({
     }
 
     const fetchLDRReport = function () {
+      if (
+        !filters.value.client ||
+        !filters.value.location_ids?.length ||
+        !filters.value.dates?.length ||
+        LDRReportLoading.value
+      )
+        return
       router
         .replace({
           query: filters.value,
@@ -774,15 +534,10 @@ export default defineComponent({
       const dateOne = filters.value.dates[0]
       const dateTwo = filters.value.dates[1] ?? filters.value.dates[0]
       googleDocLink.value = ''
-      reportUploaded.value = false
-
-      if (typeof filters.value.location_ids === 'string') {
-        filters.value.location_ids = [filters.value.location_ids]
-      }
-
       reportUploaded.value = uploadReportLoading.value = false
       LDRReportLoading.value = true
 
+      reportError.value = false
       loaded.value = false
       axios
         .get(`/leads`, {
@@ -803,13 +558,14 @@ export default defineComponent({
           if (data) {
             LDRReport.value = data
             loaded.value = true
-            activeSection.value = 0
 
             setallReportsList()
+          } else {
+            reportError.value = true
           }
         })
         .catch((e) => {
-          loaded.value = false
+          reportError.value = true
           const messageFromServer: string = get(
             e,
             'response.data.message',
@@ -821,7 +577,6 @@ export default defineComponent({
           })
         })
         .finally(() => {
-          LDRReportLoading.value = false
           LDRReportLoading.value = false
         })
     }
@@ -912,20 +667,19 @@ export default defineComponent({
       })
     }
 
-    const onLocationChange = (_id: Number, _client: any) => {
-      router.push({
-        path: router.currentRoute.path,
-        query: {
-          ...router.currentRoute.query,
-          ...(filters.value as any),
-        },
-      })
-    }
-
     const loadFiltersFromURL = () => {
+      const query = router.currentRoute.query
       filters.value = {
         ...filters.value,
-        ...router.currentRoute.query,
+        ...query,
+        dates:
+          typeof query.dates === 'string'
+            ? [query.dates]
+            : query.dates || filters.value.dates,
+        location_ids:
+          typeof query.location_ids === 'string'
+            ? [query.location_ids]
+            : query.location_ids || filters.value.location_ids,
       }
     }
 
@@ -1170,38 +924,6 @@ export default defineComponent({
               }
             })
           : []
-
-        // Filtered calls which has no campaign.
-
-        // let filteredCalls = location.details.calls.filter((call: any) => {
-        //   return call.campaign != null
-        // })
-        // location.details.calls = filteredCalls.map((filteredCalls: any) => {
-        //   return {
-        //     location_name: location?.location?.name,
-        //     ...filteredCalls,
-        //   }
-        // })
-
-        // let filteredAdwordsCalls = location.details.adwords_calls.filter((call: any) => {
-        //   return call.campaign != null
-        // })
-        // location.details.adwords_calls = filteredAdwordsCalls.map((filteredAdwordsCalls: any) => {
-        //   return {
-        //     location_name: location?.location?.name,
-        //     ...filteredAdwordsCalls,
-        //   }
-        // })
-
-        // let filteredFacebookCalls = location.details.facebook_calls.filter((call: any) => {
-        //   return call.campaign != null
-        // })
-        // location.details.facebook_calls = filteredFacebookCalls.map((filteredFacebookCalls: any) => {
-        //   return {
-        //     location_name: location?.location?.name,
-        //     ...filteredFacebookCalls,
-        //   }
-        // })
 
         location.details.chats = location.details.chats.map((chats: any) => {
           return {
@@ -1568,6 +1290,60 @@ export default defineComponent({
       return report
     })
 
+    const detailViews = [
+      { value: 'all', text: 'All leads' },
+      {
+        value: 'adwords_calls',
+        text: 'Calls · Google Ads',
+        component: 'LDRCallsPPC',
+        calls: true,
+      },
+      {
+        value: 'facebook_calls',
+        text: 'Calls · Facebook',
+        component: 'LDRCallsFB',
+        calls: true,
+      },
+      {
+        value: 'seo_calls',
+        text: 'Calls · SEO',
+        component: 'LDRCallsSEO',
+        calls: true,
+      },
+      {
+        value: 'adwords_chats',
+        text: 'Chats · Google Ads',
+        component: 'LDRChatsPPC',
+      },
+      {
+        value: 'facebook_chats',
+        text: 'Chats · Facebook',
+        component: 'LDRChatsFB',
+      },
+      { value: 'seo_chats', text: 'Chats · SEO', component: 'LDRChatsSEO' },
+      { value: 'emails', text: 'Forms · Google Ads', component: 'LDRFormsPPC' },
+      {
+        value: 'facebook_leads',
+        text: 'Forms · Facebook',
+        component: 'LDRFormsFB',
+      },
+      { value: 'seo_emails', text: 'Forms · SEO', component: 'LDRFormsSEO' },
+    ]
+    const detailView = ref('all')
+    const selectedDetailView = computed(
+      () =>
+        detailViews.find(({ value }) => value === detailView.value) ||
+        detailViews[0]
+    )
+    const detailRows = computed(() => {
+      const key = selectedDetailView.value.value
+      const rows =
+        key === 'all'
+          ? allReportsList.value
+          : computedReport.value.details?.[key]
+      return Array.isArray(rows) ? rows : []
+    })
+
     onMounted(() => {
       loadFiltersFromURL()
 
@@ -1578,12 +1354,10 @@ export default defineComponent({
         if (!query.location_ids) filters.value.location_ids = [1]
         if (!query.dates) filters.value.dates = showcaseDates()
         fetchLDRReport()
-      } else if (query.client && query.dates) {
+      } else if (query.client && query.location_ids && query.dates) {
         fetchLDRReport()
       }
-      setTimeout(() => {
-        sectionProgressAlert.value = false
-      }, 10000)
+      ready.value = true
     })
 
     watch(route, () => {
@@ -1592,37 +1366,32 @@ export default defineComponent({
 
     return {
       transformReport,
-      sectionProgressAlert,
       googleDocLink,
-      isCopied,
       copy,
       reportLoadingDialog,
       uploadReportLoading,
       uploadReport,
       reportUploaded,
       fetchLDRReport,
-      busy,
-      report,
       loaded,
       LDRReport,
       LDRReportLoading,
       summary,
-      tab,
       activeSection,
-      allReportsList,
-      currentEmail,
-      emailDialog,
+      reportError,
+      ready,
+      detailView,
+      detailViews,
+      selectedDetailView,
+      detailRows,
       callItemClass,
       push,
       filters,
       copyReportLink,
       onClientChange,
       computedReport,
-      onLocationChange,
       showButton,
       unAuthorizedToPullReport,
-      sessionExpired,
-      isAllowed,
       reportUpdatedAt,
     }
   },
