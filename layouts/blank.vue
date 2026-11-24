@@ -7,7 +7,7 @@
             <span class="workspace-brand-mark"
               ><v-icon small>mdi-chart-box-outline</v-icon></span
             >
-            LeadLens
+            Foundation
           </div>
           <div class="auth-brand-copy">
             <p>Lead attribution<br />and reporting</p>

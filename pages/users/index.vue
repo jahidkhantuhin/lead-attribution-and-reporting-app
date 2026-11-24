@@ -1,66 +1,55 @@
 <template>
-  <v-row dense class="workspace-directory">
-    <v-col cols="12">
+  <v-row class="my-6">
+    <!-- Filters -->
+    <v-col cols="12" md="3">
       <v-card class="workspace-filter-panel">
-        <v-form @submit.prevent="handleFilterApply">
+        <v-form @submit.prevent="">
           <v-card-title>
             <v-icon left>mdi-filter</v-icon>
             {{ $t('message.filters') }}
           </v-card-title>
-          <v-card-text class="directory-user-filters">
+          <v-card-text>
+            <!-- User type -->
+
             <v-select
               v-model="filters.role"
-              dense
-              outlined
-              hide-details
               :items="roles"
-              :item-text="(item) => item.name.replace(/_/g, ' ')"
+              :item-text="(item) => item.name.toUpperCase()"
               :item-value="(item) => item.name"
               :loading="loadingRoles"
               label="Role"
               clearable
             ></v-select>
-
+            <!-- Search Term -->
             <v-text-field
               v-model="filters.search"
-              dense
-              outlined
-              hide-details
-              label="Search team members"
-              prepend-inner-icon="mdi-magnify"
+              label="Search users"
               clearable
               maxlength="250"
             ></v-text-field>
 
+            <!-- Active -->
             <v-select
               v-model="filters.status"
-              dense
-              outlined
-              hide-details
               :items="activeOptions"
               clearable
-              label="Status"
+              label="User Status"
             ></v-select>
 
+            <!-- Order -->
             <v-select
               v-model="filters.sort_by"
-              dense
-              outlined
-              hide-details
-              label="Sort by"
+              label="Order By"
               :items="sortByOptions"
             ></v-select>
             <v-select
               v-model="filters.sorting"
-              dense
-              outlined
-              hide-details
-              label="Sort direction"
+              label="Order"
               :items="sortingOptions"
             ></v-select>
           </v-card-text>
           <v-card-actions>
-            <v-btn type="submit" color="primary" depressed>
+            <v-btn color="primary" @click="handleFilterApply">
               <v-icon left>mdi-check</v-icon>
               {{ $t('buttons.apply') }}
             </v-btn>
@@ -69,20 +58,17 @@
         </v-form>
       </v-card>
     </v-col>
-
-    <v-col cols="12">
+    <!-- users list -->
+    <v-col md="9">
       <v-card>
-        <ReportResultHeading :title="pageNames.users">
-          <p>
-            {{ pagination.total }}
-            {{ pagination.total === 1 ? 'member' : 'members' }}
-          </p>
-          <template #actions>
-            <v-btn small depressed color="primary" nuxt to="/users/add">
-              <v-icon small left>mdi-account-plus</v-icon> Add team member
-            </v-btn>
-          </template>
-        </ReportResultHeading>
+        <v-toolbar flat>
+          <v-toolbar-title>Users</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" nuxt to="/users/add">
+            <v-icon left>mdi-account-plus</v-icon>
+            Add
+          </v-btn>
+        </v-toolbar>
         <v-data-table
           :loading="busy"
           :options.sync="tableOptions"
@@ -94,11 +80,15 @@
             'items-per-page-options': itemsPerPageOptions,
           }"
           :server-items-length="pagination.total"
-          class="workspace-directory-table"
-          no-data-text="No team members match these filters."
+          class="elevation-1"
           @pagination="handlePaginationChange"
         >
           <template #item.fullname="{ item }">
+            <!-- <user-profile-picture
+              :height="30"
+              :width="30"
+              :user="item"
+            ></user-profile-picture> -->
             <span class="user-name">{{ item.fullname }}</span>
           </template>
           <template #item.role="{ item }">
@@ -117,7 +107,9 @@
               "
             >
               <template #activator="{ on, attrs }">
-                <v-btn small outlined v-bind="attrs" v-on="on"> Actions </v-btn>
+                <v-btn small color="primary" dark v-bind="attrs" v-on="on">
+                  Actions
+                </v-btn>
               </template>
               <v-list>
                 <v-list-item
@@ -142,6 +134,31 @@
                 </v-list-item>
               </v-list>
             </v-menu>
+            <!-- <v-btn
+              icon
+              small
+              nuxt
+              :to="`/users/${item.id}/edit`"
+              title="Edit User"
+              v-if="
+                $store.getters['users/isAllowed']('update user') &&
+                isUserAllowedToEdit(item, $auth.user)
+              "
+            >
+              <v-icon small>mdi-pencil</v-icon>
+            </v-btn>
+            <v-btn
+              icon
+              small
+              title="Delete User"
+              @click="handleDeleteUser(item.id)"
+              v-if="
+                $store.getters['users/isAllowed']('delete user') &&
+                isUserAllowedToEdit(item, $auth.user)
+              "
+            >
+              <v-icon small>mdi-delete</v-icon>
+            </v-btn> -->
           </template>
         </v-data-table>
       </v-card>
@@ -163,7 +180,6 @@ import {
 import { IBreadcrumbs } from '@/store'
 
 import useUsers from '@/services/useUsers'
-import { pageNames } from '~/shared/PageNames'
 import { Dictionary } from '~/node_modules/@types/lodash'
 
 import isUserAllowedToEdit from '~/utils/isUserAllowedToEdit'
@@ -205,12 +221,12 @@ export default defineComponent({
         to: `/`,
       },
       {
-        text: pageNames.users,
+        text: `Users`,
         to: `/users`,
       },
     ]
 
-    const pageTitle = pageNames.users
+    const pageTitle = `Users`
 
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
 
@@ -422,7 +438,6 @@ export default defineComponent({
     })
 
     return {
-      pageNames,
       isUserAllowedToEdit,
       filters,
       activeOptions,
@@ -444,7 +459,7 @@ export default defineComponent({
     }
   },
   head: {
-    title: pageNames.users,
+    title: 'Users',
   },
 })
 </script>

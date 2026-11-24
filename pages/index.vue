@@ -1,5 +1,5 @@
 <template>
-  <v-row dense class="workspace-dashboard">
+  <v-row class="workspace-dashboard">
     <v-col v-if="!nonAccountManagerUserRole" cols="12">
       <section class="workspace-overview" aria-label="Lead activity summary">
         <div class="workspace-overview-heading">
@@ -19,38 +19,63 @@
       </section>
     </v-col>
     <v-col v-if="!nonAccountManagerUserRole" cols="12" md="12">
-      <v-card flat class="workspace-chart-card" :loading="reportsLoading">
+      <v-card :loading="reportsLoading">
         <v-card-title class="workspace-chart-heading">
           <span>Lead trends</span>
           <div class="workspace-period-controls">
             <v-btn
-              v-for="period in periods"
-              :key="period.value"
-              small
-              depressed
-              :outlined="currentReport !== period.value"
-              :color="currentReport === period.value ? 'primary' : undefined"
-              :aria-pressed="currentReport === period.value ? 'true' : 'false'"
+              x-small
+              class="mr-3"
+              elevation="1"
+              :color="currentReport == 'this_week' ? 'primary' : 'normal'"
               :disabled="reportsLoading"
-              @click="setFilters(period.value)"
+              @click="setFilters('this_week')"
+              >This Week</v-btn
             >
-              {{ period.label }}
-            </v-btn>
+            <v-btn
+              x-small
+              class="mr-3"
+              elevation="1"
+              :color="currentReport == 'last_week' ? 'primary' : 'normal'"
+              :disabled="reportsLoading"
+              @click="setFilters('last_week')"
+              >Last Week</v-btn
+            >
+            <v-btn
+              x-small
+              class="mr-3"
+              elevation="1"
+              :color="currentReport == 'last_month' ? 'primary' : 'normal'"
+              :disabled="reportsLoading"
+              @click="setFilters('last_month')"
+              >Last Month</v-btn
+            >
+            <v-btn
+              x-small
+              class="mr-0"
+              elevation="1"
+              :color="currentReport == 'this_month' ? 'primary' : 'normal'"
+              :disabled="reportsLoading"
+              @click="setFilters('this_month')"
+              >This Month</v-btn
+            >
           </div>
         </v-card-title>
         <v-card-text>
-          <WorkspaceChart
-            label="Lead trends by day"
+          <!-- Graph -->
+          <apexchart
+            width="100%"
+            height="300"
             type="bar"
             :options="graphOptions"
             :series="graphSeries"
-          />
+          ></apexchart>
         </v-card-text>
       </v-card>
     </v-col>
-    <v-col cols="12" class="workspace-dashboard-reports">
+    <v-col sm="12" class="my-5">
       <h2 class="workspace-section-title">Browse reports</h2>
-      <ReportsList />
+      <ReportsList justify="start" />
     </v-col>
   </v-row>
 </template>
@@ -67,8 +92,8 @@ import {
   onBeforeMount,
 } from '@nuxtjs/composition-api'
 import { IBreadcrumbs } from '@/store'
+import VueApexCharts from 'vue-apexcharts'
 import moment from 'moment'
-import WorkspaceChart from '~/components/WorkspaceChart.vue'
 import ReportsList from '~/components/ReportsList.vue'
 import useApi from '~/services/useApi'
 import { formatDateRange } from '~/utils/dateFormat'
@@ -76,7 +101,7 @@ import { formatDateRange } from '~/utils/dateFormat'
 export default defineComponent({
   components: {
     ReportsList,
-    WorkspaceChart,
+    apexchart: VueApexCharts,
   },
   middleware: 'isAuthenticated',
   setup() {
@@ -88,12 +113,6 @@ export default defineComponent({
     const router = useRouter()
     const reports = ref([])
     const currentReport = ref('this_week')
-    const periods = [
-      { label: 'This week', value: 'this_week' },
-      { label: 'Last week', value: 'last_week' },
-      { label: 'This month', value: 'this_month' },
-      { label: 'Last month', value: 'last_month' },
-    ]
     const reportsFilters = ref({
       date_start: moment().startOf('isoWeek').format('YYYY-MM-DD'),
       date_end: moment().endOf('isoWeek').format('YYYY-MM-DD'),
@@ -138,8 +157,20 @@ export default defineComponent({
     // graph data
     const graphOptions = computed(() => {
       return {
-        colors: ['#4F79EB', '#139D87', '#956DDD'],
-        plotOptions: { bar: { columnWidth: '62%', borderRadius: 5 } },
+        colors: ['#3E6BE8', '#11A597', '#876BDB'],
+        plotOptions: { bar: { columnWidth: '58%', borderRadius: 4 } },
+        legend: { position: 'top', horizontalAlign: 'left' },
+        dataLabels: {
+          enabled: false,
+        },
+        chart: {
+          id: 'vuechart-leadsummary',
+          animations: { enabled: false },
+          toolbar: {
+            show: false,
+          },
+        },
+        grid: { strokeDashArray: 4 },
         responsive: [
           {
             breakpoint: 600,
@@ -275,7 +306,6 @@ export default defineComponent({
       leadMetrics,
       reportsLoading,
       currentReport,
-      periods,
       moment,
       setFilters,
       nonAccountManagerUserRole,

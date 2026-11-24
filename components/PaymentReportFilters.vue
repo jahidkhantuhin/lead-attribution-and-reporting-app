@@ -1,47 +1,47 @@
 <template>
-  <div class="payment-filters">
-    <v-autocomplete
-      v-model="filters['user_id']"
-      :loading="callScorersLoading"
-      label="Call scorer"
-      item-value="id"
-      clearable
-      dense
-      outlined
-      hide-details
-      item-text="fullname"
-      :items="callScorers"
-      @change="push"
-    ></v-autocomplete>
+  <div>
+    <v-card-text>
+      <v-autocomplete
+        v-model="filters['user_id']"
+        :loading="callScorersLoading"
+        label="Call scorer"
+        item-value="id"
+        clearable
+        item-text="fullname"
+        :items="callScorers"
+        @change="push"
+      ></v-autocomplete>
 
-    <Datepicker
-      v-model="filters['dates']"
-      compact
-      :date-help-buttons="[
-        'thisWeek',
-        'lastWeek',
-        'last14Days',
-        'lastMonth',
-        'thisYear',
-      ]"
-      @change="push"
-    ></Datepicker>
-
-    <v-btn
-      :disabled="
-        !(
-          filters['user_id'] > 0 &&
-          filters['dates'] &&
-          filters['dates'].length > 0
-        )
-      "
-      depressed
-      color="primary"
-      :loading="loading"
-      @click="$emit('search', filters)"
-    >
-      {{ loading ? 'Loading...' : 'Apply' }}
-    </v-btn>
+      <Datepicker
+        v-model="filters['dates']"
+        :date-help-buttons="[
+          'thisWeek',
+          'lastWeek',
+          'last14Days',
+          'lastMonth',
+          'thisYear',
+        ]"
+        @change="push"
+      ></Datepicker>
+    </v-card-text>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn
+        :disabled="
+          !(
+            filters['user_id'] > 0 &&
+            filters['dates'] &&
+            filters['dates'].length > 0
+          )
+        "
+        class="my-2"
+        color="primary"
+        :loading="loading"
+        @click="$emit('search', filters)"
+      >
+        {{ loading ? 'Loading...' : 'Apply' }}
+      </v-btn>
+    </v-card-actions>
   </div>
 </template>
 
@@ -52,7 +52,7 @@ import {
   useRouter,
   onMounted,
 } from '@nuxtjs/composition-api'
-
+import moment from 'moment'
 import Datepicker from '~/components/forms/DatePicker.vue'
 import { dates as showcaseDates } from '~/showcase/fixtures'
 
@@ -63,7 +63,7 @@ export default defineComponent({
   props: {
     callScorersLoading: {
       type: Boolean,
-      default: false,
+      defualt: false,
     },
     callScorers: {
       type: Array,
@@ -96,10 +96,8 @@ export default defineComponent({
     const loadFromURL = () => {
       const query: any = router.currentRoute.query
       if (query && query.user_id && query.dates) {
-        filters.value = {
-          user_id: Number(query.user_id),
-          dates: Array.isArray(query.dates) ? query.dates : [query.dates],
-        }
+        query.user_id = +query.user_id
+        filters.value = query
         emit('search', filters.value)
       } else if (process.env.SHOWCASE_MODE === 'true') {
         filters.value = { user_id: 3, dates: showcaseDates() }
@@ -114,23 +112,40 @@ export default defineComponent({
     return {
       filters,
       push,
+      moment,
     }
   },
 })
 </script>
 
-<style scoped>
-.payment-filters {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 12px;
-  margin-top: 14px;
+<style lang="scss">
+.filters {
+  display: flex;
+  > div {
+    margin-right: 19px;
+    .v-select {
+      width: 160px;
+    }
+    .text-input {
+      width: 150px;
+    }
+  }
 }
-
-@media (max-width: 700px) {
-  .payment-filters {
-    grid-template-columns: minmax(0, 1fr);
+.date-picker-dialog {
+  margin-bottom: 10px;
+}
+.filter-date-range-actions {
+  padding: 12px 20px;
+  border: 1px solid #eee;
+  border-left: none;
+  border-right: none;
+  .v-btn {
+    padding: 0 6px;
+    font-size: 12px;
+    margin-right: 0;
+    margin-bottom: 7px;
+    text-transform: initial;
+    height: 22px;
   }
 }
 </style>

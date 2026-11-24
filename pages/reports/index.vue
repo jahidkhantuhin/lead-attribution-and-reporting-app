@@ -1,14 +1,13 @@
 <template>
-  <ReportsList class="workspace-report-hub" />
+  <ReportsList class="mt-6" />
 </template>
 
 <script lang="ts">
 import { defineComponent, useStore } from '@nuxtjs/composition-api'
-import { pageNames } from '~/shared/PageNames'
 import ReportsList from '~/components/ReportsList.vue'
 import { IBreadcrumbs } from '~/store'
 
-const pageTitle = pageNames.reports
+const pageTitle = `Reports`
 
 export default defineComponent({
   components: {
@@ -24,7 +23,7 @@ export default defineComponent({
         to: `/`,
       },
       {
-        text: pageNames.reports,
+        text: `Reports`,
         to: '',
         disabled: true,
       },

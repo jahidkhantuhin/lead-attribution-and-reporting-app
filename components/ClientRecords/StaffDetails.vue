@@ -1,59 +1,87 @@
 <template>
   <v-card :loading="loading" v-bind="cardProps">
-    <ReportResultHeading :title="staffData.name || 'Staff member details'">
-      <workspace-badge
-        v-if="staffData.designation"
-        :value="staffData.designation"
-        kind="role"
-      />
-      <template #actions>
-        <v-btn
-          v-if="showAllButton"
-          small
-          outlined
-          :to="`/client-records/${clientId}`"
-          >Client record</v-btn
-        >
-        <v-btn
-          v-if="staffData.id"
-          small
-          depressed
-          color="primary"
-          :to="`/client-records/${clientId}/staff/${staffData.id}/edit`"
-        >
-          <v-icon small left>mdi-pencil-outline</v-icon> Edit staff member
-        </v-btn>
-      </template>
-    </ReportResultHeading>
-    <RecordFacts
-      :fields="[
-        { label: 'Name', value: staffData.name, kind: 'copy' },
-        { label: 'Email', value: staffData.email, kind: 'copy' },
-        { label: 'Phone', value: staffData.phone_number, kind: 'copy' },
-        {
-          label: 'Client',
-          value: staffData.client && staffData.client.name,
-          kind: 'copy',
-        },
-        { label: 'Role', value: staffData.designation, kind: 'copy' },
-        { label: 'Last updated', value: staffData.updated_at, kind: 'date' },
-      ]"
-    >
-      <template #copy="{ field }">
-        <span>{{ field.value }}</span>
-        <v-btn
-          icon
-          x-small
-          :aria-label="`Copy ${field.label}`"
-          @click="copy(field.value)"
-        >
-          <v-icon small>mdi-content-copy</v-icon>
-        </v-btn>
-      </template>
-      <template #date="{ field }">
-        <formatted-date :date="field.value" />
-      </template>
-    </RecordFacts>
+    <v-card-title>
+      <span>{{ staffData.name }}</span>
+      <v-spacer></v-spacer>
+      <v-btn
+        v-if="showAllButton"
+        color="white"
+        :to="`/client-records/${clientId}/`"
+        class="mr-3"
+      >
+        Show all staff
+      </v-btn>
+      <v-btn
+        color="primary"
+        :to="`/client-records/${clientId}/staff/${staffData.id}/edit`"
+      >
+        Edit
+      </v-btn>
+    </v-card-title>
+    <v-card-text>
+      <table>
+        <thead>
+          <tr v-if="staffData.name">
+            <th>Name</th>
+            <td>
+              {{ staffData.name }}
+              &nbsp;
+              <a @click="copy(staffData.name)">
+                <v-icon style="font-size: 14px"> mdi-content-copy </v-icon>
+              </a>
+            </td>
+          </tr>
+          <tr v-if="staffData.email">
+            <th>Email</th>
+            <td>
+              {{ staffData.email }}
+              &nbsp;
+              <a @click="copy(staffData.email)">
+                <v-icon style="font-size: 14px"> mdi-content-copy </v-icon>
+              </a>
+            </td>
+          </tr>
+          <tr v-if="staffData.phone_number">
+            <th>Phone Number</th>
+            <td>
+              {{ staffData.phone_number }}
+              &nbsp;
+              <a @click="copy(staffData.phone_number)">
+                <v-icon style="font-size: 14px"> mdi-content-copy </v-icon>
+              </a>
+            </td>
+          </tr>
+          <tr v-if="staffData.designation">
+            <th>Role</th>
+            <td>
+              <workspace-badge :value="staffData.designation" kind="role" />
+
+              &nbsp;
+              <a @click="copy(staffData.designation)">
+                <v-icon style="font-size: 14px"> mdi-content-copy </v-icon>
+              </a>
+            </td>
+          </tr>
+          <tr v-if="staffData && staffData.client">
+            <th>Client</th>
+            <td>
+              {{ staffData.client.name }}
+
+              &nbsp;
+              <a @click="copy(staffData.client.name)">
+                <v-icon style="font-size: 14px"> mdi-content-copy </v-icon>
+              </a>
+            </td>
+          </tr>
+          <tr v-if="staffData.updated_at">
+            <th>Last Updated</th>
+            <td>
+              <formatted-date :date="staffData.updated_at" />
+            </td>
+          </tr>
+        </thead>
+      </table>
+    </v-card-text>
   </v-card>
 </template>
 
@@ -98,3 +126,32 @@ export default defineComponent({
   },
 })
 </script>
+
+<style lang="scss" scoped>
+table {
+  width: 100%;
+  border: 1px solid var(--workspace-border);
+  border-radius: 11px;
+  border-spacing: 0;
+
+  td,
+  th {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--workspace-border);
+    overflow-wrap: anywhere;
+  }
+
+  th {
+    width: 32%;
+    color: var(--workspace-muted);
+    background: var(--workspace-subtle);
+    font-weight: 650;
+  }
+
+  tr:last-child td,
+  tr:last-child th {
+    border-bottom: 0;
+  }
+}
+</style>

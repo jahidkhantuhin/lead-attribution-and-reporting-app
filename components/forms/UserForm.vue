@@ -1,18 +1,13 @@
 <template>
   <div>
-    <RecordFormCard v-if="isAllowedToEdit" :title="title" :loading="loading">
+    <v-card v-if="isAllowedToEdit" elevation="0" :loading="loading">
       <v-card-text>
-        <v-form
-          ref="form"
-          :class="{ 'record-form-grid': scope !== 'profile' }"
-          @submit.prevent="submit"
-        >
+        <v-form ref="form">
           <v-text-field
             v-model="data['first_name']"
-            label="First name"
-            outlined
-            dense
-            hide-details="auto"
+            :label="scope === 'profile' ? 'First name' : undefined"
+            :outlined="scope === 'profile'"
+            :dense="scope === 'profile'"
             placeholder="First name"
             counter="50"
             max="50"
@@ -23,10 +18,9 @@
           <v-text-field
             v-model="data['last_name']"
             :rules="rules.last_name"
-            label="Last name"
-            outlined
-            dense
-            hide-details="auto"
+            :label="scope === 'profile' ? 'Last name' : undefined"
+            :outlined="scope === 'profile'"
+            :dense="scope === 'profile'"
             placeholder="Last name"
             :disabled="loading"
             counter="50"
@@ -37,10 +31,9 @@
             v-model="data['email']"
             :rules="rules.email"
             :disabled="loading || scope === 'profile'"
-            label="Email address"
-            outlined
-            dense
-            hide-details="auto"
+            :label="scope === 'profile' ? 'Email address' : undefined"
+            :outlined="scope === 'profile'"
+            :dense="scope === 'profile'"
             placeholder="E-mail"
           ></v-text-field>
 
@@ -49,10 +42,9 @@
             v-model="data['old_password']"
             type="password"
             :rules="rules.old_password"
-            label="Current password"
-            outlined
-            dense
-            hide-details="auto"
+            :label="scope === 'profile' ? 'Current password' : undefined"
+            :outlined="scope === 'profile'"
+            :dense="scope === 'profile'"
             autocomplete="current-password"
             placeholder="Old password"
             :disabled="loading"
@@ -63,10 +55,9 @@
             type="password"
             :disabled="loading"
             :rules="rules.password"
-            label="New password"
-            outlined
-            dense
-            hide-details="auto"
+            :label="scope === 'profile' ? 'New password' : undefined"
+            :outlined="scope === 'profile'"
+            :dense="scope === 'profile'"
             autocomplete="new-password"
             placeholder="Enter new password"
           ></v-text-field>
@@ -75,10 +66,9 @@
             v-model="data['password_confirmation']"
             type="password"
             :rules="rules.password_confirmation"
-            label="Confirm new password"
-            outlined
-            dense
-            hide-details="auto"
+            :label="scope === 'profile' ? 'Confirm new password' : undefined"
+            :outlined="scope === 'profile'"
+            :dense="scope === 'profile'"
             autocomplete="new-password"
             placeholder="Enter new password again"
             :disabled="loading"
@@ -88,10 +78,7 @@
             v-if="scope != 'profile' && data['role_id'] === 4"
             v-model="data['pay_rate']"
             type="number"
-            label="Pay rate"
-            outlined
-            dense
-            hide-details="auto"
+            placeholder="Pay rate"
             :rules="rules.pay_rate"
             :disabled="loading"
           ></v-text-field>
@@ -126,15 +113,14 @@
         <v-btn
           :disabled="loading || loadingRoles"
           :loading="loading"
-          color="primary"
-          depressed
+          :color="isEditing && scope !== 'profile' ? 'warning' : 'primary'"
           @click="submit"
           >{{
             scope === 'profile'
               ? 'Save changes'
               : isEditing
-              ? 'Save changes'
-              : 'Create team member'
+              ? 'Update'
+              : 'Create'
           }}</v-btn
         >
       </v-card-actions>
@@ -166,7 +152,7 @@
         </v-card>
       </v-dialog>
       <!-- user is editing password dialog -->
-    </RecordFormCard>
+    </v-card>
     <v-card v-else elevation="0">
       <v-card-text>Not allowed to edit.</v-card-text>
       <v-card-actions>
@@ -185,7 +171,6 @@ import {
   computed,
   useRoute,
 } from '@nuxtjs/composition-api'
-import RecordFormCard from './RecordFormCard.vue'
 import useApi from '~/services/useApi'
 import useUsers from '~/services/useUsers'
 import validateStrongPassword from '~/shared/ValidateStrongPassword'
@@ -194,9 +179,7 @@ import isUserAllowedToEdit from '~/utils/isUserAllowedToEdit'
 import swalMixin, { showToast } from '~/utils/swalMixin'
 
 export default defineComponent({
-  components: { RecordFormCard },
   props: {
-    title: { type: String, default: '' },
     userId: { type: [Number, String], default: undefined },
     scope: {
       type: String,

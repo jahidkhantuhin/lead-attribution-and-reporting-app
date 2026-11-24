@@ -3,13 +3,17 @@
     <v-data-table
       class="elevation-1 data-table"
       :headers="facebookHeader"
-      :items-per-page="10"
       :footer-props="{
-        itemsPerPageOptions: [10, 25, 50, 100],
+        itemsPerPageOptions: [100, 200, 500, -1],
+        itemsPerPage: 100,
       }"
       :no-data-text="`No Facebook Leads`"
       :items="items"
+      :disable-pagination="false"
       :disable-filtering="true"
+      :items-per-page="20"
+      :fixed-header="true"
+      height="700px"
     >
       <template #item.lead.phone_number="props">
         <span> {{ props.item.lead.phone_number | usPhone }}</span>
