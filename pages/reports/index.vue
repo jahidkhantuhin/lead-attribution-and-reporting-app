@@ -4,10 +4,11 @@
 
 <script lang="ts">
 import { defineComponent, useStore } from '@nuxtjs/composition-api'
+import { pageNames } from '~/shared/PageNames'
 import ReportsList from '~/components/ReportsList.vue'
 import { IBreadcrumbs } from '~/store'
 
-const pageTitle = `Reports`
+const pageTitle = pageNames.reports
 
 export default defineComponent({
   components: {
@@ -23,7 +24,7 @@ export default defineComponent({
         to: `/`,
       },
       {
-        text: `Reports`,
+        text: pageNames.reports,
         to: '',
         disabled: true,
       },

@@ -167,6 +167,7 @@ import {
 // @ts-ignore
 import * as VueCroppie from 'vue-croppie'
 import Compressor from 'compressorjs'
+import { pageNames } from '~/shared/PageNames'
 import UserForm from '~/components/forms/UserForm.vue'
 import 'croppie/croppie.css'
 
@@ -174,7 +175,7 @@ import { IBreadcrumbs } from '~/store'
 import useApi from '~/services/useApi'
 import swalMixin, { showToast } from '~/utils/swalMixin'
 
-const pageTitle = 'Profile'
+const pageTitle = pageNames.profile
 
 interface ProfileUser {
   id?: number | string
@@ -232,7 +233,7 @@ export default defineComponent({
 
     const breadcrumbs: IBreadcrumbs[] = [
       { text: 'Dashboard', to: '/' },
-      { text: 'Profile', to: '/profile' },
+      { text: pageNames.profile, to: '/profile' },
     ]
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
 

@@ -11,6 +11,7 @@
 <script>
 import { defineComponent, useStore } from '@nuxtjs/composition-api'
 import MissingClientRecordsForm from '@/components/forms/MissingClientRecordsForm.vue'
+import { pageNames } from '~/shared/PageNames'
 export default defineComponent({
   components: {
     MissingClientRecordsForm,
@@ -24,7 +25,7 @@ export default defineComponent({
         disabled: false,
       },
       {
-        text: `Location Settings`,
+        text: pageNames.locationSetup,
         to: `/location-settings`,
         disabled: false,
       },
@@ -35,11 +36,11 @@ export default defineComponent({
       },
     ]
     const store = useStore()
-    const pageTitle = `Location Settings`
+    const pageTitle = 'Add Location'
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
   },
   head: {
-    title: 'Create Client',
+    title: 'Add Location',
   },
 })
 </script>

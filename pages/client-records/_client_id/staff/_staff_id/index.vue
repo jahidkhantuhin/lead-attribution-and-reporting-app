@@ -14,6 +14,7 @@ import {
   ref,
   onMounted,
 } from '@nuxtjs/composition-api'
+import { pageNames } from '~/shared/PageNames'
 
 import useClientStaff from '~/services/useClientStaff'
 import StaffDetails from '~/components/ClientRecords/StaffDetails.vue'
@@ -34,7 +35,7 @@ export default defineComponent({
 
     const staffID = route.value.params.staff_id
     const clientId = route.value.params.client_id
-    const pageTitle = 'Staff'
+    const pageTitle = 'Staff Member Details'
 
     const fetchStaff = () => {
       busy.value = true
@@ -52,7 +53,7 @@ export default defineComponent({
                 disabled: false,
               },
               {
-                text: `Client Records`,
+                text: pageNames.clients,
                 to: `/client-records`,
                 disabled: false,
               },
@@ -90,5 +91,6 @@ export default defineComponent({
       staffID,
     }
   },
+  head: { title: 'Staff Member Details' },
 })
 </script>

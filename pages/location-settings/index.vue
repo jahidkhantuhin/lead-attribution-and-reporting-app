@@ -5,9 +5,7 @@
       <v-col md="12">
         <v-card :loading="busy">
           <v-toolbar flat>
-            <v-toolbar-title
-              >Location Settings (Missing Client)</v-toolbar-title
-            >
+            <v-toolbar-title>{{ pageNames.locationSetup }}</v-toolbar-title>
             <v-btn
               class="ml-5"
               color="primary"
@@ -86,6 +84,7 @@ import {
   useContext,
 } from '@nuxtjs/composition-api'
 import useLocationRecords from '@/services/useLocationRecords'
+import { pageNames } from '~/shared/PageNames'
 import { Dictionary } from '~/node_modules/@types/lodash'
 import swalMixin, { showConfirmDialog, showToast } from '~/utils/swalMixin'
 
@@ -180,7 +179,7 @@ export default defineComponent({
         disabled: false,
       },
       {
-        text: `Location Settings`,
+        text: pageNames.locationSetup,
         to: `/location-settings`,
         disabled: true,
       },
@@ -229,7 +228,7 @@ export default defineComponent({
       { deep: true }
     )
 
-    const pageTitle = `Location Settings (Missing Client)`
+    const pageTitle = pageNames.locationSetup
 
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
 
@@ -312,6 +311,7 @@ export default defineComponent({
     onMounted(() => {})
 
     return {
+      pageNames,
       tableOptions,
       tableHeaders,
       getLocationRecords,
@@ -329,7 +329,7 @@ export default defineComponent({
     }
   },
   head: {
-    title: 'Location Settings (Missing Client)',
+    title: pageNames.locationSetup,
   },
 })
 </script>

@@ -13,6 +13,7 @@ import {
   ref,
   onMounted,
 } from '@nuxtjs/composition-api'
+import { pageNames } from '~/shared/PageNames'
 import LocationDetails from '~/components/ClientRecords/LocationDetails.vue'
 import useClientLocations from '~/services/useClientLocations'
 
@@ -50,7 +51,7 @@ export default defineComponent({
                 disabled: false,
               },
               {
-                text: `Client Records`,
+                text: pageNames.clients,
                 to: `/client-records`,
                 disabled: false,
               },
@@ -87,5 +88,6 @@ export default defineComponent({
       locationID,
     }
   },
+  head: { title: 'Location Details' },
 })
 </script>

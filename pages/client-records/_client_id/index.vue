@@ -73,6 +73,7 @@ import {
   useRouter,
   onMounted,
 } from '@nuxtjs/composition-api'
+import { pageNames } from '~/shared/PageNames'
 
 import useClientRecords from '~/services/useClientRecords'
 import StaffList from '~/components/ClientRecords/StaffList.vue'
@@ -101,13 +102,13 @@ export default defineComponent({
         disabled: false,
       },
       {
-        text: `Client Records`,
+        text: pageNames.clients,
         to: `/client-records`,
         disabled: false,
       },
     ]
 
-    const pageTitle = `Client Records`
+    const pageTitle = 'Client Details'
 
     const getClient = () => {
       busy.value = true
@@ -151,6 +152,7 @@ export default defineComponent({
       getClient,
     }
   },
+  head: { title: 'Client Details' },
 })
 </script>
 

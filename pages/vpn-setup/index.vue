@@ -203,6 +203,7 @@ import {
 import useClientRecords from '@/services/useClientRecords'
 
 import useLocationRecords from '@/services/useLocationRecords'
+import { pageNames } from '~/shared/PageNames'
 
 // import { AM_ROLE } from '~/utils/UserEnums'
 // import { Dictionary } from '~/node_modules/@types/lodash'
@@ -250,13 +251,13 @@ export default defineComponent({
         disabled: false,
       },
       {
-        text: `VPN Setup`,
+        text: pageNames.vpn,
         to: `/vpn-setup`,
         disabled: true,
       },
     ]
     const store = useStore()
-    const pageTitle = `VPN Setup`
+    const pageTitle = pageNames.vpn
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
 
     // Added for VPN Activity Log
@@ -797,7 +798,7 @@ export default defineComponent({
     }
   },
   head: {
-    title: 'VPN Setup',
+    title: pageNames.vpn,
   },
 })
 </script>

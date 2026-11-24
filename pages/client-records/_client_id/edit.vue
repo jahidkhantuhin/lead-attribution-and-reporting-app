@@ -13,6 +13,7 @@
 <script>
 import { defineComponent, useRouter, useStore } from '@nuxtjs/composition-api'
 import ClientRecordsForm from '@/components/forms/ClientRecordsForm.vue'
+import { pageNames } from '~/shared/PageNames'
 export default defineComponent({
   components: {
     ClientRecordsForm,
@@ -30,7 +31,7 @@ export default defineComponent({
           disabled: false,
         },
         {
-          text: `Client Records`,
+          text: pageNames.clients,
           to: `/client-records`,
           disabled: false,
         },
@@ -46,7 +47,7 @@ export default defineComponent({
         },
       ]
 
-      const pageTitle = `Edit Client`
+      const pageTitle = 'Edit Client'
       store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
     }
 

@@ -1,8 +1,8 @@
 <template>
   <v-row :justify="justify">
     <v-col
-      v-for="(report, index) in testingReports"
-      :key="index"
+      v-for="report in availableReports"
+      :key="report.link"
       cols="12"
       md="4"
     >
@@ -22,7 +22,7 @@
         <v-card-actions>
           <v-list-item class="grow">
             <v-row justify="end">
-              <span class="workspace-report-action"> Open report </span>
+              <span class="workspace-report-action"> Open </span>
             </v-row>
           </v-list-item>
         </v-card-actions>
@@ -33,6 +33,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, useContext } from '@nuxtjs/composition-api'
+import { pageNames, reportPages } from '~/shared/PageNames'
 import { IReportPageItem } from '~/shared/Types'
 
 export default defineComponent({
@@ -48,142 +49,45 @@ export default defineComponent({
     const nonAccountManagerUserRole = computed(
       () => $auth.user?.role === 'user'
     )
-    // @TODO: i18n these
-    const reports: IReportPageItem[] = [
+    const shortcuts: IReportPageItem[] = [
       {
-        title: `Payment Report`,
-        details: `Displays a list of Call Scorers and allows you to generate a list of clients, calls they scored along with the payable amount based on the dates selcted.`,
-        link: `/reports/payment-report`,
-        icon: `mdi-account-hard-hat`,
+        title: pageNames.clients,
+        details: 'Browse client accounts and their records.',
+        link: '/client-records',
+        icon: 'mdi-domain',
       },
       {
-        title: `Lead Details Report`,
-        details: `Displays a list different kinds of leads based on the client and the date (range) selected. You may chose to only see a summary as well.`,
-        link: `/reports/lead-details-report`,
-        icon: `mdi-face-agent`,
+        title: pageNames.sites,
+        details: 'Browse tracked websites and their details.',
+        link: '/site-records',
+        icon: 'mdi-web',
       },
       {
-        title: `Client Overview Report`,
-        details: `Display a all clients with their summary of leads based on the date (range) selected.`,
-        link: `/reports/client-overview`,
-        icon: `mdi-face-agent`,
+        title: pageNames.locationSetup,
+        details: 'Find locations that still need a client assignment.',
+        link: '/location-settings',
+        icon: 'mdi-map-marker-alert-outline',
       },
       {
-        title: `KPI`,
-        details: `Display a all clients with their KPI summary of leads based on the date (range) selected.`,
-        link: `/reports/kpi`,
-        icon: `mdi-face-agent`,
-      },
-      {
-        title: `Statistics`,
-        details: `Display statistics of all leads based on the date (range) selected`,
-        link: `/reports/statistics`,
-        icon: `mdi-graph`,
-      },
-      {
-        title: `Client Records`,
-        details: `Display all active clients with various data points and sort controls`,
-        link: `/client-records`,
-        icon: `mdi-earth`,
-      },
-      {
-        title: `Site Records`,
-        details: `Display all active websites with various data points and sort controls`,
-        link: `/site-records`,
-        icon: `mdi-web`,
-      },
-      {
-        title: `Location Settings`,
-        details: `Display all locations with missing client ID with various data points and sort controls`,
-        link: `/location-records`,
-        icon: `mdi-earth`,
-      },
-      {
-        title: `VPN Setup`,
-        details: `Setup VPN`,
-        link: `/vpn-setup`,
-        icon: `mdi-earth`,
+        title: pageNames.locations,
+        details: 'Browse active client locations.',
+        link: '/all-locations',
+        icon: 'mdi-map-marker-outline',
       },
     ]
-    const testingReports = computed(() => {
-      return nonAccountManagerUserRole.value
-        ? [
-            {
-              title: `VPN Setup`,
-              details: `Setup VPN`,
-              link: `/vpn-setup`,
-              icon: `mdi-earth`,
-            },
-          ]
-        : [
-            {
-              title: `Payment Report`,
-              details: `Displays a list of Call Scorers and allows you to generate a list of clients, calls they scored along with the payable amount based on the dates selcted.`,
-              link: `/reports/payment-report`,
-              icon: `mdi-account-hard-hat`,
-            },
-            {
-              title: `Lead Details Report`,
-              details: `Displays a list different kinds of leads based on the client and the date (range) selected. You may chose to only see a summary as well.`,
-              link: `/reports/lead-details-report`,
-              icon: `mdi-face-agent`,
-            },
-            {
-              title: `Client Overview Report`,
-              details: `Display a all clients with their summary of leads based on the date (range) selected.`,
-              link: `/reports/client-overview`,
-              icon: `mdi-face-agent`,
-            },
-            {
-              title: `KPI`,
-              details: `Display a all clients with their KPI summary of leads based on the date (range) selected.`,
-              link: `/reports/kpi`,
-              icon: `mdi-face-agent`,
-            },
-            {
-              title: `Statistics`,
-              details: `Display statistics of all leads based on the date (range) selected`,
-              link: `/reports/statistics`,
-              icon: `mdi-graph`,
-            },
-            {
-              title: `Client Records`,
-              details: `Display all active clients with various data points and sort controls`,
-              link: `/client-records`,
-              icon: `mdi-earth`,
-            },
-            {
-              title: `Site Records`,
-              details: `Display all active websites with various data points and sort controls`,
-              link: `/site-records`,
-              icon: `mdi-web`,
-            },
-            {
-              title: `Location Settings`,
-              details: `Display all locations with missing client ID with various data points and sort controls`,
-              link: `/location-settings`,
-              icon: `mdi-earth`,
-            },
-            {
-              title: `VPN Setup`,
-              details: `Setup VPN`,
-              link: `/vpn-setup`,
-              icon: `mdi-earth`,
-            },
-            {
-              title: `All Active Locations`,
-              details: `Display all active locations with various data points and sort controls`,
-              link: `/all-locations`,
-              icon: `mdi-earth`,
-            },
-          ]
-    })
-
-    return {
-      reports,
-      nonAccountManagerUserRole,
-      testingReports,
+    const vpn = {
+      title: pageNames.vpn,
+      details: 'Set up VPN access.',
+      link: '/vpn-setup',
+      icon: 'mdi-shield-lock-outline',
     }
+    const availableReports = computed(() =>
+      nonAccountManagerUserRole.value
+        ? [vpn]
+        : [...Object.values(reportPages), ...shortcuts, vpn]
+    )
+
+    return { availableReports }
   },
 })
 </script>

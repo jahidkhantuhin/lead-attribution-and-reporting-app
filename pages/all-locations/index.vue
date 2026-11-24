@@ -35,7 +35,7 @@
       <v-col md="12">
         <v-card :loading="busy">
           <v-toolbar flat class="directory-toolbar">
-            <v-toolbar-title>All Active Locations</v-toolbar-title>
+            <v-toolbar-title>{{ pageNames.locations }}</v-toolbar-title>
             <v-spacer />
             <v-btn text small @click="tableView = !tableView">{{
               tableView ? 'Inspector' : 'View table'
@@ -111,6 +111,7 @@ import {
   useContext,
   computed,
 } from '@nuxtjs/composition-api'
+import { pageNames } from '~/shared/PageNames'
 
 import swalMixin, { showConfirmDialog, showToast } from '~/utils/swalMixin'
 import useClientLocations from '~/services/useClientLocations'
@@ -244,7 +245,7 @@ export default defineComponent({
         disabled: false,
       },
       {
-        text: `All Active Locations`,
+        text: pageNames.locations,
         to: `/all-locations`,
         disabled: true,
       },
@@ -278,7 +279,7 @@ export default defineComponent({
       { deep: true }
     )
 
-    const pageTitle = `All Active Locations`
+    const pageTitle = pageNames.locations
 
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
 
@@ -381,6 +382,7 @@ export default defineComponent({
     })
 
     return {
+      pageNames,
       tableOptions,
       tableView,
       appliedName,
@@ -407,7 +409,7 @@ export default defineComponent({
     }
   },
   head: {
-    title: 'All Active Locations',
+    title: pageNames.locations,
   },
 })
 </script>

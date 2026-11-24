@@ -169,6 +169,7 @@ import {
   useRouter,
   useContext,
 } from '@nuxtjs/composition-api'
+import { pageNames, reportPages } from '~/shared/PageNames'
 import PaymentReportFilters from '~/components/PaymentReportFilters.vue'
 
 import PaymentReportDetail from '~/components/PaymentReportDetail.vue'
@@ -441,18 +442,18 @@ export default defineComponent({
           to: '/',
         },
         {
-          text: 'Reports',
+          text: pageNames.reports,
           to: '/reports',
         },
         {
-          text: 'Payment Report',
+          text: reportPages.payments.title,
           to: '#',
           disabled: true,
         },
       ]
 
       store.dispatch('setPageHeading', {
-        pageTitle: 'Payment Report',
+        pageTitle: reportPages.payments.title,
         breadcrumbs,
       })
     })
@@ -485,7 +486,7 @@ export default defineComponent({
     }
   },
   head: {
-    title: 'Payment Report',
+    title: reportPages.payments.title,
   },
 })
 </script>

@@ -6,7 +6,7 @@
     <div v-if="!nonAccountManagerUserRole">
       <v-card :loading="loading">
         <v-card-title class="statistics-filters workspace-filter-inline">
-          <span>Statistics</span>
+          <span>{{ pageTitle }}</span>
           <Datepicker
             v-model="filters['dates']"
             class="statistics-date"
@@ -115,6 +115,7 @@ import {
   useContext,
 } from '@nuxtjs/composition-api'
 import VueApexCharts from 'vue-apexcharts'
+import { pageNames, reportPages } from '~/shared/PageNames'
 import { IBreadcrumbs } from '~/store'
 import useAxios from '~/plugins/useAxios'
 import Datepicker from '~/components/forms/DatePickerForStatistics.vue'
@@ -180,12 +181,12 @@ export default defineComponent({
         disabled: false,
       },
       {
-        text: `Reports`,
+        text: pageNames.reports,
         to: `/reports`,
         disabled: false,
       },
       {
-        text: `Statistics`,
+        text: reportPages.trends.title,
         to: `/reports/statistics`,
         disabled: true,
       },
@@ -382,7 +383,7 @@ export default defineComponent({
 
     // testing end
 
-    const pageTitle = `Statistics`
+    const pageTitle = reportPages.trends.title
 
     const fetchGraph = () => {
       if (filters.value.dates.length > 1) {
@@ -539,6 +540,7 @@ export default defineComponent({
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
 
     return {
+      pageTitle,
       response,
       graph,
       loading,
@@ -557,6 +559,7 @@ export default defineComponent({
       nonAccountManagerUserRole,
     }
   },
+  head: { title: reportPages.trends.title },
 })
 </script>
 <style lang="scss">

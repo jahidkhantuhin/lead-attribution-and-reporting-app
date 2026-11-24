@@ -20,7 +20,7 @@
             v-model="reportCompare"
             class="ml-4"
             inset
-            :label="'Compare Report'"
+            label="Compare periods"
             @change="push"
             @click="compareReportChange"
           ></v-switch>
@@ -283,7 +283,7 @@
                 @click="searchHandler"
                 @change="push"
               >
-                SEO ONLY
+                Organic search
               </v-btn>
               <v-btn
                 v-if="seoReport || ppcOnlyReport"
@@ -302,7 +302,7 @@
                 @click="searchPPCReport"
                 @change="push"
               >
-                PPC ONLY
+                Paid search
               </v-btn>
               <v-text-field
                 v-model="search"
@@ -947,7 +947,7 @@
                             color: black;
                             font-weight: bold;
                           "
-                          :href="`/reports/lead-details-report?client=${
+                          :href="`${reportPages.attribution.link}?client=${
                             item.client_id
                           }&dates=${String(
                             reportCompare
@@ -957,7 +957,7 @@
                             item.location_id
                           }`"
                           target="_blank"
-                          >LDR</a
+                          >{{ reportPages.attribution.title }}</a
                         >
                       </v-list-item>
                       <v-list-item>
@@ -967,14 +967,13 @@
                             color: black;
                             font-weight: bold;
                           "
-                          :href="`/reports/kpi?dates=${String(dates).replace(
-                            /,/g,
-                            `&dates=`
-                          )}&client_id=${item.client_id}&location_ids=${
-                            item.location_id
-                          }&type=month`"
+                          :href="`${reportPages.location.link}?dates=${String(
+                            dates
+                          ).replace(/,/g, `&dates=`)}&client_id=${
+                            item.client_id
+                          }&location_ids=${item.location_id}&type=month`"
                           target="_blank"
-                          >KPI</a
+                          >{{ reportPages.location.title }}</a
                         >
                       </v-list-item>
                     </v-list>
@@ -1047,6 +1046,7 @@ import {
   useRoute,
 } from '@nuxtjs/composition-api'
 import moment from 'moment'
+import { pageNames, reportPages } from '~/shared/PageNames'
 
 import { IBreadcrumbs } from '~/store'
 import Datepicker from '~/components/forms/DatePicker.vue'
@@ -1077,7 +1077,7 @@ import generateComparingSeoCorColumnsReport, {
 import { dates as showcaseDates } from '~/showcase/fixtures'
 import UnauthorizedUser from '~/components/UnauthorizedUser.vue'
 
-const pageTitle = `Client Overview Report`
+const pageTitle = reportPages.client.title
 
 export default defineComponent({
   components: {
@@ -1179,7 +1179,7 @@ export default defineComponent({
     const compareReportChange = () => {
       googleDocLink.value = ''
       search.value = ''
-      reportTitle.value = 'Client overview'
+      reportTitle.value = reportPages.client.title
       seoReport.value = false
       ppcOnlyReport.value = false
       filters.value.seo_report = []
@@ -2031,21 +2031,21 @@ export default defineComponent({
     })
 
     const seoReport = ref(false)
-    const reportTitle = ref('Client overview')
+    const reportTitle = ref(reportPages.client.title)
 
     const searchHandler = () => {
       search.value = 'seo'
       seoReport.value = true
       googleDocLink.value = ''
       reportUploaded.value = false
-      reportTitle.value = 'SEO client overview'
+      reportTitle.value = 'Organic Search Performance'
       filters.value.seo_report = [1]
       push()
     }
     const searchAllReport = () => {
       search.value = ''
       fetchReport()
-      reportTitle.value = 'Client overview'
+      reportTitle.value = reportPages.client.title
       seoReport.value = false
       ppcOnlyReport.value = false
       // googleDocLink.value = ''
@@ -2075,7 +2075,7 @@ export default defineComponent({
       ppcOnlyReport.value = true
       report.value.summary = onlYPpcReport.value
       search.value = ''
-      reportTitle.value = 'PPC client overview'
+      reportTitle.value = 'Paid Search Performance'
       seoReport.value = false
       googleDocLink.value = ''
       reportUploaded.value = false
@@ -2273,11 +2273,11 @@ export default defineComponent({
         to: `/`,
       },
       {
-        text: `Reports`,
+        text: pageNames.reports,
         to: '/reports/',
       },
       {
-        text: 'Client Overview',
+        text: reportPages.client.title,
         to: `/reports/client-overview`,
       },
     ]
@@ -2437,6 +2437,7 @@ export default defineComponent({
       dates,
       seoReport,
       reportTitle,
+      reportPages,
       newInput,
       dateOne,
       dateTwo,
@@ -2483,9 +2484,6 @@ export default defineComponent({
       menu2,
       // New COR ENd
     }
-  },
-  head: {
-    title: pageTitle,
   },
 })
 </script>

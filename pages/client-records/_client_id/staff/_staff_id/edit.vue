@@ -12,6 +12,7 @@
 
 <script>
 import { defineComponent, useRoute, useStore } from '@nuxtjs/composition-api'
+import { pageNames } from '~/shared/PageNames'
 import StaffForm from '~/components/forms/StaffForm.vue'
 
 export default defineComponent({
@@ -27,7 +28,7 @@ export default defineComponent({
     const clientId = route.value.params.client_id
 
     const onFetchClient = (client, staff) => {
-      const pageTitle = 'Edit Staff'
+      const pageTitle = 'Edit Client Staff Member'
 
       store.dispatch('setPageHeading', {
         pageTitle,
@@ -38,7 +39,7 @@ export default defineComponent({
             disabled: false,
           },
           {
-            text: `Client Records`,
+            text: pageNames.clients,
             to: `/client-records`,
             disabled: false,
           },
@@ -72,5 +73,6 @@ export default defineComponent({
       onFetchClient,
     }
   },
+  head: { title: 'Edit Client Staff Member' },
 })
 </script>

@@ -23,6 +23,7 @@ import {
   useStore,
 } from '@nuxtjs/composition-api'
 import { IBreadcrumbs } from '@/store'
+import { pageNames } from '~/shared/PageNames'
 
 import UserForm from '~/components/forms/UserForm.vue'
 import RestrictedComponent from '~/components/RestrictedComponent.vue'
@@ -46,7 +47,7 @@ export default defineComponent({
         to: `/`,
       },
       {
-        text: `Users`,
+        text: pageNames.users,
         to: `/users`,
       },
       {
@@ -55,7 +56,7 @@ export default defineComponent({
       },
     ]
 
-    const pageTitle = `Add a User`
+    const pageTitle = 'Add Team Member'
 
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
 
@@ -69,7 +70,7 @@ export default defineComponent({
     }
   },
   head: {
-    title: 'Add a User',
+    title: 'Add Team Member',
   },
 })
 </script>

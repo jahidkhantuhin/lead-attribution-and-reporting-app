@@ -125,16 +125,16 @@
         <div class="lead-report-sections">
           <v-tabs v-model="activeSection" class="lead-section-tabs" hide-slider>
             <v-tab
-              ><v-icon left small>mdi-chart-box-outline</v-icon>Lead
-              Summary</v-tab
+              ><v-icon left small>mdi-chart-box-outline</v-icon
+              >{{ reportViews.overview }}</v-tab
             >
             <v-tab
-              ><v-icon left small>mdi-chart-donut</v-icon>Summary by
-              Source</v-tab
+              ><v-icon left small>mdi-chart-donut</v-icon
+              >{{ reportViews.sources }}</v-tab
             >
             <v-tab
-              ><v-icon left small>mdi-format-list-bulleted</v-icon>Lead
-              Details</v-tab
+              ><v-icon left small>mdi-format-list-bulleted</v-icon
+              >{{ reportViews.activity }}</v-tab
             >
           </v-tabs>
           <v-tabs-items
@@ -266,6 +266,7 @@ import {
 } from '@nuxtjs/composition-api'
 import { get, sortBy } from 'lodash'
 import moment from 'moment-timezone'
+import { pageNames, reportPages, reportViews } from '~/shared/PageNames'
 import useAxios from '~/plugins/useAxios'
 import { IBreadcrumbs } from '~/store'
 
@@ -372,18 +373,18 @@ export default defineComponent({
         to: '/',
       },
       {
-        text: 'Reports',
+        text: pageNames.reports,
         to: '/reports',
       },
       {
-        text: 'LDR',
+        text: reportPages.attribution.title,
         to: '#',
         disabled: true,
       },
     ]
 
     store.dispatch('setPageHeading', {
-      pageTitle: 'Lead Details Report',
+      pageTitle: reportPages.attribution.title,
       breadcrumbs,
     })
 
@@ -1396,6 +1397,7 @@ export default defineComponent({
       LDRReportLoading,
       summary,
       activeSection,
+      reportViews,
       reportError,
       ready,
       detailView,
@@ -1415,7 +1417,7 @@ export default defineComponent({
     }
   },
   head: {
-    title: 'Lead Details Report',
+    title: reportPages.attribution.title,
   },
 })
 </script>

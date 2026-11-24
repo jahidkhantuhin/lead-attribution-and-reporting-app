@@ -16,6 +16,7 @@ import {
   useRouter,
   useStore,
 } from '@nuxtjs/composition-api'
+import { pageNames } from '~/shared/PageNames'
 import LocationForm from '~/components/forms/LocationForm.vue'
 
 export default defineComponent({
@@ -34,7 +35,7 @@ export default defineComponent({
     }
 
     const onFetchClient = (client) => {
-      const pageTitle = 'Add Location'
+      const pageTitle = 'Add Client Location'
       const breadcrumbs = [
         {
           text: `Dashboard`,
@@ -42,7 +43,7 @@ export default defineComponent({
           disabled: false,
         },
         {
-          text: `Client Records`,
+          text: pageNames.clients,
           to: `/client-records`,
           disabled: false,
         },
@@ -69,5 +70,6 @@ export default defineComponent({
       onFetchClient,
     }
   },
+  head: { title: 'Add Client Location' },
 })
 </script>

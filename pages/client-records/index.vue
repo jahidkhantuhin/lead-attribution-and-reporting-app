@@ -53,7 +53,7 @@
       <v-col md="12">
         <v-card :loading="busy">
           <v-toolbar flat class="directory-toolbar">
-            <v-toolbar-title>Client Records</v-toolbar-title>
+            <v-toolbar-title>{{ pageNames.clients }}</v-toolbar-title>
             <!-- <v-spacer></v-spacer> -->
             <v-btn class="mr-2" color="primary" nuxt to="/client-records/add">
               <v-icon left>mdi-account-plus</v-icon>
@@ -181,6 +181,7 @@ import {
   computed,
 } from '@nuxtjs/composition-api'
 import useClientRecords from '@/services/useClientRecords'
+import { pageNames } from '~/shared/PageNames'
 
 import swalMixin, { showConfirmDialog, showToast } from '~/utils/swalMixin'
 import useClientLocations from '~/services/useClientLocations'
@@ -329,7 +330,7 @@ export default defineComponent({
         disabled: false,
       },
       {
-        text: `Client Records`,
+        text: pageNames.clients,
         to: `/client-records`,
         disabled: true,
       },
@@ -363,7 +364,7 @@ export default defineComponent({
       { deep: true }
     )
 
-    const pageTitle = `Client Records`
+    const pageTitle = pageNames.clients
 
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
 
@@ -509,6 +510,7 @@ export default defineComponent({
     })
 
     return {
+      pageNames,
       tableOptions,
       tableView,
       appliedName,
@@ -538,7 +540,7 @@ export default defineComponent({
     }
   },
   head: {
-    title: 'Client Records',
+    title: pageNames.clients,
   },
 })
 </script>

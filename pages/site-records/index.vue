@@ -291,6 +291,7 @@ import {
 } from '@nuxtjs/composition-api'
 import useSiteRecords from '@/services/useSiteRecords'
 import moment from 'moment'
+import { pageNames } from '~/shared/PageNames'
 
 import { Dictionary } from '~/node_modules/@types/lodash'
 import generateSiteRecordsReport, {
@@ -476,7 +477,7 @@ export default defineComponent({
         disabled: false,
       },
       {
-        text: `Site Records`,
+        text: pageNames.sites,
         to: `/site-records`,
         disabled: true,
       },
@@ -505,7 +506,7 @@ export default defineComponent({
       { deep: true }
     )
 
-    const pageTitle = `Site Records`
+    const pageTitle = pageNames.sites
 
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
 
@@ -743,7 +744,7 @@ export default defineComponent({
     }
   },
   head: {
-    title: 'Site Records',
+    title: pageNames.sites,
   },
 })
 </script>

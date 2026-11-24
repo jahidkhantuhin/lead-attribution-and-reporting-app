@@ -41,8 +41,8 @@
                 item-text="label"
                 item-value="value"
                 :items="[
-                  { label: 'Daily', value: 'daily' },
-                  { label: 'Monthly', value: 'month' },
+                  { label: reportViews.daily, value: 'daily' },
+                  { label: reportViews.monthly, value: 'month' },
                 ]"
                 class="mr-5"
                 @change="handleViewChange"
@@ -169,6 +169,7 @@ import {
 } from '@nuxtjs/composition-api'
 import { Dictionary } from 'lodash'
 import moment from 'moment'
+import { pageNames, reportPages, reportViews } from '~/shared/PageNames'
 
 import { IBreadcrumbs } from '~/store'
 import ClientPicker from '~/components/forms/ClientPicker.vue'
@@ -373,12 +374,12 @@ export default defineComponent({
         to: `/`,
       },
       {
-        text: `Reports`,
+        text: pageNames.reports,
         to: '/',
         disabled: false,
       },
       {
-        text: `KPI Report`,
+        text: reportPages.location.title,
         to: '/reports/kpi',
         disabled: true,
       },
@@ -553,12 +554,13 @@ export default defineComponent({
     })
 
     store.dispatch('setPageHeading', {
-      pageTitle: 'KPI Report',
+      pageTitle: reportPages.location.title,
       breadcrumbs,
     })
 
     return {
       reportLoaded,
+      reportViews,
       isWeekly,
       isMonthly,
       isDaily,
@@ -584,6 +586,7 @@ export default defineComponent({
       nonAccountManagerUserRole,
     }
   },
+  head: { title: reportPages.location.title },
 })
 </script>
 <style lang="scss">

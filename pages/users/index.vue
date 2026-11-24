@@ -180,6 +180,7 @@ import {
 import { IBreadcrumbs } from '@/store'
 
 import useUsers from '@/services/useUsers'
+import { pageNames } from '~/shared/PageNames'
 import { Dictionary } from '~/node_modules/@types/lodash'
 
 import isUserAllowedToEdit from '~/utils/isUserAllowedToEdit'
@@ -221,12 +222,12 @@ export default defineComponent({
         to: `/`,
       },
       {
-        text: `Users`,
+        text: pageNames.users,
         to: `/users`,
       },
     ]
 
-    const pageTitle = `Users`
+    const pageTitle = pageNames.users
 
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
 
@@ -459,7 +460,7 @@ export default defineComponent({
     }
   },
   head: {
-    title: 'Users',
+    title: pageNames.users,
   },
 })
 </script>
