@@ -5,7 +5,7 @@
       :headers="tableHeaders"
       :items="rows"
       :items-per-page="100"
-      :fixed-header="true"
+      no-data-text="No KPI results for this period."
       :footer-props="{
         itemsPerPageOptions: [100, 200, 500, -1],
         itemsPerPage: -1,
@@ -15,7 +15,7 @@
       :disable-pagination="true"
       :disable-filtering="true"
       hide-default-footer
-      class="v-table-compact kpi-table"
+      class="workspace-report-table kpi-table"
     >
       <template #item.date="{ item }">
         <span>
@@ -176,6 +176,7 @@
 <script lang="ts">
 import { computed, defineComponent } from '@nuxtjs/composition-api'
 import FormattedDate from '~/components/FormattedDate.vue'
+import { reportTableHeaders } from '~/utils/reportTableHeaders'
 import { KPIColumnSections } from '~/utils/reports-upload/kpi'
 
 export default defineComponent({
@@ -203,13 +204,13 @@ export default defineComponent({
     })
 
     const tableHeaders = computed(() => {
-      return [
+      return reportTableHeaders([
         dateColumn.value,
         ...KPIColumnSections.leads,
         ...KPIColumnSections.adwords,
         ...KPIColumnSections.fb,
         ...KPIColumnSections.score,
-      ]
+      ])
     })
 
     return {
@@ -231,24 +232,6 @@ export default defineComponent({
   .kpi-value--search {
     background: var(--workspace-subtle);
     border: 1px solid var(--workspace-border);
-  }
-
-  .v-data-table__wrapper {
-    overflow-x: auto;
-  }
-
-  thead:not(.v-data-table-header-mobile) th:first-child,
-  tbody
-    tr:not(.v-data-table__mobile-table-row, .v-data-table__empty-wrapper)
-    td:first-child {
-    position: sticky;
-    left: 0;
-    z-index: 1;
-    background: var(--workspace-surface);
-  }
-
-  tbody tr:hover:not(.v-data-table__mobile-table-row) td:first-child {
-    background: var(--workspace-tint);
   }
 }
 </style>

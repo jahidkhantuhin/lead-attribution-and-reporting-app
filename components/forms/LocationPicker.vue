@@ -120,7 +120,14 @@ export default defineComponent({
             inputValue.value = props.multiple ? [firstOption] : firstOption
             onChange()
           } else if (locationList.value.length > 1) {
-            inputValue.value = props.multiple ? locationFromUrl : firstOption
+            inputValue.value = props.multiple
+              ? locationFromUrl
+              : locationList.value.some(
+                  (location: { id: number }) =>
+                    location.id === locationFromUrl[0]
+                )
+              ? locationFromUrl[0]
+              : firstOption
             onChange()
             // selectAll()
           }
@@ -145,7 +152,8 @@ export default defineComponent({
           >
         }
       } else {
-        inputValue.value = router.currentRoute.query.location_ids as string
+        const ids = router.currentRoute.query.location_ids
+        inputValue.value = Number(Array.isArray(ids) ? ids[0] : ids) || null
       }
       if (process.env.SHOWCASE_MODE === 'true' && props.client) fetchLocations()
     })
