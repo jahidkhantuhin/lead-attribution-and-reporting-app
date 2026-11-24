@@ -1,32 +1,35 @@
 <template>
   <div>
     <UnauthorizedUser v-if="nonAccountManagerUserRole" />
-    <v-row
+    <div
       v-if="!nonAccountManagerUserRole"
       :class="{
-        'my-5': true,
+        'workspace-report-stack': true,
         'dark-page': $vuetify.theme.dark,
       }"
     >
-      <v-col cols="12" md="12" lg="12">
+      <div>
         <v-card
           color="default"
           rounded
           elevation="1"
           class="workspace-filter-panel"
         >
-          <v-card-title>{{ $t('message.filters') }}</v-card-title>
-          <v-switch
-            v-model="reportCompare"
-            class="ml-4"
-            inset
-            label="Compare periods"
-            @change="push"
-            @click="compareReportChange"
-          ></v-switch>
+          <v-card-title class="workspace-report-filter-heading">
+            <span>{{ $t('message.filters') }}</span>
+            <v-switch
+              v-model="reportCompare"
+              inset
+              dense
+              hide-details
+              label="Compare periods"
+              @change="push"
+              @click="compareReportChange"
+            />
+          </v-card-title>
           <v-card-text>
             <!-- <p>{{selectedMonthIsCurrentMonth}}</p> -->
-            <v-row>
+            <v-row dense>
               <v-col
                 v-if="!reportCompare"
                 cols="12"
@@ -230,8 +233,8 @@
             </v-row>
           </v-card-text>
         </v-card>
-      </v-col>
-      <v-col md="12" lg="12">
+      </div>
+      <div>
         <v-expand-transition>
           <v-card v-if="!loadedReport && loadingReport === false">
             <v-card-text>
@@ -243,7 +246,7 @@
           <v-card v-if="loadingReport">
             <v-card-text>
               <v-skeleton-loader
-                type="table-heading, list-item-two-line, image, table-tfoot"
+                type="table-heading, table-row-divider, table-row-divider"
               ></v-skeleton-loader>
             </v-card-text>
           </v-card>
@@ -320,7 +323,6 @@
 
             <v-card-text>
               <v-data-table
-                fixed-header
                 :sort-by="['client.name']"
                 :sort-desc="[true]"
                 :footer-props="{
@@ -333,7 +335,6 @@
                 :search="search"
                 no-results="No matching clients found"
                 class="elevation-0 cor-table"
-                height="700px"
                 @current-items="currentItems"
               >
                 <template #item.location.name="{ item }">
@@ -983,7 +984,7 @@
             </v-card-text>
           </v-card>
         </v-expand-transition>
-      </v-col>
+      </div>
       <v-dialog v-model="reportLoadingDialog" persistent width="500">
         <v-expand-transition>
           <v-card v-show="uploadReportLoading">
@@ -1029,7 +1030,7 @@
           </v-card>
         </v-expand-transition>
       </v-dialog>
-    </v-row>
+    </div>
   </div>
 </template>
 

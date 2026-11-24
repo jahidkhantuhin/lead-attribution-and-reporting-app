@@ -1,7 +1,7 @@
 <template>
   <div>
     <UnauthorizedUser v-if="unAuthorizedToPullReport" />
-    <div v-else class="lead-report">
+    <div v-else class="lead-report workspace-report-stack">
       <v-card flat class="lead-report-surface workspace-filter-inline">
         <div class="lead-report-filters">
           <client-picker

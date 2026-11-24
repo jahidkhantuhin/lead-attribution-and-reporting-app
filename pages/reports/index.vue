@@ -1,5 +1,5 @@
 <template>
-  <ReportsList class="mt-6" />
+  <ReportsList class="workspace-report-hub" />
 </template>
 
 <script lang="ts">

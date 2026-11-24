@@ -3,9 +3,11 @@
     <div>
       <UnauthorizedUser v-if="nonAccountManagerUserRole" />
     </div>
-    <div v-if="!nonAccountManagerUserRole">
-      <v-card :loading="loading">
-        <v-card-title class="statistics-filters workspace-filter-inline">
+    <div v-if="!nonAccountManagerUserRole" class="workspace-report-stack">
+      <v-card flat class="workspace-chart-card" :loading="loading">
+        <v-card-title
+          class="statistics-filters workspace-chart-heading workspace-filter-inline"
+        >
           <span>{{ pageTitle }}</span>
           <Datepicker
             v-model="filters['dates']"
@@ -18,8 +20,26 @@
             ]"
             @change="fetchGraph"
           ></Datepicker>
+          <div v-if="dataLoaded" class="workspace-period-controls">
+            <v-btn
+              icon
+              title="Copy link to this report"
+              @click="copyReportLink"
+            >
+              <v-icon>mdi-link</v-icon>
+            </v-btn>
+            <v-btn
+              :loading="uploadReportLoading"
+              icon
+              title="Upload to Google Drive"
+              :color="googleDocLink ? 'info' : 'normal'"
+              @click="uploadReport"
+            >
+              <v-icon>mdi-upload</v-icon>
+            </v-btn>
+          </div>
         </v-card-title>
-        <v-card-text v-if="filters.dates.length">
+        <v-card-text v-if="filters.dates.length" class="workspace-chart-period">
           <dates-and-diff
             :start="filters.dates[0]"
             :end="filters.dates[1] || filters.dates[0]"
@@ -27,21 +47,6 @@
         </v-card-text>
         <!-- <p> {{ testingValue }} </p> -->
         <!-- <p> {{ testingValueTwo }} </p> -->
-        <v-toolbar v-if="dataLoaded" flat>
-          <v-spacer></v-spacer>
-          <v-btn icon title="Copy link to this report" @click="copyReportLink">
-            <v-icon>mdi-link</v-icon>
-          </v-btn>
-          <v-btn
-            :loading="uploadReportLoading"
-            icon
-            title="Upload to Google Drive"
-            :color="googleDocLink ? 'info' : 'normal'"
-            @click="uploadReport"
-          >
-            <v-icon>mdi-upload</v-icon>
-          </v-btn>
-        </v-toolbar>
         <v-dialog v-model="reportLoadingDialog" persistent width="500">
           <v-expand-transition>
             <v-card v-show="uploadReportLoading">
@@ -90,14 +95,13 @@
           </v-expand-transition>
         </v-dialog>
         <v-card-text>
-          <apexchart
-            width="100%"
-            height="500px"
+          <WorkspaceChart
+            label="Lead activity and call outcomes over time"
+            :height="365"
             type="line"
             :series="graph.series"
             :options="graph.options"
-          >
-          </apexchart>
+          />
         </v-card-text>
       </v-card>
     </div>
@@ -114,7 +118,7 @@ import {
   useStore,
   useContext,
 } from '@nuxtjs/composition-api'
-import VueApexCharts from 'vue-apexcharts'
+import WorkspaceChart from '~/components/WorkspaceChart.vue'
 import { pageNames, reportPages } from '~/shared/PageNames'
 import { IBreadcrumbs } from '~/store'
 import useAxios from '~/plugins/useAxios'
@@ -129,7 +133,7 @@ import UnauthorizedUser from '~/components/UnauthorizedUser.vue'
 
 export default defineComponent({
   components: {
-    apexchart: VueApexCharts,
+    WorkspaceChart,
     Datepicker,
     DatesAndDiff,
     UnauthorizedUser,
@@ -311,25 +315,9 @@ export default defineComponent({
             '#865C39',
             '#50658E',
           ],
-          legend: { position: 'top', horizontalAlign: 'left' },
-          chart: {
-            height: 500,
-            zoom: {
-              enabled: false,
-            },
-            toolbar: {
-              show: false,
-            },
-          },
-          dataLabels: {
-            enabled: false,
-          },
-
-          stroke: {
-            curve: 'straight',
-            width: 2,
-          },
-          grid: { strokeDashArray: 4 },
+          chart: { zoom: { enabled: false } },
+          stroke: { curve: 'straight', width: 2.5 },
+          markers: { size: 0, hover: { size: 5 } },
           xaxis: {
             categories: keys,
             labels: { formatter: formatMonthLabel },
@@ -562,13 +550,3 @@ export default defineComponent({
   head: { title: reportPages.trends.title },
 })
 </script>
-<style lang="scss">
-.theme--dark {
-  .apexcharts-tooltip {
-    color: rgb(61, 60, 60);
-  }
-  .apexcharts-canvas {
-    color: white;
-  }
-}
-</style>

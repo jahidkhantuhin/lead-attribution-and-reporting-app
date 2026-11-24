@@ -1,34 +1,23 @@
 <template>
-  <v-row :justify="justify">
-    <v-col
+  <div class="workspace-report-grid">
+    <nuxt-link
       v-for="report in availableReports"
       :key="report.link"
-      cols="12"
-      md="4"
+      :to="report.link"
+      class="workspace-report-card"
     >
-      <v-card class="workspace-report-card" hover link nuxt :to="report.link">
-        <v-toolbar flat>
-          <v-toolbar-title class="text--primary font-weight-bold">
-            {{ report.title }}
-          </v-toolbar-title>
-          <v-spacer></v-spacer>
-          <span v-if="report.icon" class="workspace-report-icon"
-            ><v-icon small>{{ report.icon }}</v-icon></span
-          >
-        </v-toolbar>
-        <v-card-text class="text--primary min-height">{{
-          report.details
-        }}</v-card-text>
-        <v-card-actions>
-          <v-list-item class="grow">
-            <v-row justify="end">
-              <span class="workspace-report-action"> Open </span>
-            </v-row>
-          </v-list-item>
-        </v-card-actions>
-      </v-card>
-    </v-col>
-  </v-row>
+      <span class="workspace-report-icon" aria-hidden="true">
+        <v-icon small>{{ report.icon }}</v-icon>
+      </span>
+      <div class="workspace-report-copy">
+        <h3>{{ report.title }}</h3>
+        <p>{{ report.details }}</p>
+      </div>
+      <v-icon small class="workspace-report-arrow" aria-hidden="true">
+        mdi-arrow-right
+      </v-icon>
+    </nuxt-link>
+  </div>
 </template>
 
 <script lang="ts">
@@ -37,13 +26,6 @@ import { pageNames, reportPages } from '~/shared/PageNames'
 import { IReportPageItem } from '~/shared/Types'
 
 export default defineComponent({
-  props: {
-    justify: {
-      type: String,
-      required: false,
-      default: 'left',
-    },
-  },
   setup() {
     const { $auth } = useContext()
     const nonAccountManagerUserRole = computed(
@@ -91,9 +73,3 @@ export default defineComponent({
   },
 })
 </script>
-
-<style scoped>
-.min-height {
-  min-height: 110px;
-}
-</style>

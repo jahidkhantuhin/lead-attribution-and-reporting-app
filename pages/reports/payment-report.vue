@@ -3,7 +3,10 @@
     <div>
       <UnauthorizedUser v-if="nonAccountManagerUserRole" />
     </div>
-    <div v-if="!nonAccountManagerUserRole" class="payment-report">
+    <div
+      v-if="!nonAccountManagerUserRole"
+      class="payment-report workspace-report-stack"
+    >
       <v-card flat class="payment-panel payment-controls">
         <h2>Report filters</h2>
         <payment-report-filters
@@ -492,12 +495,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.payment-report {
-  display: grid;
-  gap: 18px;
-  padding-block: 20px;
-}
-
 .payment-report .payment-panel {
   min-width: 0;
   background: var(--workspace-surface);
@@ -507,7 +504,7 @@ export default defineComponent({
 
 .payment-controls,
 .payment-heading {
-  padding: clamp(16px, 2.5vw, 24px);
+  padding: clamp(12px, 1.5vw, 16px);
 }
 
 .payment-heading,
@@ -536,11 +533,11 @@ export default defineComponent({
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
   gap: 10px;
-  padding: 0 clamp(16px, 2.5vw, 24px) 16px;
+  padding: 0 clamp(12px, 1.5vw, 16px) 16px;
 }
 
 .payment-metrics div {
-  padding: 14px;
+  padding: 10px 12px;
   border: 1px solid var(--workspace-border);
   border-radius: 12px;
   background: var(--workspace-subtle);
@@ -563,7 +560,7 @@ export default defineComponent({
 }
 
 .payment-empty {
-  padding: 30px 16px 40px;
+  padding: 20px 12px 24px;
   text-align: center;
 }
 

@@ -3,15 +3,16 @@
     <div>
       <UnauthorizedUser v-if="nonAccountManagerUserRole" />
     </div>
-    <div v-if="!nonAccountManagerUserRole">
+    <div v-if="!nonAccountManagerUserRole" class="workspace-report-stack">
       <!-- Filters -->
       <v-card elevation="1" :loading="busy" class="workspace-filter-panel">
         <v-card-title>{{ $t('message.filters') }}</v-card-title>
         <v-card-text>
-          <v-row>
+          <v-row dense align="center">
             <v-col cols="12" xl="2" lg="2" md="2" sm="12" xs="12">
               <client-picker
                 v-model="filters.client_id"
+                compact
                 :u-r-l-query-param="'client_id'"
                 @change="handleClientChange"
               ></client-picker>
@@ -19,6 +20,7 @@
             <v-col cols="12" xl="3" lg="3" md="3" sm="12" xs="12">
               <location-picker
                 v-model="filters.location_ids"
+                compact
                 :client="filters.client_id"
                 :multiple="false"
               ></location-picker>
@@ -26,6 +28,7 @@
             <v-col cols="12" xl="3" lg="3" md="3" sm="12" xs="12">
               <datepicker
                 v-model="filters.dates"
+                compact
                 :kpi="true"
                 :date-help-buttons="[
                   'lastMonth',
@@ -44,7 +47,9 @@
                   { label: reportViews.daily, value: 'daily' },
                   { label: reportViews.monthly, value: 'month' },
                 ]"
-                class="mr-5"
+                dense
+                outlined
+                hide-details
                 @change="handleViewChange"
               ></v-select>
             </v-col>
@@ -57,7 +62,7 @@
               xs="12"
               align="center"
             >
-              <v-btn @click="handleApply">
+              <v-btn color="primary" depressed @click="handleApply">
                 <v-icon left>mdi-check</v-icon>
                 Apply
               </v-btn>
@@ -86,17 +91,15 @@
         </v-card-actions>
       </v-card>
       <!-- Filters -->
-      <br />
       <!-- Header -->
       <v-expand-transition>
-        <v-card v-if="!reportLoaded" class="mb-5">
+        <v-card v-if="!reportLoaded && !busy">
           <v-card-text>
             {{ $t('message.supplyFilters') }}
           </v-card-text>
         </v-card>
       </v-expand-transition>
-      <div v-if="reportLoaded">
-        <br />
+      <v-card v-if="reportLoaded" flat>
         <KPIMonthly
           v-if="response.type === 'month'"
           :response="response"
@@ -105,7 +108,7 @@
           v-else-if="response.type === 'daily'"
           :response="response"
         ></KPIDaily>
-      </div>
+      </v-card>
       <!-- Upload Dialog -->
       <v-dialog v-model="reportLoadingDialog" persistent width="500">
         <v-expand-transition>
@@ -589,15 +592,3 @@ export default defineComponent({
   head: { title: reportPages.location.title },
 })
 </script>
-<style lang="scss">
-.theme--dark {
-  .lighten-5 {
-    color: rgb(61, 60, 60);
-  }
-  .kpi-table .v-data-table__wrapper {
-    table > thead > tr > th {
-      color: rgb(156, 149, 149);
-    }
-  }
-}
-</style>
