@@ -154,27 +154,44 @@
             <v-tab-item class="lead-detail-panel">
               <section class="lead-records">
                 <header class="lead-records-heading">
-                  <div>
-                    <h3>Lead records</h3>
-                    <p>
-                      {{ detailRows.length }}
-                      {{ detailRows.length === 1 ? 'record' : 'records' }}
-                    </p>
+                  <div class="lead-records-title">
+                    <span class="lead-records-icon" aria-hidden="true">
+                      <v-icon small>mdi-format-list-bulleted</v-icon>
+                    </span>
+                    <div>
+                      <h3>Lead records</h3>
+                      <p aria-live="polite">
+                        {{ detailRows.length }}
+                        {{ detailRows.length === 1 ? 'record' : 'records' }}
+                      </p>
+                    </div>
                   </div>
-                  <v-select
-                    v-model="detailView"
-                    :items="detailViews"
-                    label="Lead type and source"
-                    dense
-                    outlined
-                    hide-details
-                    class="lead-records-select"
-                  />
+                  <div class="lead-records-tools">
+                    <v-text-field
+                      v-if="detailView === 'all'"
+                      v-model="leadSearch"
+                      label="Search lead records"
+                      prepend-inner-icon="mdi-magnify"
+                      dense
+                      outlined
+                      hide-details
+                      clearable
+                    />
+                    <v-select
+                      v-model="detailView"
+                      :items="detailViews"
+                      label="Type and source"
+                      dense
+                      outlined
+                      hide-details
+                    />
+                  </div>
                 </header>
                 <LDRAllReports
                   v-if="detailView === 'all'"
                   :call-item-class="callItemClass"
                   :all-reports-list="detailRows"
+                  :search="leadSearch || ''"
                 />
                 <component
                   :is="selectedDetailView.component"
@@ -1330,6 +1347,7 @@ export default defineComponent({
       { value: 'seo_emails', text: 'Forms · SEO', component: 'LDRFormsSEO' },
     ]
     const detailView = ref('all')
+    const leadSearch = ref('')
     const selectedDetailView = computed(
       () =>
         detailViews.find(({ value }) => value === detailView.value) ||
@@ -1381,6 +1399,7 @@ export default defineComponent({
       reportError,
       ready,
       detailView,
+      leadSearch,
       detailViews,
       selectedDetailView,
       detailRows,
