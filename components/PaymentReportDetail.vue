@@ -1,27 +1,25 @@
 <template>
   <div class="payment-report-detail">
-    <v-card-title> Showing reports for {{ scorer }} </v-card-title>
-    <v-card-text>
-      <v-data-table
-        id="table"
-        :headers="headers"
-        :items="report"
-        :items-per-page="5"
-        :disable-pagination="true"
-        :disable-filtering="true"
-        :no-data-text="`No Reports found for ${scorer}`"
-        :hide-default-footer="true"
-        :disable-sort="true"
-        class="elevation-1 mb-3"
-      >
-        <template #item.total_call_duration="{ item }">
-          <formatted-duration :value="item.total_call_duration" />
-        </template>
-        <template #item.total_rating_time="{ item }">
-          <formatted-duration :value="item.total_rating_time" />
-        </template>
-      </v-data-table>
-    </v-card-text>
+    <h3>Payment by client</h3>
+
+    <v-data-table
+      item-key="name"
+      :headers="headers"
+      :items="report"
+      :items-per-page="5"
+      :disable-pagination="true"
+      :disable-filtering="true"
+      :hide-default-footer="true"
+      :disable-sort="true"
+      class="payment-table"
+    >
+      <template #item.total_call_duration="{ item }">
+        <formatted-duration :value="item.total_call_duration" />
+      </template>
+      <template #item.total_rating_time="{ item }">
+        <formatted-duration :value="item.total_rating_time" />
+      </template>
+    </v-data-table>
   </div>
 </template>
 <script>
@@ -30,9 +28,7 @@ import { PaymentReportColumns } from '~/utils/reports-upload/payment-report'
 
 export default defineComponent({
   props: {
-    scorer: { type: [String, Number], default: undefined },
     report: { type: Array, default: undefined },
-    payRate: { type: [Number, String], default: undefined },
   },
   setup(_props) {
     return {
@@ -42,22 +38,26 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
+<style>
 .payment-report-detail {
-  margin-top: -10px;
-  .v-data-footer {
-    display: none;
-  }
-  table {
-    tbody {
-      tr {
-        &:last-child {
-          td {
-            font-weight: bold;
-          }
-        }
-      }
-    }
-  }
+  min-width: 0;
+  padding: 0 clamp(16px, 2.5vw, 24px) 24px;
+}
+
+.payment-report-detail h3 {
+  margin-bottom: 12px;
+  font-size: 1rem;
+}
+
+.payment-table {
+  border: 1px solid var(--workspace-border);
+  border-radius: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.payment-report-detail .payment-table tbody tr:last-child td {
+  background: var(--workspace-tint);
+  color: var(--workspace-ink);
+  font-weight: 700;
 }
 </style>

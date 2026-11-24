@@ -1,3 +1,4 @@
+import { reportPages } from '~/shared/PageNames'
 import {
     generateDataFromColumnsAndData,
     generateHeadersFromColumns,
@@ -147,10 +148,10 @@ export const StatisticsReportColumns = () => {
     const { scorer, filters, user } = params
     return {
       type: 'statistics-report',
-      name: `statistics Report`,
+      name: reportPages.trends.title,
       sheets: [
         {
-          title: 'statistics Report',
+          title: reportPages.trends.title,
           headings: generateHeadersFromColumns(StatisticsReportColumns()),
           content: generateDataFromColumnsAndData({
             columns: StatisticsReportColumns(),
@@ -172,4 +173,3 @@ export const StatisticsReportColumns = () => {
   }
   
   export default generateStatisticsReport
-  

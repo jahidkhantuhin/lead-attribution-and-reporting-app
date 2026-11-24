@@ -1,3 +1,4 @@
+import { reportPages } from '~/shared/PageNames'
 import moment from 'moment'
 import { callColors } from '~/shared/callColors'
 import {
@@ -286,7 +287,7 @@ const generateSeoCorOverviewReport = (computedReport: any, params: any) => {
   return {
     type: 'client-overview-report',
     // name: 'client-overview-report',
-    name: `Client Overview Report, ${moment(filters.value.dates[0]).format(
+    name: `${reportPages.client.title}, ${moment(filters.value.dates[0]).format(
       'YYYY-DD-MM'
     )}-to-${moment(filters.value.dates[1]).format(
       'YYYY-DD-MM'

@@ -3,7 +3,7 @@
     <v-row class="my-6" justify="center">
       <v-col cols="12" lg="4" md="6">
         <v-card>
-          <v-card-title> Update a user </v-card-title>
+          <v-card-title> Edit team member </v-card-title>
           <user-form
             scope="admin"
             :user-id="userId"
@@ -25,6 +25,7 @@ import {
   useStore,
 } from '@nuxtjs/composition-api'
 import { IBreadcrumbs } from '@/store'
+import { pageNames } from '~/shared/PageNames'
 
 import UserForm from '~/components/forms/UserForm.vue'
 import RestrictedComponent from '~/components/RestrictedComponent.vue'
@@ -49,7 +50,7 @@ export default defineComponent({
         to: `/`,
       },
       {
-        text: `Users`,
+        text: pageNames.users,
         to: `/users`,
       },
       {
@@ -58,7 +59,7 @@ export default defineComponent({
       },
     ]
 
-    const pageTitle = `Update a user`
+    const pageTitle = 'Edit Team Member'
 
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
 
@@ -73,7 +74,7 @@ export default defineComponent({
     }
   },
   head: {
-    title: 'Update a user',
+    title: 'Edit Team Member',
   },
 })
 </script>

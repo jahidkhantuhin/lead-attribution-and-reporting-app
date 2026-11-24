@@ -14,6 +14,7 @@
 
 <script>
 import { defineComponent, useRoute, useStore } from '@nuxtjs/composition-api'
+import { pageNames } from '~/shared/PageNames'
 import LocationForm from '~/components/forms/LocationForm.vue'
 
 export default defineComponent({
@@ -39,7 +40,7 @@ export default defineComponent({
             disabled: false,
           },
           {
-            text: `Client Records`,
+            text: pageNames.clients,
             to: `/client-records`,
             disabled: false,
           },
@@ -73,5 +74,6 @@ export default defineComponent({
       onFetchClient,
     }
   },
+  head: { title: 'Edit Location' },
 })
 </script>

@@ -4,16 +4,16 @@ A lead attribution dashboard for marketing and account teams to see where leads 
 
 ## Showcase overview
 
-![Animated tour of the lead dashboard, record inspectors, and reports](docs/media/foundation-overview.gif)
+![Animated tour of the LeadLens dashboard, reports, record inspectors, and forms](docs/media/foundation-overview.gif)
 
-Start with the lead-source dashboard, then open a client record to see its locations and staff. [Browse all 57 full-page screenshots](docs/media/screenshots), including seeded detail and edit routes, account screens, and the error page.
+The overview follows the dashboard, reports, and record workflows. [Browse the full-page screenshots for all 57 showcase routes](docs/media/screenshots), including seeded details, edit forms, account screens, and the error page. Some wide reports have additional column captures.
 
 ## Key features
 
-- Break down leads by source and inspect individual leads in the Lead Details Report.
-- Compare client and website performance using the Client Overview, KPI, and Statistics reports.
+- Break down leads by source and inspect individual leads in Lead Attribution.
+- Compare client and website performance using Client Performance, Location KPIs, and Lead Trends.
 - View and manage client, location, staff, site, and user records from the same workspace.
-- Generate a Payment Report for a call scorer and date range.
+- Review call scoring activity and payable amounts in Scorer Payments.
 
 ## Tech stack
 
@@ -75,7 +75,7 @@ For Google sign-in, configure the Google OAuth client ID in the Nuxt auth strate
 2. Open `/client-records/1` to explore Cedar Dental Studio, then follow its links to Cedar Downtown or Riley Chen.
 3. Open `/reports/lead-details-report` to inspect lead summaries and individual records.
 
-In showcase mode, **Client Overview, Lead Details Report, KPI, Statistics, and Payment Report** initialize with demo filters and load results. The Reports index itself is a navigation page. To run the Payment Report again manually, open `/reports/payment-report`, select **Taylor Reed** under **Call scorer**, choose **Last 14 days**, and click **Apply**.
+In showcase mode, **Client Performance, Lead Attribution, Location KPIs, Lead Trends, and Scorer Payments** initialize with demo filters and load results. The Reporting Hub links to each report. To generate a payment report manually, open `/reports/payment-report`, select **Taylor Reed** under **Call scorer**, choose **Last 14 days**, and click **Apply**.
 
 <details>
 <summary>Route reference</summary>
@@ -83,15 +83,15 @@ In showcase mode, **Client Overview, Lead Details Report, KPI, Statistics, and P
 | Area | Routes |
 | --- | --- |
 | Dashboard | `/` |
-| Reports | `/reports`, `/reports/client-overview`, `/reports/lead-details-report`, `/reports/kpi`, `/reports/statistics`, `/reports/payment-report` |
-| Client records | `/client-records`, `/client-records/add`, `/client-records/1`, `/client-records/1/edit` |
+| Reporting Hub | `/reports`, `/reports/client-overview`, `/reports/lead-details-report`, `/reports/kpi`, `/reports/statistics`, `/reports/payment-report` |
+| Client Directory | `/client-records`, `/client-records/add`, `/client-records/1`, `/client-records/1/edit` |
 | Client locations and staff | `/client-records/1/locations/1`, `/client-records/1/staff/1` |
 | Location administration | `/all-locations`, `/location-settings`, `/location-settings/add?id=5&name=Riverfront%20Intake` |
-| Site records | `/site-records`, `/site-records/1` |
-| Users and profile | `/users`, `/users/add`, `/users/2/edit`, `/profile` |
-| VPN setup | `/vpn-setup` |
+| Website Directory | `/site-records`, `/site-records/1` |
+| Team Members and My Profile | `/users`, `/users/add`, `/users/2/edit`, `/profile` |
+| VPN Access | `/vpn-setup` |
 | Authentication | `/login`, `/social-login`, `/reset-password` |
-| Other routes | `/data-mining` redirects to Statistics. `/search` is a placeholder. `/404` displays the error page. |
+| Other routes | `/data-mining` redirects to Lead Trends. `/search` is a placeholder. `/404` displays the error page. |
 
 </details>
 

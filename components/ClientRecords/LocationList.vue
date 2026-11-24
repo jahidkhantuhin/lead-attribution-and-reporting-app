@@ -1,17 +1,19 @@
 <template>
   <v-card elevation="0">
-    <v-card-title>
-      Locations
-      <v-spacer></v-spacer>
-      <v-btn
-        color="primary"
-        small
-        :to="`/client-records/${clientID}/locations/add`"
-      >
-        Add Location
-      </v-btn>
-    </v-card-title>
+    <ReportResultHeading title="Locations">
+      <template #actions>
+        <v-btn
+          color="primary"
+          small
+          depressed
+          :to="`/client-records/${clientID}/locations/add`"
+        >
+          <v-icon small left>mdi-plus</v-icon> Add location
+        </v-btn>
+      </template>
+    </ReportResultHeading>
     <v-data-table
+      class="workspace-directory-table"
       loading-text="Loading locations"
       no-data-text="No locations"
       :loading="loading || busy"

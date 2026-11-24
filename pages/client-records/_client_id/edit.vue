@@ -1,18 +1,17 @@
 <template>
-  <v-row class="my-6" justify="center">
-    <v-col cols="12" lg="4" md="6">
-      <ClientRecordsForm
-        :id="clientId"
-        @onFetchClient="onFetchClient"
-        @cancel="$router.push(`/client-records/${clientId}/`)"
-      ></ClientRecordsForm>
-    </v-col>
-  </v-row>
+  <div class="record-editor">
+    <ClientRecordsForm
+      :id="clientId"
+      @onFetchClient="onFetchClient"
+      @cancel="$router.push(`/client-records/${clientId}/`)"
+    ></ClientRecordsForm>
+  </div>
 </template>
 
 <script>
 import { defineComponent, useRouter, useStore } from '@nuxtjs/composition-api'
 import ClientRecordsForm from '@/components/forms/ClientRecordsForm.vue'
+import { pageNames } from '~/shared/PageNames'
 export default defineComponent({
   components: {
     ClientRecordsForm,
@@ -30,7 +29,7 @@ export default defineComponent({
           disabled: false,
         },
         {
-          text: `Client Records`,
+          text: pageNames.clients,
           to: `/client-records`,
           disabled: false,
         },
@@ -46,7 +45,7 @@ export default defineComponent({
         },
       ]
 
-      const pageTitle = `Edit Client`
+      const pageTitle = 'Edit Client'
       store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
     }
 

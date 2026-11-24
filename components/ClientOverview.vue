@@ -1,123 +1,62 @@
 <template>
   <div>
     <UnauthorizedUser v-if="nonAccountManagerUserRole" />
-    <v-row
+    <div
       v-if="!nonAccountManagerUserRole"
       :class="{
-        'my-5': true,
+        'workspace-report-stack': true,
         'dark-page': $vuetify.theme.dark,
       }"
     >
-      <v-col cols="12" md="12" lg="12">
+      <div>
         <v-card
           color="default"
           rounded
           elevation="1"
           class="workspace-filter-panel"
         >
-          <v-card-title>{{ $t('message.filters') }}</v-card-title>
-          <v-switch
-            v-model="reportCompare"
-            class="ml-4"
-            inset
-            :label="'Compare Report'"
-            @change="push"
-            @click="compareReportChange"
-          ></v-switch>
+          <v-card-title class="workspace-report-filter-heading">
+            <span>{{ $t('message.filters') }}</span>
+            <v-switch
+              v-model="reportCompare"
+              inset
+              dense
+              hide-details
+              label="Compare periods"
+              @change="push"
+              @click="compareReportChange"
+            />
+          </v-card-title>
           <v-card-text>
-            <!-- <p>{{selectedMonthIsCurrentMonth}}</p> -->
-            <v-row>
-              <v-col
-                v-if="!reportCompare"
-                cols="12"
-                xl="4"
-                lg="4"
-                md="4"
-                sm="12"
-                xs="12"
-              >
-                <v-select
-                  v-model="filters['status']"
-                  :items="clientStatusOptions"
-                  item-value="value"
-                  item-text="label"
-                  label="Client Type"
-                  @change="push"
-                >
-                </v-select>
-              </v-col>
-              <v-col
-                v-if="reportCompare"
-                cols="12"
-                xl="3"
-                lg="3"
-                md="3"
-                sm="12"
-                xs="12"
-              >
-                <v-select
-                  v-model="filters['status']"
-                  :items="clientStatusOptions"
-                  item-value="value"
-                  item-text="label"
-                  label="Client Type"
-                  @change="push"
-                >
-                </v-select>
-              </v-col>
-              <v-col
-                v-if="!reportCompare"
-                cols="12"
-                xl="4"
-                lg="4"
-                md="4"
-                sm="12"
-                xs="12"
-              >
-                <v-autocomplete
-                  v-model="filters['account_manager_id']"
-                  :items="accountManagers"
-                  item-value="id"
-                  :loading="loadingAccountManagers"
-                  item-text="fullname"
-                  :clearable="filters.account_manager_id ? true : false"
-                  label="Account Manager"
-                  @change="push"
-                >
-                </v-autocomplete>
-              </v-col>
-              <v-col
-                v-if="reportCompare"
-                cols="12"
-                xl="3"
-                lg="3"
-                md="3"
-                sm="12"
-                xs="12"
-              >
-                <v-autocomplete
-                  v-model="filters['account_manager_id']"
-                  :items="accountManagers"
-                  item-value="id"
-                  :loading="loadingAccountManagers"
-                  item-text="fullname"
-                  :clearable="filters.account_manager_id ? true : false"
-                  label="Account Manager"
-                  @change="push"
-                >
-                </v-autocomplete>
-              </v-col>
-              <v-col
-                v-if="!reportCompare"
-                cols="12"
-                xl="4"
-                lg="4"
-                md="4"
-                sm="12"
-                xs="12"
-              >
+            <div class="client-performance-filters">
+              <v-select
+                v-model="filters.status"
+                :items="clientStatusOptions"
+                item-value="value"
+                item-text="label"
+                label="Client status"
+                dense
+                outlined
+                hide-details
+                @change="push"
+              />
+              <v-autocomplete
+                v-model="filters.account_manager_id"
+                :items="accountManagers"
+                item-value="id"
+                :loading="loadingAccountManagers"
+                item-text="fullname"
+                clearable
+                label="Account manager"
+                dense
+                outlined
+                hide-details
+                @change="push"
+              />
+              <template v-if="!reportCompare">
                 <Datepicker
                   v-model="filters['dates']"
+                  compact
                   :date-help-buttons="[
                     'lastWeek',
                     'thisWeek',
@@ -128,16 +67,8 @@
                   ]"
                   @change="push"
                 ></Datepicker>
-              </v-col>
-              <v-col
-                v-if="reportCompare"
-                cols="12"
-                xl="3"
-                lg="3"
-                md="3"
-                sm="12"
-                xs="12"
-              >
+              </template>
+              <template v-else>
                 <v-menu
                   v-model="menu2"
                   :close-on-content-click="false"
@@ -149,8 +80,11 @@
                   <template #activator="{ on, attrs }">
                     <v-text-field
                       v-model="filters['ref_month']"
-                      label="Reference Month"
-                      prepend-icon="mdi-calendar"
+                      label="Reference month"
+                      prepend-inner-icon="mdi-calendar"
+                      dense
+                      outlined
+                      hide-details
                       readonly
                       v-bind="attrs"
                       v-on="on"
@@ -164,16 +98,6 @@
                     @change="push"
                   ></v-date-picker>
                 </v-menu>
-              </v-col>
-              <v-col
-                v-if="reportCompare"
-                cols="12"
-                xl="3"
-                lg="3"
-                md="3"
-                sm="12"
-                xs="12"
-              >
                 <v-menu
                   v-model="menu1"
                   :close-on-content-click="false"
@@ -185,8 +109,11 @@
                   <template #activator="{ on, attrs }">
                     <v-text-field
                       v-model="filters['comp_month']"
-                      label="Comparing Month"
-                      prepend-icon="mdi-calendar"
+                      label="Comparison month"
+                      prepend-inner-icon="mdi-calendar"
+                      dense
+                      outlined
+                      hide-details
                       readonly
                       v-bind="attrs"
                       v-on="on"
@@ -200,42 +127,33 @@
                     @change="push"
                   ></v-date-picker>
                 </v-menu>
-              </v-col>
-              <v-col
-                cols="12"
-                xl="12"
-                lg="12"
-                md="12"
-                sm="12"
-                xs="12"
-                class="py-0"
+              </template>
+              <v-btn
+                :loading="loadingReport"
+                color="primary"
+                depressed
+                :disabled="
+                  reportCompare
+                    ? !filters.ref_month || !filters.comp_month
+                    : !filters.dates || !filters.dates.length
+                "
+                @click="fetchReport"
               >
-                <div class="text-xs-left text-sm-left text-lg-left mt-n3">
-                  <v-btn
-                    :loading="loadingReport"
-                    color="primary"
-                    class="my-2"
-                    :disabled="
-                      (reportCompare
-                        ? !filters.ref_month || !filters.comp_month
-                        : filters.dates && filters.dates < 1) || loadingReport
-                    "
-                    @click="fetchReport"
-                  >
-                    <v-icon left>mdi-check</v-icon>
-                    Apply
-                  </v-btn>
-                </div>
-              </v-col>
-            </v-row>
+                Apply filters
+              </v-btn>
+            </div>
           </v-card-text>
         </v-card>
-      </v-col>
-      <v-col md="12" lg="12">
+      </div>
+      <div>
         <v-expand-transition>
-          <v-card v-if="!loadedReport && loadingReport === false">
+          <v-card v-if="!loadedReport && !loadingReport" flat>
             <v-card-text>
-              {{ $t('message.supplyFilters') }}
+              {{
+                reportError
+                  ? 'Report unavailable. Apply the filters again to retry.'
+                  : $t('message.supplyFilters')
+              }}
             </v-card-text>
           </v-card>
         </v-expand-transition>
@@ -243,7 +161,7 @@
           <v-card v-if="loadingReport">
             <v-card-text>
               <v-skeleton-loader
-                type="table-heading, list-item-two-line, image, table-tfoot"
+                type="table-heading, table-row-divider, table-row-divider"
               ></v-skeleton-loader>
             </v-card-text>
           </v-card>
@@ -251,39 +169,35 @@
 
         <v-expand-transition>
           <v-card v-if="!loadingReport && loadedReport">
-            <v-toolbar flat>
-              <v-toolbar-title> {{ reportTitle }} </v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-btn icon title="Copy link to this report" @click="copyLink">
-                <v-icon>mdi-link</v-icon>
-              </v-btn>
-              <v-btn
-                v-show="loadedReport"
-                icon
-                title="Upload to Google Drive"
-                :color="googleDocLink ? 'info' : 'normal'"
-                @click="uploadReport"
-              >
-                <v-icon>mdi-upload</v-icon>
-              </v-btn>
-            </v-toolbar>
+            <ReportResultHeading :title="reportTitle">
+              <p v-if="comparisonLabel">
+                {{ comparisonLabel }}
+              </p>
+              <p v-if="lastUpdatedTime">Updated {{ lastUpdatedTime }}</p>
+              <template #actions>
+                <v-btn small outlined @click="copyLink">
+                  <v-icon small left>mdi-link</v-icon> Copy link
+                </v-btn>
+                <v-btn
+                  small
+                  depressed
+                  color="primary"
+                  :loading="uploadReportLoading"
+                  @click="uploadReport"
+                >
+                  <v-icon small left>mdi-google-drive</v-icon>
+                  {{ googleDocLink ? 'View export' : 'Export to Drive' }}
+                </v-btn>
+              </template>
+            </ReportResultHeading>
             <div class="client-report-controls">
-              <!-- <div v-if="!reportCompare">
-                <p class="body-2 mb-2">Last updated at {{ lastUpdatedTime }}</p>
-                <DatesAndDiff
-                  class="body-2"
-                  v-if="loadedReport && !reportCompare"
-                  :start="report.date.date_start"
-                  :end="report.date.date_end"
-                />
-              </div> -->
               <v-btn
                 v-if="!seoReport && !ppcOnlyReport"
                 color="primary"
                 @click="searchHandler"
                 @change="push"
               >
-                SEO ONLY
+                Organic search
               </v-btn>
               <v-btn
                 v-if="seoReport || ppcOnlyReport"
@@ -291,7 +205,7 @@
                 @click="searchAllReport"
                 @change="push"
               >
-                ALL REPORT
+                All channels
               </v-btn>
               <v-btn
                 v-if="
@@ -302,14 +216,15 @@
                 @click="searchPPCReport"
                 @change="push"
               >
-                PPC ONLY
+                Paid search
               </v-btn>
               <v-text-field
                 v-model="search"
-                append-icon="mdi-magnify"
+                prepend-inner-icon="mdi-magnify"
                 label="Search clients"
                 class="client-report-search"
-                single-line
+                dense
+                outlined
                 hide-details
                 clearable
                 @input="newInput"
@@ -318,9 +233,8 @@
               </v-text-field>
             </div>
 
-            <v-card-text>
+            <v-card-text class="report-table-body">
               <v-data-table
-                fixed-header
                 :sort-by="['client.name']"
                 :sort-desc="[true]"
                 :footer-props="{
@@ -331,9 +245,9 @@
                 :items="selectedComputedReport"
                 :headers="selectedTableHeaders"
                 :search="search"
-                no-results="No matching clients found"
-                class="elevation-0 cor-table"
-                height="700px"
+                no-results-text="No clients match your search."
+                no-data-text="No client results for this report."
+                class="workspace-report-table"
                 @current-items="currentItems"
               >
                 <template #item.location.name="{ item }">
@@ -389,11 +303,6 @@
                 <template #item.total_budget="{ item }">
                   <span> ${{ item.total_budget }} </span>
                 </template>
-                <!-- <template #item.total_trends="{ item }">
-                  <span>
-                    {{ selectedMonthIsCurrentMonth ? item.total_trends : item.total_leads}}
-                  </span>
-                </template> -->
                 <template #item.total_booked="{ item }">
                   <span :style="`color: ${item.colors.booked_color}`">
                     {{ item.total_booked }}
@@ -947,7 +856,7 @@
                             color: black;
                             font-weight: bold;
                           "
-                          :href="`/reports/lead-details-report?client=${
+                          :href="`${reportPages.attribution.link}?client=${
                             item.client_id
                           }&dates=${String(
                             reportCompare
@@ -957,7 +866,7 @@
                             item.location_id
                           }`"
                           target="_blank"
-                          >LDR</a
+                          >{{ reportPages.attribution.title }}</a
                         >
                       </v-list-item>
                       <v-list-item>
@@ -967,14 +876,13 @@
                             color: black;
                             font-weight: bold;
                           "
-                          :href="`/reports/kpi?dates=${String(dates).replace(
-                            /,/g,
-                            `&dates=`
-                          )}&client_id=${item.client_id}&location_ids=${
-                            item.location_id
-                          }&type=month`"
+                          :href="`${reportPages.location.link}?dates=${String(
+                            dates
+                          ).replace(/,/g, `&dates=`)}&client_id=${
+                            item.client_id
+                          }&location_ids=${item.location_id}&type=month`"
                           target="_blank"
-                          >KPI</a
+                          >{{ reportPages.location.title }}</a
                         >
                       </v-list-item>
                     </v-list>
@@ -984,7 +892,7 @@
             </v-card-text>
           </v-card>
         </v-expand-transition>
-      </v-col>
+      </div>
       <v-dialog v-model="reportLoadingDialog" persistent width="500">
         <v-expand-transition>
           <v-card v-show="uploadReportLoading">
@@ -1030,7 +938,7 @@
           </v-card>
         </v-expand-transition>
       </v-dialog>
-    </v-row>
+    </div>
   </div>
 </template>
 
@@ -1047,6 +955,9 @@ import {
   useRoute,
 } from '@nuxtjs/composition-api'
 import moment from 'moment'
+import ReportResultHeading from '~/components/ReportResultHeading.vue'
+import { reportTableHeaders } from '~/utils/reportTableHeaders'
+import { pageNames, reportPages } from '~/shared/PageNames'
 
 import { IBreadcrumbs } from '~/store'
 import Datepicker from '~/components/forms/DatePicker.vue'
@@ -1077,10 +988,11 @@ import generateComparingSeoCorColumnsReport, {
 import { dates as showcaseDates } from '~/showcase/fixtures'
 import UnauthorizedUser from '~/components/UnauthorizedUser.vue'
 
-const pageTitle = `Client Overview Report`
+const pageTitle = reportPages.client.title
 
 export default defineComponent({
   components: {
+    ReportResultHeading,
     Datepicker,
     UnauthorizedUser,
   },
@@ -1164,22 +1076,29 @@ export default defineComponent({
         ? requiredFormattedReport.value
         : computedReport.value
     })
+    const hasAccountManagerFilter = ref(false)
     const selectedTableHeaders = computed(() => {
-      return reportCompare.value && seoReport.value
-        ? (tableHeaders.value = [...comparingSeoCorColumns()])
-        : reportCompare.value && !seoReport.value
-        ? (tableHeaders.value = [...comparingCorColumns()])
-        : !reportCompare.value && seoReport.value
-        ? (tableHeaders.value = [...seoCorColumns()])
-        : !reportCompare.value && !seoReport.value
-        ? (tableHeaders.value = [...clientOverviewColumns()])
-        : tableHeaders.value
+      const columns = reportCompare.value
+        ? seoReport.value
+          ? comparingSeoCorColumns()
+          : comparingCorColumns()
+        : seoReport.value
+        ? seoCorColumns()
+        : clientOverviewColumns()
+
+      return reportTableHeaders(
+        hasAccountManagerFilter.value
+          ? columns.filter(
+              (column) => !column.value.includes('account_manager_id')
+            )
+          : columns
+      )
     })
 
     const compareReportChange = () => {
       googleDocLink.value = ''
       search.value = ''
-      reportTitle.value = 'Client overview'
+      reportTitle.value = reportPages.client.title
       seoReport.value = false
       ppcOnlyReport.value = false
       filters.value.seo_report = []
@@ -1999,11 +1918,6 @@ export default defineComponent({
     const currentMonth = computed(() => {
       return new Date().getMonth()
     })
-    const selectedMonthIsCurrentMonth = computed(() => {
-      return (
-        new Date(filters.value.dates[0]).getMonth() === new Date().getMonth()
-      )
-    })
     const totalDaysOfCurrentMonth = computed(() => {
       return currentMonth.value === 0
         ? 31
@@ -2031,21 +1945,21 @@ export default defineComponent({
     })
 
     const seoReport = ref(false)
-    const reportTitle = ref('Client overview')
+    const reportTitle = ref(reportPages.client.title)
 
     const searchHandler = () => {
       search.value = 'seo'
       seoReport.value = true
       googleDocLink.value = ''
       reportUploaded.value = false
-      reportTitle.value = 'SEO client overview'
+      reportTitle.value = 'Organic Search Performance'
       filters.value.seo_report = [1]
       push()
     }
     const searchAllReport = () => {
       search.value = ''
       fetchReport()
-      reportTitle.value = 'Client overview'
+      reportTitle.value = reportPages.client.title
       seoReport.value = false
       ppcOnlyReport.value = false
       // googleDocLink.value = ''
@@ -2075,7 +1989,7 @@ export default defineComponent({
       ppcOnlyReport.value = true
       report.value.summary = onlYPpcReport.value
       search.value = ''
-      reportTitle.value = 'PPC client overview'
+      reportTitle.value = 'Paid Search Performance'
       seoReport.value = false
       googleDocLink.value = ''
       reportUploaded.value = false
@@ -2208,9 +2122,11 @@ export default defineComponent({
     }
 
     const lastUpdatedTime = computed(() => {
-      return moment(report.value?.cache?.cache?.created_at).format(
-        'ddd, MMM DD, YYYY @ hh:mm:ss A z'
-      )
+      const result = reportCompare.value ? comparedReport.value : report.value
+      const timestamp = result?.cache?.cache?.created_at
+      return timestamp
+        ? moment(timestamp).format('MMM D, YYYY [at] h:mm A')
+        : ''
     })
 
     const loadingAccountManagers = ref(false)
@@ -2230,34 +2146,42 @@ export default defineComponent({
     const loadingReport = ref(false)
     const axios = useAxios()
     const loadedReport = ref(false)
+    const reportError = ref(false)
+    const comparisonLabel = ref('')
 
     const fetchReport = () => {
       if (loadingReport.value === false) {
         googleDocLink.value = ''
         reportUploaded.value = false
         loadingReport.value = true
+        loadedReport.value = false
+        reportError.value = false
+        const comparison = reportCompare.value
+        const accountManagerId = filters.value.account_manager_id
+        const {
+          ref_month: referenceMonth,
+          comp_month: comparisonMonth,
+        } = filters.value
         get('/clients/leads', filterParams.value)
           .then((resp: any) => {
-            const accountManagerFilter = filters.value.account_manager_id
-            if (
-              typeof accountManagerFilter === 'string' ||
-              typeof accountManagerFilter === 'number'
-            ) {
-              tableHeaders.value.splice(
-                tableHeaders.value.findIndex((c: any) =>
-                  c.value.includes('account_manager_id')
-                ),
-                1
-              )
-            } else {
-              tableHeaders.value = clientOverviewColumns()
+            const data = resp.data?.data
+            if (!data || !Array.isArray(data.summary)) {
+              reportError.value = true
+              return
             }
-            if (reportCompare.value) {
-              comparedReport.value = resp.data?.data
+            hasAccountManagerFilter.value = Boolean(accountManagerId)
+            if (comparison) {
+              comparedReport.value = data
             } else {
-              report.value = resp.data?.data
+              report.value = data
             }
+            comparisonLabel.value = comparison
+              ? `${referenceMonth} compared with ${comparisonMonth}`
+              : ''
             loadedReport.value = true
+          })
+          .catch(() => {
+            reportError.value = true
           })
           .finally(() => {
             loadingReport.value = false
@@ -2273,11 +2197,11 @@ export default defineComponent({
         to: `/`,
       },
       {
-        text: `Reports`,
+        text: pageNames.reports,
         to: '/reports/',
       },
       {
-        text: 'Client Overview',
+        text: reportPages.client.title,
         to: `/reports/client-overview`,
       },
     ]
@@ -2292,8 +2216,6 @@ export default defineComponent({
       pageTitle,
       breadcrumbs,
     })
-
-    const tableHeaders = ref<any>([...clientOverviewColumns()])
 
     const loadFiltersFromURL = () => {
       const query = router.currentRoute.query
@@ -2416,10 +2338,11 @@ export default defineComponent({
       filters,
       push,
       report,
-      tableHeaders,
       computedReport,
       search,
       loadedReport,
+      reportError,
+      comparisonLabel,
       lastUpdatedTime,
       copyLink,
       uploadReportLoading,
@@ -2437,6 +2360,7 @@ export default defineComponent({
       dates,
       seoReport,
       reportTitle,
+      reportPages,
       newInput,
       dateOne,
       dateTwo,
@@ -2478,100 +2402,10 @@ export default defineComponent({
       onlYPpcReport,
       totalDaysOfCurrentMonth,
       currentMonth,
-      selectedMonthIsCurrentMonth,
       menu1,
       menu2,
       // New COR ENd
     }
   },
-  head: {
-    title: pageTitle,
-  },
 })
 </script>
-<style lang="scss">
-// @todo Wait for Vuetify table fixed column feature. Remove this code when that's done. so we can use configuration.
-.cor-table {
-  table > tbody > tr > td:nth-child(1),
-  table > thead > tr > th:nth-child(1) {
-    position: sticky !important;
-    position: -webkit-sticky !important;
-    left: 0;
-    z-index: 1;
-    background: white;
-  }
-  table > thead > tr > th:nth-child(1) {
-    z-index: 6;
-  }
-
-  tbody tr:nth-of-type(odd) {
-    background-color: rgba(9, 245, 127, 0.1);
-  }
-
-  @media (min-width: 768px) {
-    table > tbody > tr > td:nth-child(2),
-    table > thead > tr > th:nth-child(2) {
-      position: sticky !important;
-      position: -webkit-sticky !important;
-      left: 200px;
-      z-index: 1;
-      background: white;
-    }
-    table > thead > tr > th:nth-child(2) {
-      position: sticky !important;
-      position: -webkit-sticky !important;
-      z-index: 6;
-    }
-    table > tbody > tr > td:nth-child(3),
-    table > thead > tr > th:nth-child(3) {
-      position: sticky !important;
-      position: -webkit-sticky !important;
-      left: 300px;
-      z-index: 1;
-      background: white;
-    }
-    table > thead > tr > th:nth-child(3) {
-      position: sticky !important;
-      position: -webkit-sticky !important;
-      z-index: 6;
-    }
-  }
-}
-.dark-page {
-  .cor-table {
-    table > tbody > tr > td:nth-child(1),
-    table > thead > tr > th:nth-child(1) {
-      position: sticky !important;
-      position: -webkit-sticky !important;
-      left: 0;
-      z-index: 4;
-      background: rgb(29, 28, 28);
-    }
-    table > thead > tr > th:nth-child(1) {
-      z-index: 5;
-    }
-    table > tbody > tr > td:nth-child(2),
-    table > thead > tr > th:nth-child(2) {
-      position: sticky !important;
-      position: -webkit-sticky !important;
-      left: 340 px;
-      z-index: 4;
-      background: rgb(29, 28, 28);
-    }
-    table > thead > tr > th:nth-child(2) {
-      z-index: 5;
-    }
-    table > tbody > tr > td:nth-child(3),
-    table > thead > tr > th:nth-child(3) {
-      position: sticky !important;
-      position: -webkit-sticky !important;
-      left: 490 px;
-      z-index: 4;
-      background: rgb(29, 28, 28);
-    }
-    table > thead > tr > th:nth-child(3) {
-      z-index: 5;
-    }
-  }
-}
-</style>
