@@ -2,25 +2,22 @@
   <v-data-table
     class="elevation-1 data-table"
     :headers="allReportsHeader"
-    :no-data-text="`No Items`"
+    no-data-text="No leads in this view."
+    :items-per-page="10"
     :footer-props="{
-      itemsPerPageOptions: [100, 200, 500, -1],
-      itemsPerPage: 100,
+      itemsPerPageOptions: [10, 25, 50, 100],
     }"
     :item-class="callItemClass"
     :sort-by="['timestamp']"
     :sort-desc="[true]"
     :items="allReportsList"
-    :disable-pagination="false"
-    :disable-filtering="true"
-    :fixed-header="true"
-    height="700px"
+    :search="search"
   >
     <template #item.phone="props">
-      <span> {{ props.item.phone | usPhone }}</span>
+      <span>{{ props.item.phone ? formatPhone(props.item.phone) : '—' }}</span>
     </template>
     <template #item.email="props">
-      <span>{{ props.item.email }}</span>
+      <span>{{ props.item.email || '—' }}</span>
     </template>
     <template #item.timestamp="props">
       <formatted-date
@@ -28,8 +25,13 @@
         :date="props.item.datetime"
       ></formatted-date>
     </template>
+    <template #item.name="{ item }">
+      <strong class="lead-record-name">{{
+        item.name || 'Unnamed lead'
+      }}</strong>
+    </template>
     <template #item.type="props">
-      <span class="text-capitialize">{{ props.item.type }}</span>
+      <WorkspaceBadge :value="props.item.type" kind="lead-type" />
     </template>
   </v-data-table>
 </template>
@@ -37,10 +39,14 @@
 <script lang="ts">
 import { defineComponent } from '@nuxtjs/composition-api'
 
+import WorkspaceBadge from '~/components/WorkspaceBadge.vue'
+import { usPhone } from '~/plugins/usPhone'
 import { ldrAllColumns } from '~/utils/reports-upload/ldr/columns'
 
 export default defineComponent({
+  components: { WorkspaceBadge },
   props: {
+    search: { type: String, default: '' },
     allReportsList: {
       type: Array,
       default: () => [],
@@ -52,7 +58,7 @@ export default defineComponent({
     },
   },
   setup() {
-    return { allReportsHeader: ldrAllColumns() }
+    return { allReportsHeader: ldrAllColumns(), formatPhone: usPhone }
   },
 })
 </script>

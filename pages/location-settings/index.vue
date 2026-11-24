@@ -1,34 +1,33 @@
 <template>
   <div>
     <UnauthorizedUser v-if="nonAccountManagerUserRole" />
-    <v-row v-if="!nonAccountManagerUserRole" class="my-6">
-      <v-col md="12">
+    <v-row v-if="!nonAccountManagerUserRole" dense class="workspace-directory">
+      <v-col cols="12">
         <v-card :loading="busy">
-          <v-toolbar flat>
-            <v-toolbar-title
-              >Location Settings (Missing Client)</v-toolbar-title
-            >
-            <v-btn
-              class="ml-5"
-              color="primary"
-              nuxt
-              to="/location-settings/add"
-            >
-              <v-icon left>mdi-account-plus</v-icon>
-              Add to Existing Client
-            </v-btn>
-            <v-spacer></v-spacer>
-            <v-btn icon title="Copy link to this report" @click="copyLink">
-              <v-icon>mdi-link</v-icon>
-            </v-btn>
-          </v-toolbar>
+          <ReportResultHeading :title="pageNames.locationSetup">
+            <p>Review locations that need a client assignment.</p>
+            <template #actions>
+              <v-btn small outlined @click="copyLink">
+                <v-icon small left>mdi-link</v-icon> Copy link
+              </v-btn>
+              <v-btn
+                small
+                depressed
+                color="primary"
+                nuxt
+                to="/location-settings/add"
+              >
+                <v-icon small left>mdi-account-plus</v-icon> Add to existing
+                client
+              </v-btn>
+            </template>
+          </ReportResultHeading>
           <v-data-table
             :items="report"
             :headers="tableHeaders"
             :options.sync="tableOptions"
-            :fixed-header="true"
-            height="calc(100vh - 318px)"
-            class="elevation-1"
+            class="workspace-directory-table"
+            no-data-text="No locations are waiting for a client assignment."
             :footer-props="{
               'items-per-page-options': itemsPerPageOptions,
             }"
@@ -43,17 +42,17 @@
             <template #item.actions="{ item }">
               <v-menu>
                 <template #activator="{ on, attrs }">
-                  <v-btn small color="primary" dark v-bind="attrs" v-on="on">
+                  <v-btn small outlined v-bind="attrs" v-on="on">
                     Actions
                   </v-btn>
                 </template>
                 <v-list>
                   <v-list-item
-                    title="Add to exsisting client"
+                    title="Add to existing client"
                     :to="`/location-settings/add?id=${item.id}&name=${item.name}`"
                   >
                     <v-list-item-title
-                      >Add to exsisting client</v-list-item-title
+                      >Add to existing client</v-list-item-title
                     >
                   </v-list-item>
                   <v-list-item
@@ -86,6 +85,7 @@ import {
   useContext,
 } from '@nuxtjs/composition-api'
 import useLocationRecords from '@/services/useLocationRecords'
+import { pageNames } from '~/shared/PageNames'
 import { Dictionary } from '~/node_modules/@types/lodash'
 import swalMixin, { showConfirmDialog, showToast } from '~/utils/swalMixin'
 
@@ -180,7 +180,7 @@ export default defineComponent({
         disabled: false,
       },
       {
-        text: `Location Settings`,
+        text: pageNames.locationSetup,
         to: `/location-settings`,
         disabled: true,
       },
@@ -229,7 +229,7 @@ export default defineComponent({
       { deep: true }
     )
 
-    const pageTitle = `Location Settings (Missing Client)`
+    const pageTitle = pageNames.locationSetup
 
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
 
@@ -312,6 +312,7 @@ export default defineComponent({
     onMounted(() => {})
 
     return {
+      pageNames,
       tableOptions,
       tableHeaders,
       getLocationRecords,
@@ -329,7 +330,7 @@ export default defineComponent({
     }
   },
   head: {
-    title: 'Location Settings (Missing Client)',
+    title: pageNames.locationSetup,
   },
 })
 </script>

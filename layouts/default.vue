@@ -80,7 +80,7 @@ import { IBreadcrumbs } from '~/store'
 export default defineComponent({
   components: { Sidebar, LogOutModal, Version, AppBar },
   middleware: process.env.SHOWCASE_MODE === 'true' ? 'isAuthenticated' : 'auth',
-  setup(_props, { root, parent }) {
+  setup(_props, { root }) {
     // register the toast plugin
 
     // vuex store
@@ -113,8 +113,7 @@ export default defineComponent({
     }
 
     // left sidebar menu items
-    // const SidebarItems = LeftMenuItems(parent?.$auth.hasScope('create report'))
-    const SidebarItems = LeftMenuItems(parent?.$auth)
+    const SidebarItems = computed(() => LeftMenuItems($auth))
 
     // signout modal
     const showLogoutModal = ref<boolean>(false)

@@ -1,50 +1,51 @@
 <template>
   <div>
     <UnauthorizedUser v-if="nonAccountManagerUserRole" />
-    <v-row
-      v-if="!nonAccountManagerUserRole"
-      :class="{
-        'my-6': true,
-        'client-records': true,
-      }"
-    >
-      <v-col md="12">
+    <v-row v-if="!nonAccountManagerUserRole" dense class="workspace-directory">
+      <v-col cols="12">
         <v-card class="workspace-filter-panel">
           <v-card-title>Find locations</v-card-title>
-          <v-card-text class="workspace-filter-search">
+          <v-card-text class="directory-search-bar">
             <v-text-field
               v-model="filters.name"
               label="Search locations"
-              append-icon="mdi-magnify"
+              prepend-inner-icon="mdi-magnify"
+              dense
+              outlined
+              hide-details
               clearable
               maxlength="250"
               @keydown.enter.prevent="handleFilterApply(true)"
             >
             </v-text-field>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn color="primary" @click="handleFilterApply(true)"
+            <v-btn color="primary" depressed @click="handleFilterApply(true)"
               >Apply</v-btn
             >
-            <v-chip v-if="appliedName" small close @click:close="clearSearch"
+          </v-card-text>
+          <v-card-actions v-if="appliedName">
+            <v-chip small close @click:close="clearSearch"
               >Search: {{ appliedName }}</v-chip
             >
           </v-card-actions>
         </v-card>
       </v-col>
-      <v-col md="12">
+      <v-col cols="12">
         <v-card :loading="busy">
-          <v-toolbar flat class="directory-toolbar">
-            <v-toolbar-title>All Active Locations</v-toolbar-title>
-            <v-spacer />
-            <v-btn text small @click="tableView = !tableView">{{
-              tableView ? 'Inspector' : 'View table'
-            }}</v-btn>
-          </v-toolbar>
+          <ReportResultHeading :title="pageNames.locations">
+            <p>
+              {{ pagination.total }}
+              {{ pagination.total === 1 ? 'location' : 'locations' }}
+            </p>
+            <template #actions>
+              <v-btn small outlined @click="tableView = !tableView">
+                <v-icon small left>{{
+                  tableView ? 'mdi-view-list-outline' : 'mdi-table'
+                }}</v-icon>
+                {{ tableView ? 'View inspector' : 'View table' }}
+              </v-btn>
+            </template>
+          </ReportResultHeading>
           <template v-if="!tableView">
-            <v-card-text class="pb-0"
-              >{{ pagination.total }} locations</v-card-text
-            >
             <record-inspector
               :records="items"
               :loading="busy"
@@ -76,9 +77,8 @@
             :items="items"
             :headers="tableHeaders"
             :options.sync="tableOptions"
-            :fixed-header="true"
-            height="calc(100vh - 318px)"
-            class="elevation-1"
+            class="workspace-directory-table"
+            no-data-text="No active locations match this search."
             :footer-props="{
               'items-per-page-options': itemsPerPageOptions,
             }"
@@ -111,6 +111,7 @@ import {
   useContext,
   computed,
 } from '@nuxtjs/composition-api'
+import { pageNames } from '~/shared/PageNames'
 
 import swalMixin, { showConfirmDialog, showToast } from '~/utils/swalMixin'
 import useClientLocations from '~/services/useClientLocations'
@@ -244,7 +245,7 @@ export default defineComponent({
         disabled: false,
       },
       {
-        text: `All Active Locations`,
+        text: pageNames.locations,
         to: `/all-locations`,
         disabled: true,
       },
@@ -278,7 +279,7 @@ export default defineComponent({
       { deep: true }
     )
 
-    const pageTitle = `All Active Locations`
+    const pageTitle = pageNames.locations
 
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
 
@@ -381,6 +382,7 @@ export default defineComponent({
     })
 
     return {
+      pageNames,
       tableOptions,
       tableView,
       appliedName,
@@ -407,78 +409,7 @@ export default defineComponent({
     }
   },
   head: {
-    title: 'All Active Locations',
+    title: pageNames.locations,
   },
 })
 </script>
-
-<style lang="scss">
-/* stylelint-disable no-descending-specificity */
-
-.client-link {
-  text-decoration: none;
-  &:hover {
-    text-decoration: underline;
-    color: red;
-  }
-}
-// @todo Wait for Vuetify table fixed column feature. Remove this code when that's done. so we can use configuration.
-.client-records .v-data-table {
-  table > tbody > tr > td:nth-child(1),
-  table > thead > tr > th:nth-child(1) {
-    position: sticky !important;
-    position: -webkit-sticky !important;
-    left: 0;
-    z-index: 4;
-    background: white;
-  }
-  table > tbody > tr {
-    &:hover {
-      th,
-      td {
-        background: #eee !important;
-      }
-    }
-  }
-  table > thead > tr > th:nth-child(1) {
-    z-index: 5;
-  }
-
-  // @media (min-width: 768px) {
-  //   table > tbody > tr > td:nth-child(2),
-  //   table > thead > tr > th:nth-child(2) {
-  //     position: sticky !important;
-  //     position: -webkit-sticky !important;
-  //     left: 340px;
-  //     z-index: 4;
-  //     background: white;
-  //   }
-  //   table > thead > tr > th:nth-child(2) {
-  //     z-index: 5;
-  //   }
-  // }
-}
-.theme--dark {
-  .client-records .v-data-table {
-    table > tbody > tr > td:nth-child(1),
-    table > thead > tr > th:nth-child(1) {
-      position: sticky !important;
-      position: -webkit-sticky !important;
-      left: 0;
-      z-index: 4;
-      background: rgb(29, 28, 28);
-    }
-    table > tbody > tr {
-      &:hover {
-        th,
-        td {
-          background: rgb(63, 62, 62) !important;
-        }
-      }
-    }
-    table > thead > tr > th:nth-child(1) {
-      z-index: 5;
-    }
-  }
-}
-</style>

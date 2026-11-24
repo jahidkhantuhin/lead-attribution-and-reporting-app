@@ -1,17 +1,19 @@
 <template>
   <v-card elevation="0">
-    <v-card-title>
-      Staff
-      <v-btn
-        color="primary"
-        small
-        :to="`/client-records/${clientID}/staff/add`"
-        class="ml-4"
-      >
-        Add Staff
-      </v-btn>
-    </v-card-title>
+    <ReportResultHeading title="Staff members">
+      <template #actions>
+        <v-btn
+          color="primary"
+          small
+          depressed
+          :to="`/client-records/${clientID}/staff/add`"
+        >
+          <v-icon small left>mdi-plus</v-icon> Add staff member
+        </v-btn>
+      </template>
+    </ReportResultHeading>
     <v-data-table
+      class="workspace-directory-table"
       loading-text="Loading Staff"
       no-data-text="No staff"
       :loading="loading || busy"

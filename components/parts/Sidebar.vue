@@ -14,7 +14,7 @@
         <span class="workspace-brand-mark"
           ><v-icon small>mdi-chart-box-outline</v-icon></span
         >
-        Foundation
+        LeadLens
       </nuxt-link>
       <v-list-item two-line class="workspace-identity">
         <v-icon

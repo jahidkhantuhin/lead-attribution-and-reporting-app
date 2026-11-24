@@ -3,127 +3,118 @@
     <div>
       <UnauthorizedUser v-if="nonAccountManagerUserRole" />
     </div>
-    <div v-if="!nonAccountManagerUserRole">
-      <v-row class="my-5">
-        <v-col cols="12" md="12" lg="3">
-          <v-card color="default" rounded class="workspace-filter-panel">
-            <v-card-title>{{ $t('message.filters') }}</v-card-title>
-            <payment-report-filters
-              :call-scorers-loading="callScorersLoading"
-              :headers="headers"
-              :call-scorers="callScorers"
-              :loading="generatingPaymentReportLoading"
-              @search="handleGenerateReport"
-            ></payment-report-filters>
-          </v-card>
-        </v-col>
-        <v-col md="12" lg="9">
-          <v-card v-if="generatingPaymentReportLoading">
-            <v-card-text>
-              <v-skeleton-loader
-                type="table-heading, list-item-two-line, image, table-tfoot"
-              ></v-skeleton-loader>
-            </v-card-text>
-          </v-card>
-          <v-card v-else class="min-h-300">
-            <v-toolbar flat>
-              <v-toolbar-title> Report Details: </v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-btn
-                v-show="loaded"
-                icon
-                title="Copy link to this report"
-                @click="copyReportLink"
-              >
-                <v-icon>mdi-link</v-icon>
-              </v-btn>
-              <v-btn
-                v-show="loaded"
-                icon
-                title="Reload the report"
-                @click="fetchPaymentReport"
-              >
-                <v-icon>mdi-refresh</v-icon>
-              </v-btn>
-              <v-btn
-                v-show="loaded"
-                icon
-                title="Upload to Google Drive"
-                :color="googleDocLink ? 'info' : 'normal'"
-                @click="uploadReport"
-              >
-                <v-icon>mdi-upload</v-icon>
-              </v-btn>
-            </v-toolbar>
+    <div
+      v-if="!nonAccountManagerUserRole"
+      class="payment-report workspace-report-stack"
+    >
+      <v-card flat class="payment-panel payment-controls">
+        <h2>Report filters</h2>
+        <payment-report-filters
+          :call-scorers-loading="callScorersLoading"
+          :headers="headers"
+          :call-scorers="callScorers"
+          :loading="generatingPaymentReportLoading"
+          @search="handleGenerateReport"
+        />
+      </v-card>
 
-            <!-- no filters selected -->
-            <v-card-subtitle
-              v-if="loaded === false && paymentReport.ratings.length === 0"
+      <v-card flat class="payment-panel">
+        <header class="payment-heading">
+          <div>
+            <h2>
+              {{
+                (selectedCallScorer && selectedCallScorer.fullname) ||
+                'Report details'
+              }}
+            </h2>
+            <p v-if="selectedFilters.from">
+              {{ selectedFilters.from }} to {{ selectedFilters.to }}
+            </p>
+            <p
+              v-if="
+                loaded && paymentReport.cache && paymentReport.cache.created_at
+              "
             >
-              Please apply appropriate filters to see the data.
-            </v-card-subtitle>
-
-            <!-- nothing found -->
-            <v-card-text
-              v-if="loaded === true && paymentReport.ratings.length === 0"
-            >
-              <v-alert color="info lighten-2"> No reports found. </v-alert>
-            </v-card-text>
-
-            <v-card-text>
-              <report-generated
-                v-if="
-                  paymentReport.ratings.length > 0 &&
-                  generatingPaymentReportSuccess === true &&
-                  generatingPaymentReportLoading === false
-                "
-                :scorer="selectedCallScorer && selectedCallScorer.fullname"
-                :date="
-                  selectedFilters &&
-                  selectedFilters.date &&
-                  selectedFilters.date.join(',')
-                "
-              ></report-generated>
-            </v-card-text>
-
-            <!-- CLient Info -->
-            <v-card-text
-              v-if="loaded === true && paymentReport.ratings.length > 0"
-              class="text-h5"
-            >
-              Scorer: {{ selectedCallScorer && selectedCallScorer.fullname }}
-            </v-card-text>
-            <v-card-text v-if="loaded === true">
-              <DatesAndDiff
-                :start="selectedFilters.from"
-                :end="selectedFilters.to"
+              Updated
+              <formatted-date
+                :timezone="false"
+                :date="paymentReport.cache.created_at"
               />
-            </v-card-text>
-
-            <v-card-text v-if="loaded">
-              <p class="body-2 mb-2">
-                Last updated at
-                <formatted-date
-                  :timezone="false"
-                  :date="paymentReport.cache.created_at"
-                ></formatted-date>
-              </p>
-            </v-card-text>
-            <!-- summary -->
-            <div class="payment-report-detail">
-              <payment-report-detail
-                v-if="
-                  generatingPaymentReportSuccess === true &&
-                  generatingPaymentReportLoading === false
-                "
-                :scorer="selectedCallScorer && selectedCallScorer.fullname"
-                :pay-rate="payRate"
-                :report="computedReport"
-              />
+            </p>
+          </div>
+          <div v-if="loaded" class="payment-actions">
+            <v-btn
+              v-if="generatingPaymentReportSuccess"
+              outlined
+              small
+              @click="copyReportLink"
+            >
+              <v-icon left small>mdi-link</v-icon> Copy link
+            </v-btn>
+            <v-btn outlined small @click="fetchPaymentReport">
+              <v-icon left small>mdi-refresh</v-icon> Reload
+            </v-btn>
+            <v-btn
+              v-if="
+                generatingPaymentReportSuccess && paymentReport.ratings.length
+              "
+              color="primary"
+              depressed
+              small
+              @click="uploadReport"
+            >
+              <v-icon left small>mdi-google-drive</v-icon>
+              {{ googleDocLink ? 'View export' : 'Export to Drive' }}
+            </v-btn>
+          </div>
+        </header>
+        <v-card-text
+          v-if="generatingPaymentReportLoading"
+          role="status"
+          aria-label="Loading report"
+        >
+          <v-skeleton-loader
+            type="table-heading, table-row-divider, table-row-divider"
+          />
+        </v-card-text>
+        <v-card-text
+          v-else-if="
+            !loaded ||
+            !generatingPaymentReportSuccess ||
+            !paymentReport.ratings.length
+          "
+          class="payment-empty"
+        >
+          <v-icon size="28">mdi-clipboard-text-outline</v-icon>
+          <h3>
+            {{
+              !loaded
+                ? 'Generate a payment report'
+                : generatingPaymentReportSuccess
+                ? 'No results for this period'
+                : 'Report unavailable'
+            }}
+          </h3>
+          <p>
+            {{
+              !loaded
+                ? 'Select a scorer and dates, then apply the filters.'
+                : generatingPaymentReportSuccess
+                ? 'Try a different scorer or date range.'
+                : 'Reload the report to try again.'
+            }}
+          </p>
+        </v-card-text>
+        <template v-else>
+          <dl class="payment-metrics">
+            <div v-for="metric in summary" :key="metric.label">
+              <dt>{{ metric.label }}</dt>
+              <dd>{{ metric.value }}</dd>
             </div>
-          </v-card>
-        </v-col>
-      </v-row>
+          </dl>
+          <payment-report-detail :report="computedReport" />
+        </template>
+      </v-card>
       <v-dialog v-model="reportLoadingDialog" persistent width="500">
         <v-expand-transition>
           <v-card v-show="uploadReportLoading">
@@ -181,8 +172,8 @@ import {
   useRouter,
   useContext,
 } from '@nuxtjs/composition-api'
+import { pageNames, reportPages } from '~/shared/PageNames'
 import PaymentReportFilters from '~/components/PaymentReportFilters.vue'
-import ReportGenerated from '~/components/ReportGenerated.vue'
 
 import PaymentReportDetail from '~/components/PaymentReportDetail.vue'
 import useAxios from '~/plugins/useAxios'
@@ -190,7 +181,6 @@ import { IBreadcrumbs } from '~/store'
 import useUsers from '~/services/useUsers'
 import { CALL_SCORER_ROLE } from '~/utils/UserEnums'
 import FormattedDate from '~/components/FormattedDate.vue'
-import DatesAndDiff from '~/components/DatesAndDiff.vue'
 import secondsToHHMMSS from '~/utils/secondsToHHMMSS'
 import swalMixin, { showToast } from '~/utils/swalMixin'
 import generatePaymentReport from '~/utils/reports-upload/payment-report'
@@ -208,8 +198,6 @@ const totalsSkeleton = {
 export default defineComponent({
   components: {
     PaymentReportFilters,
-    ReportGenerated,
-    DatesAndDiff,
     PaymentReportDetail,
     FormattedDate,
     UnauthorizedUser,
@@ -244,13 +232,9 @@ export default defineComponent({
     const { list } = useUsers()
     const router = useRouter()
 
-    const totals = ref({
-      ...totalsSkeleton,
-    })
-
     const copyReportLink = () => {
       window.navigator.clipboard.writeText(
-        `${window.location.host}${router.currentRoute.fullPath}`
+        `${window.location.origin}${router.currentRoute.fullPath}`
       )
       showToast($swal, {
         title: 'Link copied to clipboard',
@@ -264,51 +248,46 @@ export default defineComponent({
     }
 
     const computedReport = computed(() => {
-      let list = paymentReport.value?.ratings.map((rating: any) => {
-        totals.value.total_calls = totals.value.total_calls + rating.total_calls
-        totals.value.total_call_duration =
-          +totals.value.total_call_duration + rating.total_call_duration
-        totals.value.total_rating_time =
-          +totals.value.total_rating_time + rating.total_rating_time
+      const totals = { ...totalsSkeleton }
+      const rows = paymentReport.value.ratings.map((rating: any) => {
+        const amount = (
+          payRate.value *
+          (rating.total_rating_time / 3600)
+        ).toFixed(2)
+        totals.total_calls += Number(rating.total_calls)
+        totals.total_call_duration += Number(rating.total_call_duration)
+        totals.total_rating_time += Number(rating.total_rating_time)
+        totals.total += Number(amount)
 
-        rating.pay_rate = payRate.value
-        return rating
+        return {
+          ...rating,
+          pay_rate: `$${payRate.value}`,
+          total: `$${amount}`,
+          total_call_duration: secondsToHHMMSS(rating.total_call_duration),
+          total_rating_time: secondsToHHMMSS(rating.total_rating_time),
+        }
       })
 
-      list = list.map((rating) => {
-        let reportTotal: any = payRate.value * (rating.total_rating_time / 3600)
-        reportTotal = reportTotal.toFixed(2)
-        rating.total = reportTotal
-        const totalsTotal = +rating.total + totals.value.total
+      return [
+        ...rows,
+        {
+          ...totals,
+          total: `$${totals.total.toFixed(2)}`,
+          pay_rate: `$${payRate.value}`,
+          total_call_duration: secondsToHHMMSS(totals.total_call_duration),
+          total_rating_time: secondsToHHMMSS(totals.total_rating_time),
+        },
+      ]
+    })
 
-        totals.value.total = +Number(totalsTotal).toFixed(2)
-
-        return rating
-      })
-
-      // Now show
-      list = list.map((rating) => {
-        rating.total = `$${rating.total}`
-        rating.pay_rate = `$${rating.pay_rate}`
-        rating.total_call_duration = secondsToHHMMSS(rating.total_call_duration)
-        rating.total_rating_time = secondsToHHMMSS(rating.total_rating_time)
-        return rating
-      })
-
-      // @ts-ignore
-      totals.value.total = `$${totals.value.total}`
-      // @ts-ignore
-      totals.value.pay_rate = `$${payRate.value}`
-      // @ts-ignore
-      totals.value.total_call_duration = secondsToHHMMSS(
-        totals.value.total_call_duration
-      )
-      // @ts-ignore
-      totals.value.total_rating_time = secondsToHHMMSS(
-        totals.value.total_rating_time
-      )
-
-      return [...list, totals.value]
+    const summary = computed(() => {
+      const total = computedReport.value[computedReport.value.length - 1]
+      return [
+        { label: 'Total payment', value: total.total },
+        { label: 'Calls reviewed', value: total.total_calls },
+        { label: 'Rating time', value: total.total_rating_time },
+        { label: 'Hourly rate', value: total.pay_rate },
+      ]
     })
 
     const getUsers = () => {
@@ -344,7 +323,7 @@ export default defineComponent({
     const fetchPaymentReport = () => {
       googleDocLink.value = ''
       reportUploaded.value = false
-      totals.value = { ...totalsSkeleton }
+      paymentReport.value = { ratings: [], cache: {} }
       generatingPaymentReportLoading.value = true
       generatingPaymentReportSuccess.value = true
       loaded.value = false
@@ -466,18 +445,18 @@ export default defineComponent({
           to: '/',
         },
         {
-          text: 'Reports',
+          text: pageNames.reports,
           to: '/reports',
         },
         {
-          text: 'Payment Report',
+          text: reportPages.payments.title,
           to: '#',
           disabled: true,
         },
       ]
 
       store.dispatch('setPageHeading', {
-        pageTitle: 'Payment Report',
+        pageTitle: reportPages.payments.title,
         breadcrumbs,
       })
     })
@@ -494,6 +473,7 @@ export default defineComponent({
       handleGenerateReport,
       callScorers,
       computedReport,
+      summary,
 
       selectedCallScorer,
 
@@ -509,31 +489,83 @@ export default defineComponent({
     }
   },
   head: {
-    title: 'Payment Report',
+    title: reportPages.payments.title,
   },
 })
 </script>
 
-<style lang="scss">
-.generate-report-form {
-  padding-top: 0;
-  padding-bottom: 0;
+<style scoped>
+.payment-report .payment-panel {
+  min-width: 0;
+  background: var(--workspace-surface);
+  border: 1px solid var(--workspace-border);
+  color: var(--workspace-ink);
 }
 
-.payment-report-detail table tbody {
-  tr {
-    &:last-child {
-      background: #eee;
-    }
-  }
+.payment-controls,
+.payment-heading {
+  padding: clamp(12px, 1.5vw, 16px);
 }
-.theme--dark {
-  .payment-report-detail table tbody {
-    tr {
-      &:last-child {
-        background: #000;
-      }
-    }
-  }
+
+.payment-heading,
+.payment-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.payment-heading {
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.payment-report h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.payment-report p {
+  margin: 4px 0 0;
+  color: var(--workspace-muted);
+}
+
+.payment-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  gap: 10px;
+  padding: 0 clamp(12px, 1.5vw, 16px) 16px;
+}
+
+.payment-metrics div {
+  padding: 10px 12px;
+  border: 1px solid var(--workspace-border);
+  border-radius: 12px;
+  background: var(--workspace-subtle);
+}
+
+.payment-metrics div:first-child {
+  background: var(--workspace-tint);
+}
+
+.payment-metrics dt {
+  color: var(--workspace-muted);
+  font-size: 0.875rem;
+}
+
+.payment-metrics dd {
+  margin-top: 4px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.payment-empty {
+  padding: 20px 12px 24px;
+  text-align: center;
+}
+
+.payment-empty h3 {
+  margin-top: 8px;
+  color: var(--workspace-ink);
 }
 </style>

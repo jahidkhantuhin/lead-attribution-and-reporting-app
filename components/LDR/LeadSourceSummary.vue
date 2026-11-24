@@ -62,10 +62,18 @@
       </table>
 
       <template v-if="source.paid">
-        <h3>Call outcomes</h3>
+        <h3 class="lead-outcomes-heading">Call outcomes</h3>
         <dl class="lead-outcomes">
-          <div v-for="outcome in source.outcomes" :key="outcome.label">
-            <dt>{{ outcome.label }}</dt>
+          <div
+            v-for="outcome in source.outcomes"
+            :key="outcome.label"
+            class="lead-outcome"
+            :class="outcome.value ? outcome.tone : 'lead-outcome--empty'"
+          >
+            <dt>
+              <v-icon small aria-hidden="true">{{ outcome.icon }}</v-icon>
+              <span>{{ outcome.label }}</span>
+            </dt>
             <dd>{{ formatNumber(outcome.value) }}</dd>
           </div>
         </dl>
@@ -97,11 +105,26 @@ const leadTypes = [
   { key: 'forms', label: 'Forms' },
 ]
 const callTypes = [
-  { key: 'booked', label: 'Booked' },
-  { key: 'not_booked', label: 'Not booked' },
-  { key: 'missed', label: 'Missed' },
-  { key: 'irrelevant', label: 'Irrelevant' },
-  { key: 'unscored', label: 'Unscored' },
+  {
+    key: 'booked',
+    label: 'Booked',
+    icon: 'mdi-check-circle-outline',
+    tone: 'lead-outcome--positive',
+  },
+  {
+    key: 'not_booked',
+    label: 'Not booked',
+    icon: 'mdi-minus-circle-outline',
+    tone: 'lead-outcome--caution',
+  },
+  {
+    key: 'missed',
+    label: 'Missed',
+    icon: 'mdi-phone-missed',
+    tone: 'lead-outcome--negative',
+  },
+  { key: 'irrelevant', label: 'Irrelevant', icon: 'mdi-filter-remove-outline' },
+  { key: 'unscored', label: 'Unscored', icon: 'mdi-clock-outline' },
 ]
 
 export default defineComponent({
@@ -139,8 +162,8 @@ export default defineComponent({
           total: rows.reduce((sum, row) => sum + row.total, 0),
           unique: rows.reduce((sum, row) => sum + row.unique, 0),
           spend: count(analytics[source.key]?.total_spend),
-          outcomes: callTypes.map(({ key, label }) => ({
-            label,
+          outcomes: callTypes.map(({ key, ...appearance }) => ({
+            ...appearance,
             value: count(data.call_summary?.[key]),
           })),
         }

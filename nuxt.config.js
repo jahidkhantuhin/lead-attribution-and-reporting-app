@@ -45,8 +45,8 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - Foundation',
-    title: 'foundation-front-end',
+    titleTemplate: (title) => (title ? title + ' - LeadLens' : 'LeadLens'),
+
     htmlAttrs: {
       lang: 'en',
     },
@@ -55,19 +55,16 @@ export default {
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: 'Score calls' },
     ],
-    link: [
-      { rel: 'icon', sizes: 'any', href: '/favicon.png' },
-      {
-        rel: 'stylesheet',
-        href:
-          'https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/4.4.95/css/materialdesignicons.min.css',
-      },
-    ],
+    link: [{ rel: 'icon', sizes: 'any', href: '/favicon.png' }],
     script: [],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: ['~/assets/notification-style-fix.css', '~/assets/workspace.css'],
+  css: [
+    '@mdi/font/css/materialdesignicons.min.css',
+    '~/assets/notification-style-fix.css',
+    '~/assets/workspace.css',
+  ],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
@@ -159,6 +156,8 @@ export default {
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
+    defaultAssets: false,
+    icons: { iconfont: 'mdi' },
     customVariables: ['~/assets/variables.scss'],
     theme: {
       dark: false,

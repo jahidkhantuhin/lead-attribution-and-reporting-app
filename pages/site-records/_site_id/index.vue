@@ -14,6 +14,7 @@ import {
   ref,
   onMounted,
 } from '@nuxtjs/composition-api'
+import { pageNames } from '~/shared/PageNames'
 import SiteDetails from '~/components/SiteRecords/SiteDetails.vue'
 
 import useSiteRecords from '~/services/useSiteRecords'
@@ -33,7 +34,7 @@ export default defineComponent({
 
     const siteID = route.value.params.site_id
     const clientId = route.value.params.client_id
-    const pageTitle = 'Site Details'
+    const pageTitle = 'Website Details'
 
     const fetchLocation = () => {
       busy.value = true
@@ -51,7 +52,7 @@ export default defineComponent({
                 disabled: false,
               },
               {
-                text: `Site Records`,
+                text: pageNames.sites,
                 to: `/site-records`,
                 disabled: false,
               },
@@ -79,5 +80,6 @@ export default defineComponent({
       siteID,
     }
   },
+  head: { title: 'Website Details' },
 })
 </script>
