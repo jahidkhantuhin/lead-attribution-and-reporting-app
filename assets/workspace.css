@@ -964,3 +964,121 @@ body:has(.v-application.theme--dark) .swal2-popup {
   padding-inline-start: 10px;
   overflow-wrap: anywhere;
 }
+
+.workspace-directory.row {
+  margin: 0 -4px;
+  padding-block: 8px;
+}
+
+.workspace-directory.row > .col {
+  min-width: 0;
+  padding: 4px;
+}
+
+.v-application.workspace-app .workspace-directory .workspace-filter-panel .v-card__title:first-child {
+  min-height: 0;
+  padding: 9px 14px;
+  font-size: 1rem;
+}
+
+.v-application.workspace-app .workspace-directory .workspace-filter-panel .v-card__text,
+.v-application.workspace-app .workspace-directory .workspace-filter-panel .v-card__actions {
+  padding: 8px 14px;
+}
+
+.directory-search-bar,
+.directory-user-filters,
+.directory-vpn-fields {
+  display: grid;
+  align-items: start;
+  gap: 8px;
+}
+
+.directory-search-bar {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.directory-user-filters {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 145px), 1fr));
+}
+
+.directory-vpn-fields {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
+}
+
+.directory-search-bar > *,
+.directory-user-filters > *,
+.directory-vpn-fields > * {
+  min-width: 0;
+}
+
+.directory-search-bar > .v-btn,
+.directory-vpn-fields > .v-btn {
+  min-height: 40px;
+}
+
+@media (min-width: 1100px) {
+  .directory-vpn-fields {
+    grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr)) auto;
+  }
+}
+
+.v-application.workspace-app .workspace-directory-table {
+  margin: 8px;
+  overflow: hidden;
+  border: 1px solid var(--workspace-border);
+  border-radius: 10px;
+}
+
+.workspace-directory-table .v-data-table__wrapper {
+  overflow-x: auto;
+}
+
+.v-application.workspace-app .workspace-directory-table .v-data-table__wrapper > table > thead > tr > th,
+.v-application.workspace-app .workspace-directory-table .v-data-table__wrapper > table > tbody > tr > td {
+  padding-inline: 12px;
+  vertical-align: middle;
+}
+
+.v-application.workspace-app .workspace-directory-table .v-data-table__wrapper > table > thead > tr > th {
+  height: 40px;
+  color: var(--workspace-ink);
+  font-size: .8125rem;
+  white-space: nowrap;
+}
+
+.v-application.workspace-app .workspace-directory-table .v-data-table__wrapper > table > tbody > tr > td {
+  height: 42px;
+}
+
+.workspace-directory-table .v-data-table__wrapper > table > tbody > tr:nth-child(even):not(.v-data-table__mobile-table-row, .v-data-table__empty-wrapper) {
+  background: var(--workspace-subtle);
+}
+
+.workspace-directory-table .v-data-table__wrapper > table > tbody > tr:not(.v-data-table__mobile-table-row, .v-data-table__empty-wrapper) > td:first-child {
+  color: var(--workspace-ink);
+  font-weight: 650;
+}
+
+.workspace-directory-table .v-data-table__mobile-row__cell {
+  min-width: 0;
+  padding-inline-start: 10px;
+  overflow-wrap: anywhere;
+}
+
+.workspace-directory .site-inspector {
+  gap: 10px;
+  padding: 10px;
+}
+
+.workspace-directory .site-result {
+  padding: 8px 10px;
+}
+
+.workspace-directory-table a {
+  text-decoration: none;
+}
+
+.workspace-directory-table a:hover {
+  text-decoration: underline;
+}
