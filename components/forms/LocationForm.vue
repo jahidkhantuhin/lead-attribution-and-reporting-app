@@ -1,17 +1,17 @@
 <template>
   <v-form ref="form" v-model="formValid">
-    <RecordFormCard :title="title" :loading="busy">
-      <v-card-text class="record-form-section">
-        <h3>Location information</h3>
+    <v-card>
+      <v-card-title>
+        <h4 class="heading">{{ title }}</h4>
+      </v-card-title>
+      <v-card-text>
+        <h3>General Info</h3>
       </v-card-text>
       <v-card-text>
-        <v-row dense>
+        <v-row class="mt-n10">
           <v-col cols="12" md="6">
             <v-text-field
               v-model="formData.name"
-              dense
-              outlined
-              hide-details="auto"
               label="Name *"
               clearable
               :rules="rules.name"
@@ -24,9 +24,6 @@
           <v-col cols="12" md="6">
             <v-text-field
               v-model="formData.address"
-              dense
-              outlined
-              hide-details="auto"
               label="Address *"
               clearable
               :rules="rules.address"
@@ -36,12 +33,9 @@
             >
             </v-text-field>
           </v-col>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" class="mt-n8">
             <v-text-field
               v-model="formData.city"
-              dense
-              outlined
-              hide-details="auto"
               label="City"
               clearable
               :rules="rules.city"
@@ -51,12 +45,9 @@
             >
             </v-text-field>
           </v-col>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" class="mt-n8">
             <v-text-field
               v-model="formData.state"
-              dense
-              outlined
-              hide-details="auto"
               label="State"
               clearable
               :rules="rules.state"
@@ -66,12 +57,9 @@
             >
             </v-text-field>
           </v-col>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" class="mt-n8">
             <v-text-field
               v-model="formData.zip"
-              dense
-              outlined
-              hide-details="auto"
               label="Zip Code *"
               clearable
               :rules="rules.zipcode"
@@ -81,12 +69,9 @@
             >
             </v-text-field>
           </v-col>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" class="mt-n8">
             <v-text-field
               v-model="formData.website"
-              dense
-              outlined
-              hide-details="auto"
               label="Location Website *"
               clearable
               :rules="rules.website"
@@ -97,13 +82,10 @@
             </v-text-field>
           </v-col>
         </v-row>
-        <v-row dense>
+        <v-row>
           <v-col cols="12" md="6">
             <v-autocomplete
               v-model="formData.account_manager_id"
-              dense
-              outlined
-              hide-details="auto"
               :items="accountManagers"
               item-value="id"
               :loading="loadingAccountManagers"
@@ -116,9 +98,6 @@
           <v-col cols="12" md="6">
             <v-select
               v-model="formData.status"
-              dense
-              outlined
-              hide-details="auto"
               :items="statusOptions"
               placeholder="Select Status *"
               item-value="id"
@@ -129,84 +108,86 @@
           </v-col>
         </v-row>
       </v-card-text>
-      <v-card-text class="record-form-section">
-        <h3>Lead tracking</h3>
+      <v-card-text class="mt-n6">
+        <h3>Lead details information</h3>
       </v-card-text>
       <v-card-text>
-        <v-row dense>
-          <v-col cols="12" md="6">
+        <v-row>
+          <v-col cols="12" md="6" class="mt-n10">
             <v-text-field
               v-model="formData.apexchat_id"
-              dense
-              outlined
-              hide-details="auto"
               label="Apex chat ID"
               clearable
               :rules="rules.apexchat_id"
             >
             </v-text-field>
           </v-col>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" class="mt-n10">
             <v-text-field
               v-model="formData.account_id"
-              dense
-              outlined
-              hide-details="auto"
               label="Call Service id *"
               clearable
               :rules="rules.account_id"
             >
             </v-text-field>
           </v-col>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" class="mt-n8">
             <v-text-field
               v-model="formData.reporting_mail"
-              dense
-              outlined
-              hide-details="auto"
               label="Reporting Email Address *"
               clearable
               :rules="rules.reporting_mail"
             >
             </v-text-field>
           </v-col>
+          <!-- <v-col cols="12" md="6" class="mt-n10" v-if="editForm">
+            <v-text-field
+              label="Lh2 Api Key"
+              clearable
+              v-model="formData.lh2_api_key"
+            >
+            </v-text-field>
+          </v-col> -->
+          <!-- <v-col cols="12" md="6" class="mt-n8">
+            <v-text-field
+              label="Twillio Number"
+              clearable
+              v-model="formData.twilio_number"
+              :rules="rules.twilio_number"
+            >
+            </v-text-field>
+          </v-col> -->
+          <!-- <v-col cols="12" md="6" class="mt-n10">
+            <v-checkbox v-model="formData.is_edge" label="Edge"></v-checkbox>
+          </v-col> -->
         </v-row>
       </v-card-text>
-      <v-card-text class="record-form-section">
+      <v-card-text class="mt-n6">
         <h3>Advertising information</h3>
       </v-card-text>
       <v-card-text>
-        <v-row dense>
-          <v-col cols="12" md="6">
+        <v-row>
+          <v-col cols="12" md="6" class="mt-n8">
             <v-text-field
               v-model="formData.facebook_id"
-              dense
-              outlined
-              hide-details="auto"
               label="Facebook ID"
               clearable
               :rules="rules.facebook_id"
             >
             </v-text-field>
           </v-col>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" class="mt-n8">
             <v-text-field
               v-model="formData.adwords_id"
-              dense
-              outlined
-              hide-details="auto"
               label="Adwords ID"
               clearable
               :rules="rules.adwords_id"
             >
             </v-text-field>
           </v-col>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" class="mt-n8">
             <v-text-field
               v-model="formData.adwords_budget"
-              dense
-              outlined
-              hide-details="auto"
               label="Adwords Budget"
               clearable
               :rules="rules.adwords_budget"
@@ -216,12 +197,9 @@
             >
             </v-text-field>
           </v-col>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" class="mt-n8">
             <v-text-field
               v-model="formData.facebook_budget"
-              dense
-              outlined
-              hide-details="auto"
               label="Facebook Budget"
               clearable
               :rules="rules.facebook_budget"
@@ -231,12 +209,9 @@
             >
             </v-text-field>
           </v-col>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" class="mt-n8">
             <v-text-field
               v-model="formData.monthly_fee"
-              dense
-              outlined
-              hide-details="auto"
               label="Monthly Fee"
               clearable
               :rules="rules.monthly_fee"
@@ -249,7 +224,7 @@
         </v-row>
       </v-card-text>
       <v-card-actions v-if="!editForm">
-        <RequiredFieldsNote />
+        <span class="red--text text--darken-1"> * required </span>
         <v-spacer></v-spacer>
         <v-btn :disabled="busy" @click="$emit('cancel')">Cancel</v-btn>
         <v-btn
@@ -261,9 +236,21 @@
           Save Changes
         </v-btn>
       </v-card-actions>
-
+      <!-- <v-card-actions v-if="editForm">
+        <span class="red--text text--darken-1"> * required </span>
+        <v-spacer></v-spacer>
+        <v-btn :disabled="busy" @click="$emit('cancel')">Cancel</v-btn>
+        <v-btn
+          :loading="busy"
+          :disabled="!formValid"
+          color="primary"
+          @click.prevent="formValid && submit()"
+        >
+          Go Ahead
+        </v-btn>
+      </v-card-actions> -->
       <v-card-actions v-if="editForm">
-        <RequiredFieldsNote />
+        <span class="red--text text--darken-1"> * required </span>
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" persistent max-width="600px">
           <template #activator="{ on, attrs }">
@@ -283,13 +270,10 @@
             </v-card-title>
             <v-card-text>
               <v-container>
-                <v-row dense>
+                <v-row>
                   <v-col cols="12" sm="12" md="12">
                     <v-text-field
                       v-model="formData.comment"
-                      dense
-                      outlined
-                      hide-details="auto"
                       label="Reason for changes*"
                       :rules="rules.comment"
                       required
@@ -315,7 +299,7 @@
           </v-card>
         </v-dialog>
       </v-card-actions>
-    </RecordFormCard>
+    </v-card>
   </v-form>
 </template>
 
@@ -327,8 +311,6 @@ import {
   ref,
   useRouter,
 } from '@nuxtjs/composition-api'
-import RecordFormCard from './RecordFormCard.vue'
-import RequiredFieldsNote from '~/components/RequiredFieldsNote.vue'
 
 import useClientLocations from '~/services/useClientLocations'
 import useClientRecords from '~/services/useClientRecords'
@@ -338,7 +320,7 @@ import useUsers from '~/services/useUsers'
 import { AM_ROLE } from '~/utils/UserEnums'
 
 export default defineComponent({
-  components: { RecordFormCard, RequiredFieldsNote },
+  components: {},
   props: {
     id: {
       type: [String, Number],

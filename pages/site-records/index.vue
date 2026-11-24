@@ -1,22 +1,26 @@
 <template>
   <div>
     <UnauthorizedUser v-if="nonAccountManagerUserRole" />
-    <v-row v-if="!nonAccountManagerUserRole" dense class="workspace-directory">
+    <v-row
+      v-if="!nonAccountManagerUserRole"
+      :class="{
+        'my-6': true,
+        'site-records': true,
+      }"
+    >
       <v-col cols="12">
         <v-card class="workspace-filter-panel site-record-controls">
           <v-card-title>Find sites</v-card-title>
           <v-card-text>
             <v-form @submit.prevent="handleFilterApply()">
-              <v-row dense align="center">
+              <v-row align="center">
                 <v-col cols="12" sm="6" lg="4">
                   <v-text-field
                     v-model="filters.name"
                     label="Search sites"
-                    prepend-inner-icon="mdi-magnify"
+                    append-icon="mdi-magnify"
                     clearable
-                    dense
-                    outlined
-                    hide-details
+                    hide-details="auto"
                   />
                 </v-col>
                 <v-col cols="6" sm="3" lg="2">
@@ -25,15 +29,12 @@
                     label="Status"
                     :items="statusOptions"
                     clearable
-                    dense
-                    outlined
-                    hide-details
+                    hide-details="auto"
                   />
                 </v-col>
                 <v-col cols="12" sm="6" lg="3">
                   <Datepicker
                     v-model="filters.date"
-                    compact
                     :date-help-buttons="[
                       'lastWeek',
                       'thisWeek',
@@ -57,20 +58,17 @@
                         : ''
                     }}
                   </v-btn>
-                  <v-btn type="submit" color="primary" depressed>Apply</v-btn>
+                  <v-btn type="submit" color="primary">Apply</v-btn>
                 </v-col>
               </v-row>
 
               <v-expand-transition>
-                <v-row v-show="showFilters" dense>
+                <v-row v-show="showFilters">
                   <v-col cols="12" sm="6" md="3">
                     <v-autocomplete
                       v-model="filters.plugin"
                       :items="pluginOptions"
                       label="Plugin"
-                      dense
-                      outlined
-                      hide-details
                       item-text="name"
                       :item-value="(item) => String(item.id)"
                       clearable
@@ -81,9 +79,6 @@
                       v-model="filters.theme"
                       :items="themeOptions"
                       label="Theme"
-                      dense
-                      outlined
-                      hide-details
                       item-text="name"
                       :item-value="(item) => String(item.id)"
                       clearable
@@ -143,46 +138,38 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col cols="12">
+      <v-col md="12">
         <v-card :loading="busy">
-          <ReportResultHeading :title="pageTitle">
-            <p>
-              {{ pagination.total }}
-              {{ pagination.total === 1 ? 'site' : 'sites' }}
-            </p>
-            <DatesAndDiff
-              v-if="appliedFilters.date[0]"
-              :start="appliedFilters.date[0]"
-              :end="appliedFilters.date[1] || appliedFilters.date[0]"
-            />
-            <template #actions>
-              <v-btn
-                v-if="loadedReport"
-                small
-                outlined
-                @click="tableView = !tableView"
-              >
-                <v-icon small left>{{
-                  tableView ? 'mdi-view-list-outline' : 'mdi-table'
-                }}</v-icon>
-                {{ tableView ? 'View inspector' : 'View table' }}
-              </v-btn>
-              <v-btn small outlined @click="copyLink">
-                <v-icon small left>mdi-link</v-icon> Copy link
-              </v-btn>
-              <v-btn
-                v-if="loadedReport"
-                small
-                depressed
-                color="primary"
-                :loading="uploadReportLoading"
-                @click="uploadReport"
-              >
-                <v-icon small left>mdi-google-drive</v-icon>
-                {{ googleDocLink ? 'View export' : 'Export to Drive' }}
-              </v-btn>
-            </template>
-          </ReportResultHeading>
+          <v-toolbar flat>
+            <v-toolbar-title
+              >{{ pagination.total }}
+              {{ pagination.total === 1 ? 'site' : 'sites' }}</v-toolbar-title
+            >
+            <v-spacer></v-spacer>
+            <v-btn text small @click="tableView = !tableView">{{
+              tableView ? 'Inspector' : 'View table'
+            }}</v-btn>
+            <v-btn icon title="Copy link to this report" @click="copyLink">
+              <v-icon>mdi-link</v-icon>
+            </v-btn>
+            <v-btn
+              v-show="loadedReport"
+              icon
+              title="Upload to Google Drive"
+              :color="googleDocLink ? 'info' : 'normal'"
+              @click="uploadReport"
+            >
+              <v-icon>mdi-upload</v-icon>
+            </v-btn>
+          </v-toolbar>
+          <v-toolbar flat>
+            <v-card-text class="ml-n4">
+              <DatesAndDiff
+                :start="appliedFilters.date[0]"
+                :end="appliedFilters.date[1]"
+              />
+            </v-card-text>
+          </v-toolbar>
           <template v-if="loadedReport && !tableView">
             <site-record-inspector
               :sites="computedReport"
@@ -204,8 +191,9 @@
             :items="computedReport"
             :headers="tableHeaders"
             :options.sync="tableOptions"
-            class="workspace-directory-table"
-            no-data-text="No sites match these filters."
+            :fixed-header="true"
+            height="calc(100vh - 318px)"
+            class="elevation-1"
             :footer-props="{
               'items-per-page-options': itemsPerPageOptions,
             }"
@@ -303,7 +291,6 @@ import {
 } from '@nuxtjs/composition-api'
 import useSiteRecords from '@/services/useSiteRecords'
 import moment from 'moment'
-import { pageNames } from '~/shared/PageNames'
 
 import { Dictionary } from '~/node_modules/@types/lodash'
 import generateSiteRecordsReport, {
@@ -489,7 +476,7 @@ export default defineComponent({
         disabled: false,
       },
       {
-        text: pageNames.sites,
+        text: `Site Records`,
         to: `/site-records`,
         disabled: true,
       },
@@ -518,7 +505,7 @@ export default defineComponent({
       { deep: true }
     )
 
-    const pageTitle = pageNames.sites
+    const pageTitle = `Site Records`
 
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
 
@@ -713,7 +700,6 @@ export default defineComponent({
     onMounted(() => {})
 
     return {
-      pageTitle,
       tableOptions,
       tableView,
       showFilters,
@@ -757,10 +743,78 @@ export default defineComponent({
     }
   },
   head: {
-    title: pageNames.sites,
+    title: 'Site Records',
   },
 })
 </script>
+<style lang="scss">
+.site-link {
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+    color: red;
+  }
+}
+.site-records .v-data-table {
+  table > tbody > tr > td:nth-child(1),
+  table > thead > tr > th:nth-child(1) {
+    position: sticky !important;
+    position: -webkit-sticky !important;
+    left: 0;
+    z-index: 4;
+    background: white;
+  }
+  table > tbody > tr {
+    &:hover {
+      th,
+      td {
+        background: #eee !important;
+      }
+    }
+  }
+  table > thead > tr > th:nth-child(1) {
+    z-index: 5;
+  }
+
+  // @media (min-width: 768px) {
+  //   table > tbody > tr > td:nth-child(2),
+  //   table > thead > tr > th:nth-child(2) {
+  //     position: sticky !important;
+  //     position: -webkit-sticky !important;
+  //     left: 340px;
+  //     z-index: 4;
+  //     background: white;
+  //   }
+  //   table > thead > tr > th:nth-child(2) {
+  //     z-index: 5;
+  //   }
+  // }
+}
+.theme--dark {
+  .site-records .v-data-table {
+    table > tbody > tr > td:nth-child(1),
+    table > thead > tr > th:nth-child(1) {
+      position: sticky !important;
+      position: -webkit-sticky !important;
+      left: 0;
+      z-index: 4;
+      background: rgb(29, 28, 28);
+    }
+    table > tbody > tr {
+      &:hover {
+        th,
+        td {
+          background: rgb(63, 62, 62) !important;
+        }
+      }
+    }
+    table > thead > tr > th:nth-child(1) {
+      z-index: 5;
+    }
+  }
+}
+</style>
+
 <style scoped>
 .site-filter-actions,
 .site-filter-chips {

@@ -1,52 +1,69 @@
 <template>
-  <div class="workspace-record-stack">
-    <v-card v-if="apiStatus === 200" :loading="busy" flat>
-      <ReportResultHeading :title="clientData.name || 'Client details'">
-        <workspace-badge v-if="clientData.status" :value="clientData.status" />
-        <template #actions>
-          <v-btn small outlined to="/client-records">All clients</v-btn>
-          <v-btn
-            small
-            depressed
-            color="primary"
-            :to="`/client-records/${clientData.id}/edit`"
+  <v-row>
+    <v-col cols="10" offset="1">
+      <v-card v-if="apiStatus === 200" :loading="busy">
+        <v-card-title>
+          <h3 class="text-capitalize client-name">
+            {{ !busy ? clientData.name : 'Loading...' }}
+          </h3>
+          <workspace-badge
+            v-if="clientData.status"
+            :value="clientData.status"
+            class="ml-4"
+          />
+          <h5 v-if="clientData.email" class="ml-4">
+            {{ clientData.email }}
+          </h5>
+
+          <v-spacer></v-spacer>
+          <v-btn class="mr-3" to="/client-records" small
+            >Show all clients</v-btn
           >
-            <v-icon small left>mdi-pencil-outline</v-icon> Edit client
-          </v-btn>
-        </template>
-      </ReportResultHeading>
-      <RecordFacts
-        :fields="[
-          { label: 'Email', value: clientData.email },
-          { label: 'Address', value: clientData.address },
-          { label: 'City', value: clientData.city },
-          { label: 'State', value: clientData.state },
-          { label: 'ZIP code', value: clientData.zipcode },
-        ]"
-      />
-      <staff-list
-        :loading="busy"
-        :list="clientData.staff ? clientData.staff : []"
-        @fetchClient="getClient"
-      ></staff-list>
-      <location-list
-        :loading="busy"
-        :list="clientData.locations ? clientData.locations : []"
-        @fetchClient="getClient"
-      ></location-list>
-    </v-card>
-    <v-card v-else-if="apiStatus === 404">
-      <v-card-text>
-        <v-alert type="error">
-          The client you're looking for cannot be found.
-        </v-alert>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn to="/client-records" small>Show all clients</v-btn>
-      </v-card-actions>
-    </v-card>
-  </div>
+          <v-btn
+            color="primary"
+            small
+            :to="`/client-records/${clientData.id}/edit`"
+            >Edit</v-btn
+          >
+        </v-card-title>
+        <v-card-text>
+          <span class="text-capitalize">{{
+            clientData.city ? clientData.city : 'city'
+          }}</span>
+          <span class="text-capitalize ml-4">{{
+            clientData.state ? clientData.state : 'state'
+          }}</span>
+          <span class="text-capitalize ml-4">{{
+            clientData.zipcode ? clientData.zipcode : 'zipcode'
+          }}</span>
+          <span class="text-capitalize ml-4">{{
+            clientData.address ? clientData.address : 'address'
+          }}</span>
+        </v-card-text>
+        <staff-list
+          :loading="busy"
+          :list="clientData.staff ? clientData.staff : []"
+          @fetchClient="getClient"
+        ></staff-list>
+        <location-list
+          :loading="busy"
+          :list="clientData.locations ? clientData.locations : []"
+          @fetchClient="getClient"
+        ></location-list>
+      </v-card>
+      <v-card v-else-if="apiStatus === 404">
+        <v-card-text>
+          <v-alert type="error">
+            The client you're looking for cannot be found.
+          </v-alert>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn to="/client-records" small>Show all clients</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 <script lang="ts">
 import {
@@ -56,7 +73,6 @@ import {
   useRouter,
   onMounted,
 } from '@nuxtjs/composition-api'
-import { pageNames } from '~/shared/PageNames'
 
 import useClientRecords from '~/services/useClientRecords'
 import StaffList from '~/components/ClientRecords/StaffList.vue'
@@ -85,13 +101,13 @@ export default defineComponent({
         disabled: false,
       },
       {
-        text: pageNames.clients,
+        text: `Client Records`,
         to: `/client-records`,
         disabled: false,
       },
     ]
 
-    const pageTitle = 'Client Details'
+    const pageTitle = `Client Records`
 
     const getClient = () => {
       busy.value = true
@@ -135,6 +151,16 @@ export default defineComponent({
       getClient,
     }
   },
-  head: { title: 'Client Details' },
 })
 </script>
+
+<style lang="scss" scoped>
+.client-name {
+  span {
+    font-size: 12px;
+    position: relative;
+    left: -2px;
+    top: -2px;
+  }
+}
+</style>

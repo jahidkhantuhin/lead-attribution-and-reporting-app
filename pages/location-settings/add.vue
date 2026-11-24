@@ -1,15 +1,16 @@
 <template>
-  <div class="record-editor">
-    <MissingClientRecordsForm
-      @cancel="$router.push(`/location-records/`)"
-    ></MissingClientRecordsForm>
-  </div>
+  <v-row class="my-6" justify="center">
+    <v-col cols="12" lg="4" md="6">
+      <MissingClientRecordsForm
+        @cancel="$router.push(`/location-records/`)"
+      ></MissingClientRecordsForm>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
 import { defineComponent, useStore } from '@nuxtjs/composition-api'
 import MissingClientRecordsForm from '@/components/forms/MissingClientRecordsForm.vue'
-import { pageNames } from '~/shared/PageNames'
 export default defineComponent({
   components: {
     MissingClientRecordsForm,
@@ -23,7 +24,7 @@ export default defineComponent({
         disabled: false,
       },
       {
-        text: pageNames.locationSetup,
+        text: `Location Settings`,
         to: `/location-settings`,
         disabled: false,
       },
@@ -34,11 +35,11 @@ export default defineComponent({
       },
     ]
     const store = useStore()
-    const pageTitle = 'Add Location'
+    const pageTitle = `Location Settings`
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
   },
   head: {
-    title: 'Add Location',
+    title: 'Create Client',
   },
 })
 </script>

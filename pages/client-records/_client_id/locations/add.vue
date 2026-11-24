@@ -1,10 +1,12 @@
 <template>
-  <div class="record-editor">
-    <location-form
-      @onFetchClient="onFetchClient"
-      @cancel="handleCancel"
-    ></location-form>
-  </div>
+  <v-row class="my-6" justify="center">
+    <v-col cols="12" lg="6" md="8">
+      <location-form
+        @onFetchClient="onFetchClient"
+        @cancel="handleCancel"
+      ></location-form>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -14,7 +16,6 @@ import {
   useRouter,
   useStore,
 } from '@nuxtjs/composition-api'
-import { pageNames } from '~/shared/PageNames'
 import LocationForm from '~/components/forms/LocationForm.vue'
 
 export default defineComponent({
@@ -33,7 +34,7 @@ export default defineComponent({
     }
 
     const onFetchClient = (client) => {
-      const pageTitle = 'Add Client Location'
+      const pageTitle = 'Add Location'
       const breadcrumbs = [
         {
           text: `Dashboard`,
@@ -41,7 +42,7 @@ export default defineComponent({
           disabled: false,
         },
         {
-          text: pageNames.clients,
+          text: `Client Records`,
           to: `/client-records`,
           disabled: false,
         },
@@ -68,6 +69,5 @@ export default defineComponent({
       onFetchClient,
     }
   },
-  head: { title: 'Add Client Location' },
 })
 </script>

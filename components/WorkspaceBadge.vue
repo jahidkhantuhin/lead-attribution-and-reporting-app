@@ -46,15 +46,6 @@ const roles: Record<string, [string, Tone]> = {
   user: ['User', 'neutral'],
 }
 
-const leadTypes: Record<string, [string, Tone]> = {
-  call: ['Call', 'info'],
-  chat: ['Chat', 'positive'],
-  email: ['Form', 'neutral'],
-  facebook: ['Facebook', 'accent'],
-}
-
-const labelSets = { status: statuses, role: roles, 'lead-type': leadTypes }
-
 export default defineComponent({
   props: {
     value: { type: [String, Number, Boolean, Object], default: null },
@@ -72,7 +63,7 @@ export default defineComponent({
         : value
       const text = raw == null ? '' : String(raw).trim()
       const key = text.toLowerCase().replace(/[\s-]+/g, '_')
-      const labels = labelSets[props.kind as keyof typeof labelSets] || statuses
+      const labels = props.kind === 'role' ? roles : statuses
       const known =
         Object.prototype.hasOwnProperty.call(labels, key) && labels[key]
       const readable = text

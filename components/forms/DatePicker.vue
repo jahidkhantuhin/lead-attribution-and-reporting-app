@@ -13,12 +13,8 @@
         <v-text-field
           v-model="displayedDates"
           clearable
-          :dense="compact"
-          :outlined="compact"
-          :hide-details="compact"
           :label="datesLabel"
-          :prepend-icon="compact ? undefined : 'mdi-calendar'"
-          :prepend-inner-icon="compact ? 'mdi-calendar' : undefined"
+          prepend-icon="mdi-calendar"
           readonly
           v-bind="attrs"
           :disabled="disabled"
@@ -62,10 +58,6 @@ import { formatDateRange } from '~/utils/dateFormat'
 import { datePickerHelperButtons } from '~/utils/datepicker'
 export default defineComponent({
   props: {
-    compact: {
-      type: Boolean,
-      default: false,
-    },
     kpi: {
       type: Boolean,
       default: false,

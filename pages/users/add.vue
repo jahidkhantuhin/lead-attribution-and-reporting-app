@@ -1,13 +1,17 @@
 <template>
   <restricted-component permission="create user">
-    <div class="record-editor">
-      <user-form
-        title="Add team member"
-        scope="admin"
-        @cancel="$router.push('/users/')"
-        @done="onCreate"
-      />
-    </div>
+    <v-row class="my-6" justify="center">
+      <v-col cols="12" lg="4" md="6">
+        <v-card>
+          <v-card-title> Create a user </v-card-title>
+          <user-form
+            scope="admin"
+            @cancel="$router.push('/users/')"
+            @done="onCreate"
+          ></user-form>
+        </v-card>
+      </v-col>
+    </v-row>
   </restricted-component>
 </template>
 
@@ -19,7 +23,6 @@ import {
   useStore,
 } from '@nuxtjs/composition-api'
 import { IBreadcrumbs } from '@/store'
-import { pageNames } from '~/shared/PageNames'
 
 import UserForm from '~/components/forms/UserForm.vue'
 import RestrictedComponent from '~/components/RestrictedComponent.vue'
@@ -43,7 +46,7 @@ export default defineComponent({
         to: `/`,
       },
       {
-        text: pageNames.users,
+        text: `Users`,
         to: `/users`,
       },
       {
@@ -52,7 +55,7 @@ export default defineComponent({
       },
     ]
 
-    const pageTitle = 'Add Team Member'
+    const pageTitle = `Add a User`
 
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
 
@@ -66,7 +69,7 @@ export default defineComponent({
     }
   },
   head: {
-    title: 'Add Team Member',
+    title: 'Add a User',
   },
 })
 </script>

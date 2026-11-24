@@ -2,9 +2,6 @@
   <span>
     <v-autocomplete
       v-model="inputValue"
-      :dense="compact"
-      :outlined="compact"
-      :hide-details="compact"
       :placeholder="
         (multiple && inputValue.length === 0) || !inputValue
           ? 'Select location'
@@ -15,7 +12,7 @@
           ? 'Select location'
           : ''
       "
-      :style="compact ? undefined : { marginTop: '8px' }"
+      style="margin-top: 8px"
       no-data-text="Search locations"
       :search-input.sync="searchInput"
       :loading="busy"
@@ -59,10 +56,6 @@ import useClientLocations from '~/services/useClientLocations'
 
 export default defineComponent({
   props: {
-    compact: {
-      type: Boolean,
-      default: false,
-    },
     client: {
       type: [String, Number],
       default: null,
@@ -120,14 +113,7 @@ export default defineComponent({
             inputValue.value = props.multiple ? [firstOption] : firstOption
             onChange()
           } else if (locationList.value.length > 1) {
-            inputValue.value = props.multiple
-              ? locationFromUrl
-              : locationList.value.some(
-                  (location: { id: number }) =>
-                    location.id === locationFromUrl[0]
-                )
-              ? locationFromUrl[0]
-              : firstOption
+            inputValue.value = props.multiple ? locationFromUrl : firstOption
             onChange()
             // selectAll()
           }
@@ -152,8 +138,7 @@ export default defineComponent({
           >
         }
       } else {
-        const ids = router.currentRoute.query.location_ids
-        inputValue.value = Number(Array.isArray(ids) ? ids[0] : ids) || null
+        inputValue.value = router.currentRoute.query.location_ids as string
       }
       if (process.env.SHOWCASE_MODE === 'true' && props.client) fetchLocations()
     })

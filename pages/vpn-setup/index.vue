@@ -1,113 +1,189 @@
 <template>
-  <div class="workspace-report-stack">
-    <v-alert v-if="connectedToVpn" type="warning" dense class="mb-0">
-      Disconnect from the VPN before adding an IP address.
-      <v-btn small text @click="refreshPage">Refresh status</v-btn>
-    </v-alert>
-    <v-card flat class="workspace-filter-panel">
-      <v-card-title>Request VPN access</v-card-title>
-      <v-form
-        v-model="formValid"
-        @submit.prevent="formValid && !connectedToVpn && !busy && submit()"
-      >
-        <v-card-text class="directory-vpn-fields">
-          <v-autocomplete
-            v-model="formData.url"
-            label="Website"
-            clearable
-            outlined
-            dense
-            hide-details="auto"
-            :items="clientsList"
-            :loading="clientsListLoading"
-            item-text="url"
-            :filter="() => true"
-            item-value="url"
-            :search-input.sync="searchInput"
-            :rules="rules.url"
-            @keydown="fetchClients(searchInput)"
-            @change="onChange"
-          />
-          <v-select
-            v-model="formData.number_of_hours"
-            label="Access duration"
-            :items="numberOfHours"
-            :rules="rules.number_of_hours"
-            clearable
-            outlined
-            dense
-            hide-details="auto"
-          />
-          <v-text-field
-            v-model="formData.ip"
-            label="IP address"
-            :rules="rules.ip"
-            :clearable="adminUser"
-            :readonly="!adminUser"
-            outlined
-            dense
-            hide-details="auto"
-          />
-          <v-btn
-            type="submit"
-            depressed
-            color="primary"
-            :disabled="!formValid || connectedToVpn || busy"
-            :loading="busy"
-          >
-            Request access
-          </v-btn>
-        </v-card-text>
-      </v-form>
-    </v-card>
-    <v-card :loading="busy" flat>
-      <ReportResultHeading title="VPN activity log">
-        <p>
-          {{ pagination.total }}
-          {{ pagination.total === 1 ? 'entry' : 'entries' }}
-        </p>
-      </ReportResultHeading>
-      <v-data-table
-        :items="items"
-        :headers="tableHeaders"
-        :options.sync="tableOptions"
-        class="workspace-directory-table"
-        no-data-text="No VPN activity to display."
-        :footer-props="{
-          'items-per-page-options': itemsPerPageOptions,
+  <div>
+    <div>
+      <v-row class="my-6" justify="center">
+        <v-col xl="8" lg="8" md="8" sm="12">
+          <!-- <VpnSetupForm
+          @cancel="$router.push(`/vpn-setup/`)"
+          @submit="loadFiltersFromURL()"
+        ></VpnSetupForm> -->
+          <div>
+            <div>
+              <v-row v-if="connectedToVpn">
+                <v-col cols="12">
+                  <v-alert shaped prominent type="error">
+                    You are currently connected to wm4d vpn. Please disconnect
+                    from vpn and
+                    <v-btn small class="info" @click="refreshPage">
+                      Click Here</v-btn
+                    >
+                  </v-alert>
+                </v-col>
+              </v-row>
+            </div>
+            <div>
+              <v-form v-model="formValid">
+                <v-card>
+                  <v-card-title> Add IP Address </v-card-title>
+                  <v-row>
+                    <v-col cols="12" xl="6" lg="6" md="8" sm="12">
+                      <v-card-text>
+                        <v-autocomplete
+                          ref="autoComplete"
+                          v-model="formData.url"
+                          label="Search for a site"
+                          clearable
+                          placeholder="Search for a client *"
+                          :items="clientsList"
+                          :loading="clientsListLoading"
+                          item-text="url"
+                          :filter="() => true"
+                          item-value="url"
+                          :no-data-text="
+                            clientsListLoading === false &&
+                            searchInput &&
+                            searchInput.length > 0
+                              ? 'No Results found'
+                              : clientsListLoading
+                              ? 'Loading'
+                              : 'Search something'
+                          "
+                          :search-input.sync="searchInput"
+                          :rules="rules.url"
+                          @keydown="fetchClients(searchInput)"
+                          @change="onChange"
+                          @keydown.enter="formValid && submit()"
+                        >
+                        </v-autocomplete>
+                      </v-card-text>
+                    </v-col>
+                    <v-col cols="4" xl="2" lg="2" md="4" sm="4">
+                      <v-card-text>
+                        <v-select
+                          v-model="formData.number_of_hours"
+                          label="Period"
+                          :items="numberOfHours"
+                          :rules="rules.number_of_hours"
+                          clearable
+                        ></v-select>
+                      </v-card-text>
+                    </v-col>
+                    <v-col
+                      v-if="adminUser"
+                      cols="8"
+                      xl="4"
+                      lg="4"
+                      md="6"
+                      sm="8"
+                    >
+                      <v-card-text>
+                        <v-text-field
+                          v-model="formData.ip"
+                          label="IP Address"
+                          class="mb-3"
+                          :rules="rules.ip"
+                          clearable
+                        >
+                        </v-text-field>
+                      </v-card-text>
+                    </v-col>
+                    <v-col
+                      v-if="!adminUser"
+                      cols="8"
+                      xl="4"
+                      lg="4"
+                      md="6"
+                      sm="8"
+                    >
+                      <v-card-text>
+                        <v-text-field
+                          v-model="formData.ip"
+                          label="IP Address"
+                          class="mb-3"
+                          :rules="rules.ip"
+                          readonly
+                        >
+                        </v-text-field>
+                      </v-card-text>
+                    </v-col>
+                  </v-row>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn :disabled="busy" @click="route.push('/vpn-setup')"
+                      >Cancel</v-btn
+                    >
+                    <v-btn
+                      :disabled="!formValid || connectedToVpn"
+                      :loading="busy"
+                      color="primary"
+                      @click.prevent="formValid && submit()"
+                    >
+                      Submit
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-form>
+            </div>
+          </div>
+        </v-col>
+      </v-row>
+    </div>
+    <div>
+      <v-row
+        :class="{
+          'my-6': true,
+          'client-records': true,
         }"
-        :server-items-length="pagination.total"
-        @pagination="handlePaginationChange"
       >
-        <template #item.expiry_date="{ item }">
-          <formatted-date :date="item.expiry_date" />
-        </template>
-        <template #item.user.status="{ item }">
-          <workspace-badge :value="item.user && item.user.status" />
-        </template>
-        <template #item.user && item.user.first_name="{ item }">
-          <span>
-            {{ item.user && item.user.first_name }}
-            {{ item.user && item.user.last_name }}
-          </span>
-        </template>
-        <template #item.actions="{ item }">
-          <v-menu>
-            <template #activator="{ on, attrs }">
-              <v-btn small v-bind="attrs" v-on="on"> Actions </v-btn>
-            </template>
-            <v-list>
-              <v-list-item
-                title="Remove VPN access"
-                @click="handleDeleteIP(item.id)"
-              >
-                <v-list-item-title>Remove access</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </template>
-      </v-data-table>
-    </v-card>
+        <v-col md="12">
+          <v-card :loading="busy">
+            <v-toolbar flat>
+              <v-toolbar-title>VPN activity log</v-toolbar-title>
+            </v-toolbar>
+            <v-data-table
+              :items="items"
+              :headers="tableHeaders"
+              :options.sync="tableOptions"
+              :fixed-header="true"
+              height="calc(100vh - 318px)"
+              class="elevation-1"
+              :footer-props="{
+                'items-per-page-options': itemsPerPageOptions,
+              }"
+              :server-items-length="pagination.total"
+              @pagination="handlePaginationChange"
+            >
+              <template #item.expiry_date="{ item }">
+                <formatted-date :date="item.expiry_date" />
+              </template>
+              <template #item.user.status="{ item }">
+                <workspace-badge :value="item.user && item.user.status" />
+              </template>
+              <template #item.user.first_name="{ item }">
+                <span>
+                  {{ item.user.first_name }} {{ item.user.last_name }}
+                </span>
+              </template>
+              <template #item.actions="{ item }">
+                <v-menu>
+                  <template #activator="{ on, attrs }">
+                    <v-btn small v-bind="attrs" v-on="on"> Actions </v-btn>
+                  </template>
+                  <v-list>
+                    <v-list-item
+                      title="Delete Location"
+                      @click="handleDeleteIP(item.id)"
+                    >
+                      <v-list-item-title>Delete</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </template>
+            </v-data-table>
+          </v-card>
+        </v-col>
+      </v-row>
+    </div>
   </div>
 </template>
 
@@ -127,7 +203,6 @@ import {
 import useClientRecords from '@/services/useClientRecords'
 
 import useLocationRecords from '@/services/useLocationRecords'
-import { pageNames } from '~/shared/PageNames'
 
 // import { AM_ROLE } from '~/utils/UserEnums'
 // import { Dictionary } from '~/node_modules/@types/lodash'
@@ -175,13 +250,13 @@ export default defineComponent({
         disabled: false,
       },
       {
-        text: pageNames.vpn,
+        text: `VPN Setup`,
         to: `/vpn-setup`,
         disabled: true,
       },
     ]
     const store = useStore()
-    const pageTitle = pageNames.vpn
+    const pageTitle = `VPN Setup`
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
 
     // Added for VPN Activity Log
@@ -211,6 +286,52 @@ export default defineComponent({
     const busy = ref(false)
 
     const items: any = ref([])
+
+    // const tableHeaders = ref([
+    //   {
+    //     text: `Actions`,
+    //     align: `start`,
+    //     width: '130px',
+    //     sortable: false,
+    //     value: `actions`,
+    //   },
+    //   {
+    //     text: `User Name`,
+    //     align: `start`,
+    //     sortable: true,
+    //     value: `user.first_name`,
+    //     width: '200px',
+    //   },
+    //   {
+    //     text: `Status`,
+    //     align: `start`,
+    //     sortable: true,
+    //     width: '130px',
+    //     value: `user.status`,
+    //   },
+
+    //   {
+    //     text: `Site`,
+    //     align: `start`,
+    //     sortable: true,
+    //     width: '130px',
+    //     value: `site.url`,
+    //   },
+    //   {
+    //     text: `IP Address`,
+    //     align: `start`,
+    //     sortable: true,
+    //     width: '160px',
+    //     value: `ip`,
+    //   },
+    //   {
+    //     text: `Expiry Date`,
+    //     align: `start`,
+    //     width: '130px',
+    //     sortable: false,
+    //     value: `expiry_date`,
+    //   },
+    // ])
 
     const tableHeaders = computed(() => {
       return $auth.user?.role === 'super admin'
@@ -444,6 +565,7 @@ export default defineComponent({
     })
 
     // Adding for VPN Setup Form
+    const ipAddress = ref()
     // const { $auth } = useContext()
     const adminUser = computed(
       () => $auth.user?.role === 'admin' || $auth.user?.role === 'super admin'
@@ -461,6 +583,7 @@ export default defineComponent({
     const clientsListLoading = ref(false)
     const searchInput = ref(router.currentRoute.query.client_name)
     const clientsList = ref<any>([])
+    const autoComplete = ref()
     const { get } = useApi()
     const entries = ref<any>([])
     const isLoading = ref(false)
@@ -620,6 +743,7 @@ export default defineComponent({
           } else {
             connectedToVpn.value = false
           }
+          ipAddress.value = resp.data.ip
           formData.value.ip = resp.data.ip
           // console.log('IP ADDRESS', resp.data.ip)
         })
@@ -657,6 +781,7 @@ export default defineComponent({
       clientsList,
       fetchClients,
       inputValue,
+      autoComplete,
       onChange,
       entries,
       isLoading,
@@ -665,13 +790,14 @@ export default defineComponent({
       locationName,
       submit2,
       numberOfHours,
+      ipAddress,
       adminUser,
       connectedToVpn,
       refreshPage,
     }
   },
   head: {
-    title: pageNames.vpn,
+    title: 'VPN Setup',
   },
 })
 </script>

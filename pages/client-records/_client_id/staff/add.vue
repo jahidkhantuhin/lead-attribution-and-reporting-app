@@ -16,7 +16,6 @@ import {
   useRouter,
   useStore,
 } from '@nuxtjs/composition-api'
-import { pageNames } from '~/shared/PageNames'
 import StaffForm from '~/components/forms/StaffForm.vue'
 
 export default defineComponent({
@@ -36,7 +35,7 @@ export default defineComponent({
     }
 
     const onFetchClient = (client) => {
-      const pageTitle = 'Add Client Staff Member'
+      const pageTitle = 'Add Staff'
       const breadcrumbs = [
         {
           text: `Dashboard`,
@@ -44,7 +43,7 @@ export default defineComponent({
           disabled: false,
         },
         {
-          text: pageNames.clients,
+          text: `Client Records`,
           to: `/client-records`,
           disabled: false,
         },
@@ -71,6 +70,5 @@ export default defineComponent({
       onFetchClient,
     }
   },
-  head: { title: 'Add Client Staff Member' },
 })
 </script>

@@ -1,16 +1,17 @@
 <template>
-  <div class="record-editor">
-    <staff-form
-      :id="editId"
-      @cancel="$router.push(`/client-records/${clientId}/staff/${editId}`)"
-      @onFetchClient="onFetchClient"
-    ></staff-form>
-  </div>
+  <v-row class="my-6" justify="center">
+    <v-col cols="12" lg="4" md="6">
+      <staff-form
+        :id="editId"
+        @cancel="$router.push(`/client-records/${clientId}/staff/${editId}`)"
+        @onFetchClient="onFetchClient"
+      ></staff-form>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
 import { defineComponent, useRoute, useStore } from '@nuxtjs/composition-api'
-import { pageNames } from '~/shared/PageNames'
 import StaffForm from '~/components/forms/StaffForm.vue'
 
 export default defineComponent({
@@ -26,7 +27,7 @@ export default defineComponent({
     const clientId = route.value.params.client_id
 
     const onFetchClient = (client, staff) => {
-      const pageTitle = 'Edit Client Staff Member'
+      const pageTitle = 'Edit Staff'
 
       store.dispatch('setPageHeading', {
         pageTitle,
@@ -37,7 +38,7 @@ export default defineComponent({
             disabled: false,
           },
           {
-            text: pageNames.clients,
+            text: `Client Records`,
             to: `/client-records`,
             disabled: false,
           },
@@ -71,6 +72,5 @@ export default defineComponent({
       onFetchClient,
     }
   },
-  head: { title: 'Edit Client Staff Member' },
 })
 </script>

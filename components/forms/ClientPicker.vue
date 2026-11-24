@@ -3,9 +3,6 @@
     <v-autocomplete
       ref="autoComplete"
       v-model="inputValue"
-      :dense="compact"
-      :outlined="compact"
-      :hide-details="compact"
       label="Search for a client"
       clearable
       placeholder="Search for a client"
@@ -44,10 +41,6 @@ let timeout: any
 
 export default defineComponent({
   props: {
-    compact: {
-      type: Boolean,
-      default: false,
-    },
     value: { type: [String, Number], default: undefined },
     urlQueryParam: {
       type: String,

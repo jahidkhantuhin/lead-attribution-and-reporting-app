@@ -1,17 +1,12 @@
 <template>
-  <v-form
-    v-model="formValid"
-    @submit.prevent="formValid && !busy && (locationId ? submit2() : submit())"
-  >
-    <RecordFormCard title="Assign locations to a client" :loading="busy">
+  <v-form v-model="formValid">
+    <v-card>
+      <v-card-title> Add Client </v-card-title>
       <v-card-text>
         <v-autocomplete
           ref="autoComplete"
           v-model="formData.client_id"
-          dense
-          outlined
-          hide-details="auto"
-          label="Client *"
+          label="Search for a client"
           clearable
           placeholder="Search for a client *"
           :items="clientsList"
@@ -32,15 +27,13 @@
           :rules="rules.client_id"
           @keydown="fetchClients(searchInput)"
           @change="onChange"
+          @keydown.enter="formValid && submit()"
         >
         </v-autocomplete>
       </v-card-text>
       <v-card-text v-if="!locationId">
         <v-autocomplete
           v-model="formData.location_ids"
-          dense
-          outlined
-          hide-details="auto"
           :items="entries"
           :loading="isLoading"
           :search-input.sync="search"
@@ -49,41 +42,42 @@
           item-text="name"
           :filter="() => true"
           item-value="id"
-          label="Locations *"
+          label="Search for locations *"
           placeholder="Start typing to Search"
           chips
           deletable-chips
           multiple
           clearable
           :rules="rules.location_ids"
+          @keydown.enter="formValid && submit()"
         >
         </v-autocomplete>
       </v-card-text>
       <v-card-text v-if="locationId">
         <v-text-field
-          dense
-          outlined
-          hide-details="auto"
-          label="Location"
+          label="Location Name"
+          class="mb-3"
           :value="'' + locationName + ''"
           readonly
         >
         </v-text-field>
       </v-card-text>
       <v-card-actions>
-        <RequiredFieldsNote />
+        <span class="red--text text--darken-1"> * required </span>
         <v-spacer></v-spacer>
         <v-btn :disabled="busy" @click="$emit('cancel')">Cancel</v-btn>
         <v-btn
-          :disabled="!formValid || busy"
+          :disabled="!formValid"
           :loading="busy"
           color="primary"
-          type="submit"
+          @click.prevent="
+            !locationId ? formValid && submit() : formValid && submit2()
+          "
         >
-          Assign locations
+          Add Client
         </v-btn>
       </v-card-actions>
-    </RecordFormCard>
+    </v-card>
   </v-form>
 </template>
 
@@ -96,8 +90,6 @@ import {
   watch,
 } from '@nuxtjs/composition-api'
 import useLocationRecords from '@/services/useLocationRecords'
-import RecordFormCard from './RecordFormCard.vue'
-import RequiredFieldsNote from '~/components/RequiredFieldsNote.vue'
 
 import SwalMixin, { showToast } from '~/utils/swalMixin'
 
@@ -111,7 +103,7 @@ interface Client {
 }
 
 export default defineComponent({
-  components: { RecordFormCard, RequiredFieldsNote },
+  components: {},
   props: {
     id: {
       type: [String, Number],

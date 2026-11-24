@@ -12,11 +12,8 @@
         <v-text-field
           v-model="displayedDates"
           clearable
-          dense
-          outlined
-          hide-details
           label="Date or date range"
-          prepend-inner-icon="mdi-calendar"
+          prepend-icon="mdi-calendar"
           readonly
           v-bind="attrs"
           :disabled="disabled"

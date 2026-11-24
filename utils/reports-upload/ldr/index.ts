@@ -1,4 +1,3 @@
-import { reportPages } from '~/shared/PageNames'
 import moment from 'moment'
 import VuetifyColorsPallete from '~/shared/VuetifyColorsPallete'
 import { emptyLine } from '../../reports'
@@ -39,7 +38,7 @@ const generateLeadDetailsReport = (
     ) + 1
   return {
     type: 'lead-details-report',
-    name: `${reportPages.attribution.title}, ${locationNames.join(',')}, ${
+    name: `LDR, ${locationNames.join(',')}, ${
       computedReport.value.client.name
     }, ${computedReport.value.date_start}, ${
       computedReport.value.date_end

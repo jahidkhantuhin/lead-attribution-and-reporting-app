@@ -1,12 +1,10 @@
 <template>
   <v-form v-model="formValid">
-    <RecordFormCard :title="title" :loading="busy">
-      <v-card-text class="record-form-grid">
+    <v-card>
+      <v-card-title> {{ title }} </v-card-title>
+      <v-card-text>
         <v-text-field
           v-model="formData.name"
-          dense
-          outlined
-          hide-details="auto"
           label="Person's name *"
           clearable
           maxlength="50"
@@ -17,9 +15,6 @@
         </v-text-field>
         <v-text-field
           v-model="formData.phone_number"
-          dense
-          outlined
-          hide-details="auto"
           :rules="rules.phone_number"
           label="Person's phone number"
           clearable
@@ -28,9 +23,6 @@
         </v-text-field>
         <v-text-field
           v-model="formData.email"
-          dense
-          outlined
-          hide-details="auto"
           label="Person's E-mail *"
           :rules="rules.email"
           clearable
@@ -39,9 +31,6 @@
         </v-text-field>
         <v-combobox
           v-model="formData.designation"
-          dense
-          outlined
-          hide-details="auto"
           :rules="rules.designation"
           hint="Press enter to add custom designation"
           :items="designationItems"
@@ -52,7 +41,7 @@
         ></v-combobox>
       </v-card-text>
       <v-card-actions>
-        <RequiredFieldsNote />
+        <span class="red--text text--darken-1"> * required </span>
         <v-spacer></v-spacer>
         <v-btn :disabled="busy" @click="$emit('cancel')">Cancel</v-btn>
         <v-btn
@@ -64,7 +53,7 @@
           Save Changes
         </v-btn>
       </v-card-actions>
-    </RecordFormCard>
+    </v-card>
   </v-form>
 </template>
 
@@ -76,14 +65,11 @@ import {
   ref,
   useRouter,
 } from '@nuxtjs/composition-api'
-import RecordFormCard from './RecordFormCard.vue'
-import RequiredFieldsNote from '~/components/RequiredFieldsNote.vue'
 import useClientRecords from '~/services/useClientRecords'
 import useClientStaff from '~/services/useClientStaff'
 import SwalMixin, { showToast } from '~/utils/swalMixin'
 
 export default defineComponent({
-  components: { RecordFormCard, RequiredFieldsNote },
   props: {
     id: {
       type: [String, Number],

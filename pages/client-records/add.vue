@@ -11,7 +11,6 @@
 <script>
 import { defineComponent, useStore } from '@nuxtjs/composition-api'
 import ClientRecordsForm from '@/components/forms/ClientRecordsForm.vue'
-import { pageNames } from '~/shared/PageNames'
 export default defineComponent({
   components: {
     ClientRecordsForm,
@@ -25,7 +24,7 @@ export default defineComponent({
         disabled: false,
       },
       {
-        text: pageNames.clients,
+        text: `Client Records`,
         to: `/client-records`,
         disabled: false,
       },
@@ -36,11 +35,11 @@ export default defineComponent({
       },
     ]
     const store = useStore()
-    const pageTitle = 'Add Client'
+    const pageTitle = `Add client`
     store.dispatch('setPageHeading', { pageTitle, breadcrumbs })
   },
   head: {
-    title: 'Add Client',
+    title: 'Create Client',
   },
 })
 </script>
