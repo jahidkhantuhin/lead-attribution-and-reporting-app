@@ -45,8 +45,8 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - Foundation',
-    title: 'foundation-front-end',
+    titleTemplate: (title) => (title ? title + ' - LeadLens' : 'LeadLens'),
+
     htmlAttrs: {
       lang: 'en',
     },
