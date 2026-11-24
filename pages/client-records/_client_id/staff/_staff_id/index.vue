@@ -1,9 +1,7 @@
 <template>
-  <v-row class="my-6" justify="center">
-    <v-col cols="12" lg="8" md="10">
-      <staff-details :loading="busy" :staff-data="staffData"></staff-details>
-    </v-col>
-  </v-row>
+  <div class="workspace-record-stack">
+    <staff-details :loading="busy" :staff-data="staffData"></staff-details>
+  </div>
 </template>
 
 <script lang="ts">

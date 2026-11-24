@@ -1,12 +1,10 @@
 <template>
-  <v-row class="my-6" justify="center">
-    <v-col cols="12" lg="6" md="8">
-      <location-form
-        @onFetchClient="onFetchClient"
-        @cancel="handleCancel"
-      ></location-form>
-    </v-col>
-  </v-row>
+  <div class="record-editor">
+    <location-form
+      @onFetchClient="onFetchClient"
+      @cancel="handleCancel"
+    ></location-form>
+  </div>
 </template>
 
 <script>

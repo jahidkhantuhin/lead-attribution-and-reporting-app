@@ -1,17 +1,13 @@
 <template>
   <restricted-component permission="create user">
-    <v-row class="my-6" justify="center">
-      <v-col cols="12" lg="4" md="6">
-        <v-card>
-          <v-card-title> Create a user </v-card-title>
-          <user-form
-            scope="admin"
-            @cancel="$router.push('/users/')"
-            @done="onCreate"
-          ></user-form>
-        </v-card>
-      </v-col>
-    </v-row>
+    <div class="record-editor">
+      <user-form
+        title="Add team member"
+        scope="admin"
+        @cancel="$router.push('/users/')"
+        @done="onCreate"
+      />
+    </div>
   </restricted-component>
 </template>
 

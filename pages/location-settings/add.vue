@@ -1,11 +1,9 @@
 <template>
-  <v-row class="my-6" justify="center">
-    <v-col cols="12" lg="4" md="6">
-      <MissingClientRecordsForm
-        @cancel="$router.push(`/location-records/`)"
-      ></MissingClientRecordsForm>
-    </v-col>
-  </v-row>
+  <div class="record-editor">
+    <MissingClientRecordsForm
+      @cancel="$router.push(`/location-records/`)"
+    ></MissingClientRecordsForm>
+  </div>
 </template>
 
 <script>

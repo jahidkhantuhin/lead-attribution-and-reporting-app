@@ -1082,3 +1082,156 @@ body:has(.v-application.theme--dark) .swal2-popup {
 .workspace-directory-table a:hover {
   text-decoration: underline;
 }
+
+.record-editor {
+  width: min(100%, 850px);
+  margin-inline: auto;
+  padding-block: 12px;
+}
+
+.workspace-record-stack {
+  padding-block: 12px;
+}
+
+.workspace-record-content {
+  display: grid;
+  min-width: 0;
+  gap: 12px;
+}
+
+.v-application.workspace-app .record-form-card > .v-card__text {
+  padding: 10px 16px;
+}
+
+.record-form-grid,
+.workspace-record-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 225px), 1fr));
+  gap: 8px 12px;
+}
+
+.record-form-grid > * {
+  min-width: 0;
+}
+
+.record-form-grid > .v-input--radio-group {
+  grid-column: 1 / -1;
+  margin-top: 0;
+}
+
+.v-application.workspace-app .record-form-card > .record-form-section {
+  padding: 7px 16px 0;
+  color: var(--workspace-ink);
+}
+
+.record-form-section h3 {
+  font-size: .9375rem;
+}
+
+.v-application.workspace-app .record-form-card > .v-card__actions {
+  gap: 6px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--workspace-border);
+  background: var(--workspace-subtle);
+}
+
+.workspace-record-facts {
+  padding: 12px;
+}
+
+.workspace-record-facts > div {
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--workspace-border);
+  border-radius: 8px;
+  background: var(--workspace-subtle);
+}
+
+.workspace-record-facts dt {
+  color: var(--workspace-muted);
+  font-size: .8125rem;
+}
+
+.workspace-record-facts dd {
+  margin: 3px 0 0;
+  color: var(--workspace-ink);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.workspace-detail-panels .v-expansion-panel-header {
+  min-height: 44px;
+  padding: 10px 14px;
+}
+
+.workspace-detail-panels .v-expansion-panel-header h2 {
+  font-size: 1rem;
+}
+
+.workspace-detail-panels .v-expansion-panel-content__wrap {
+  min-width: 0;
+  padding: 0 12px 12px;
+}
+
+.workspace-detail-panels .workspace-detail-table {
+  border: 1px solid var(--workspace-border);
+}
+
+.workspace-detail-chart {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+}
+
+.workspace-result-context > .workspace-badge {
+  margin-top: 5px;
+}
+
+.record-activity {
+  margin-bottom: 10px;
+}
+
+.record-activity-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.record-activity-heading h3 {
+  font-size: .9375rem;
+}
+
+.v-application .record-activity-heading p {
+  margin: 2px 0;
+  color: var(--workspace-muted);
+}
+
+.record-activity-changed {
+  background: var(--workspace-tint);
+  font-weight: 650;
+}
+
+.workspace-record-facts.website-facts {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 0 0 8px;
+}
+
+.workspace-record-facts.website-facts > div {
+  display: grid;
+  grid-template-columns: minmax(90px, 1fr) minmax(0, 1.7fr);
+  align-items: baseline;
+  gap: 4px 10px;
+}
+
+.workspace-record-facts.website-facts dd {
+  margin: 0;
+}
+
+@media (max-width: 800px) {
+  .workspace-record-facts.website-facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

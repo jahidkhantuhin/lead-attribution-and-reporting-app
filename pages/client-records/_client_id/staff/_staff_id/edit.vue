@@ -1,13 +1,11 @@
 <template>
-  <v-row class="my-6" justify="center">
-    <v-col cols="12" lg="4" md="6">
-      <staff-form
-        :id="editId"
-        @cancel="$router.push(`/client-records/${clientId}/staff/${editId}`)"
-        @onFetchClient="onFetchClient"
-      ></staff-form>
-    </v-col>
-  </v-row>
+  <div class="record-editor">
+    <staff-form
+      :id="editId"
+      @cancel="$router.push(`/client-records/${clientId}/staff/${editId}`)"
+      @onFetchClient="onFetchClient"
+    ></staff-form>
+  </div>
 </template>
 
 <script>
