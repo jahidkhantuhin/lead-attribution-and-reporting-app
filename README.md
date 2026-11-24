@@ -4,7 +4,7 @@ A lead attribution dashboard for marketing and account teams to see where leads 
 
 ## Showcase overview
 
-![Animated tour of the LeadLens dashboard, reports, record inspectors, and forms](docs/media/foundation-overview.gif)
+![Animated tour of the LeadLens dashboard, reports, record inspectors, and forms](docs/media/leadlens-overview.gif)
 
 The overview follows the dashboard, reports, and record workflows. [Browse the full-page screenshots for all 57 showcase routes](docs/media/screenshots), including seeded details, edit forms, account screens, and the error page. Some wide reports have additional column captures.
 
