@@ -1,5 +1,5 @@
 export default {
-  welcome: `Welcome to Foundation!`,
+  welcome: `Welcome to LeadLens!`,
   copied: 'Copied',
   warning: {
     sure: `Are you sure?`,
