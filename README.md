@@ -4,9 +4,9 @@ A lead attribution dashboard for marketing and account teams to see where leads 
 
 ## Showcase overview
 
-![Animated tour of the lead dashboard, record inspectors, and reports](docs/media/foundation-overview.gif)
+![Animated tour of the LeadLens dashboard, reports, record inspectors, and forms](docs/media/foundation-overview.gif)
 
-Start with the lead-source dashboard, then open a client record to see its locations and staff. [Browse all 57 full-page screenshots](docs/media/screenshots), including seeded detail and edit routes, account screens, and the error page.
+The overview follows the dashboard, reports, and record workflows. [Browse the full-page screenshots for all 57 showcase routes](docs/media/screenshots), including seeded details, edit forms, account screens, and the error page. Some wide reports have additional column captures.
 
 ## Key features
 
