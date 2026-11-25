@@ -111,16 +111,7 @@
             @change="handleSelectFile"
           />
           <div v-else class="profile-crop">
-            <vue-croppie
-              ref="croppieRef"
-              :enable-orientation="true"
-              :boundary="{ width: cropSize, height: cropSize }"
-              :viewport="{
-                width: cropSize - 48,
-                height: cropSize - 48,
-                type: 'circle',
-              }"
-            />
+            <ProfileImageCropper ref="croppieRef" :size="cropSize" />
           </div>
         </v-card-text>
         <v-card-actions>
@@ -164,12 +155,10 @@ import {
   watch,
 } from '@nuxtjs/composition-api'
 
-// @ts-ignore
-import * as VueCroppie from 'vue-croppie'
 import Compressor from 'compressorjs'
+import ProfileImageCropper from '~/components/ProfileImageCropper.vue'
 import { pageNames } from '~/shared/PageNames'
 import UserForm from '~/components/forms/UserForm.vue'
-import 'croppie/croppie.css'
 
 import { IBreadcrumbs } from '~/store'
 import useApi from '~/services/useApi'
@@ -190,7 +179,7 @@ interface ProfileUser {
 }
 
 export default defineComponent({
-  components: { UserForm, VueCroppie: VueCroppie.VueCroppieComponent },
+  components: { UserForm, ProfileImageCropper },
   middleware: 'isAuthenticated',
   props: { user: { type: Object, default: null } },
   setup(props, { root, parent }) {
