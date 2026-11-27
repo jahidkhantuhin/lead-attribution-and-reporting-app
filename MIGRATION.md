@@ -398,4 +398,60 @@ Removed the unused `vue-toastification/nuxt` ambient type entry from `tsconfig.j
 | Hook and CI command replay | Passed. Replayed the exact lint and Jest commands with aggregate exit handling. The hosted workflow was not run. |
 | Showcase static generation | Passed. All 57 paths match the discovery list. The `200.html` fallback is present. |
 
-Phase 1 awaits approval. The next checkpoint will cover characterization tests and a route-by-route smoke checklist.
+The green baseline was recorded before Phase 1 began.
+
+## Phase 1 — Safety net
+
+- `test/showcase-contract.spec.js` drives the real showcase adapter through Axios. It locks inclusive daily KPI dates and totals, monthly grouping and numeric values, lead location scoping, directory pagination and sorting, and the nested success and error response shapes.
+- `test/auth-contract.spec.js` exercises the actual route guard and Axios response handler with a mocked Nuxt context. It locks authentication gating, preservation of the report return URL, and the current handling for existing redirect parameters and the login route.
+- The four original payment duration tests remain. Auth tests isolate frontend behavior. Connected Sanctum cookies, token expiry, and Google code exchange require a compatible test backend and are still open for Phase 3.
+
+### Manual smoke checklist
+
+Use the local showcase setup in the README. After static generation, repeat direct navigation on a local static host that serves directory indexes and honors the client fallback. Run desktop and narrow viewport checks. On each route, verify the expected title, active navigation, loading and empty states where applicable, and absence of console errors. For form routes, check validation, cancel and a synthetic save before reloading to reset fixture edits.
+
+Each route pattern below covers all concrete examples listed under **Generated showcase paths**. Complete the entire list when checking cutover parity.
+
+| Route or pattern | Check |
+| --- | --- |
+| `/` | Verify dashboard dates, lead-source totals and chart, and report links. |
+| `/reports` | Verify all five report links. |
+| `/reports/client-overview` | Apply account-manager and date filters, compare periods, and open a location drill-down. |
+| `/reports/kpi` | Apply client, location, and date filters. Check daily and monthly views and export. |
+| `/reports/lead-details-report` | Check Leads, Lead Summary, and Summary by Source; switch source and try a direct filtered URL. |
+| `/reports/statistics` | Change the date window and check the trend chart and table. |
+| `/reports/payment-report` | Select a scorer and period. Compare call counts, duration, and payable values. |
+| `/data-mining` | Check the redirect to Lead Trends. |
+| `/client-records` | Test search, status filter, sorting, pagination, and first record link. |
+| `/client-records/add` | Validate and save a synthetic client. |
+| `/client-records/:client_id` | Confirm client name, locations, staff, and edit links. |
+| `/client-records/:client_id/edit` | Confirm prefilled client fields and save a fixture change. |
+| `/client-records/:client_id/locations/add` | Confirm the parent client and save a synthetic location. |
+| `/client-records/:client_id/locations/:location_id` | Confirm location identity, linked site and parent client. |
+| `/client-records/:client_id/locations/:location_id/edit` | Confirm prefilled location details and save a fixture change. |
+| `/client-records/:client_id/staff/add` | Validate and save a synthetic staff member against the parent client. |
+| `/client-records/:client_id/staff/:staff_id` | Confirm staff identity, parent links, and edit action. |
+| `/client-records/:client_id/staff/:staff_id/edit` | Confirm prefilled staff details and save a fixture change. |
+| `/all-locations` | Test filters and sorting and follow a location link. |
+| `/location-settings` | Check the unassigned-location queue and assignment controls. |
+| `/location-settings/add` | Assign a fixture location to a client and verify the result. |
+| `/site-records` | Test search, filters, and website links. |
+| `/site-records/:site_id` | Confirm site and hosting fields, linked client, and chart. |
+| `/users` | Test role/status filters and row navigation. |
+| `/users/add` | Check required fields, role selection and fixture account creation. |
+| `/users/:id/edit` | Confirm existing user and role fields and save a fixture change. |
+| `/profile` | Check demo user details and profile form. |
+| `/vpn-setup` | Check site picker, synthetic access entry and expiry. |
+| `/login` | Confirm sign-in, redirect handling and recovery affordance using demo credentials only. |
+| `/reset-password` | Verify validation and demo reset feedback. |
+| `/social-login` | Verify showcase callback behavior without contacting a real OAuth provider. |
+| `/search` | Confirm the existing placeholder and dashboard link. |
+| `/404` and an unknown path | Confirm the error view and return navigation. |
+
+For connected mode, use a separately authorized test backend to check sign-in, CSRF, redirect back to the original report, expired-session handling, logout, and the OAuth callback. Record observed request and response shapes with synthetic data only.
+
+### Phase 1 verification
+
+The Phase 0 frozen install was reused. The dependency manifests and lockfiles are unchanged. On Windows with Node 26.13.0, TypeScript, both linters, and all 14 Jest cases passed. The exact lint and test commands used by the hook and CI passed when replayed with the same aggregate exit handling. Static generation produced all 57 expected routes and the client fallback. The checklist is available for manual comparison during the port. Connected authentication and the hosted GitHub Actions run were outside this verification.
+
+Phase 2 will scaffold the Nuxt 4 app in `app-next/`. The legacy app will remain runnable for comparison, and the checkpoint will identify what is needed for automation to check both roots.
