@@ -1,0 +1,3 @@
+Lead Attribution and Reporting App
+
+This is a synthetic showcase export placeholder. Open a report in the application to see its sample data.

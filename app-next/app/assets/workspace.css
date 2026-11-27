@@ -299,3 +299,112 @@
     padding-inline: 8px;
   }
 }
+
+.workspace-report-stack {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  min-width: 0;
+}
+
+.workspace-report-stack > .v-card {
+  min-width: 0;
+}
+
+.report-filter-card,
+.report-result-heading {
+  padding: clamp(12px, 1.5vw, 16px);
+}
+
+.report-result-heading,
+.report-result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.report-result-heading {
+  justify-content: space-between;
+}
+
+.report-result-heading h2,
+.report-filter-card h2 {
+  font-size: 1.25rem;
+}
+
+.report-result-heading p {
+  color: var(--workspace-muted);
+}
+
+.payment-filters,
+.kpi-filters {
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) minmax(0, 2fr) auto;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.kpi-filters {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+}
+
+.payment-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  gap: 10px;
+  padding: 0 16px 16px;
+}
+
+.payment-metrics div {
+  padding: 10px 12px;
+  border: 1px solid var(--workspace-border);
+  border-radius: 12px;
+  background: var(--workspace-subtle);
+}
+
+.payment-metrics div:first-child {
+  background: var(--workspace-tint);
+}
+
+.payment-metrics dt {
+  color: var(--workspace-muted);
+  font-size: 0.875rem;
+}
+
+.payment-metrics dd {
+  margin-top: 4px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.report-table-panel {
+  min-width: 0;
+  padding: 0 16px 16px;
+}
+
+.report-table-panel h3 {
+  margin-bottom: 12px;
+  font-size: 1rem;
+}
+
+.report-table-panel .v-table {
+  max-width: 100%;
+  border: 1px solid var(--workspace-border);
+  border-radius: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.payment-table tbody tr:last-child td {
+  background: var(--workspace-tint);
+  color: var(--workspace-ink);
+  font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  .payment-filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

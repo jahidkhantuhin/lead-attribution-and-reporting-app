@@ -17,7 +17,20 @@ export default defineNuxtConfig({
   ssr: false,
   css: ['~/assets/workspace.css'],
   vite: { plugins: [vuetify({ autoImport: true })] },
-  nitro: { prerender: { routes: ['/', '/reports', '/search', '/404'] } },
+  nitro: {
+    prerender: {
+      routes: [
+        '/',
+        '/reports',
+        '/reports/payment-report',
+        '/reports/kpi',
+        '/reports/statistics',
+        '/data-mining',
+        '/search',
+        '/404',
+      ],
+    },
+  },
   modules: ['@nuxt/eslint', '@pinia/nuxt'],
   app: {
     head: {
