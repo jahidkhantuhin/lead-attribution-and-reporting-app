@@ -1,4 +1,5 @@
 import type { AxiosInstance } from 'axios'
+import type { SiteDay, SiteRecord } from './site-records'
 import type {
   Envelope,
   Fields,
@@ -53,8 +54,10 @@ export function createServices(api: AxiosInstance) {
       remove: (id: RecordId) => remove(`/staff/${id}`),
     },
     sites: {
-      list: (filters?: Fields) => list<RecordSummary>('/sites', filters),
-      byId: (id: RecordId) => get<RecordSummary>(`/sites/${id}`),
+      list: (filters?: Fields) => list<SiteRecord>('/sites', filters),
+      byId: (id: RecordId) => get<SiteRecord>(`/sites/${id}`),
+      graph: (id: RecordId, filters: Fields) =>
+        get<SiteDay[]>('/sites/' + id + '/graph', filters),
       plugins: () => get<RecordSummary[]>('/plugins'),
       themes: () => get<RecordSummary[]>('/themes'),
     },

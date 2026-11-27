@@ -538,3 +538,11 @@ Phase 4 stays open for attribution workbook and source-detail parity, the direct
 - Both apps passed lint, strict typecheck, and static generation. The legacy gate replay passed all 14 Jest tests. The Nuxt 4 Prettier check passed.
 
 The directory and administration routes are the next Phase 4 group. Their filters, inspectors, nested forms, and spreadsheet exports still need to be ported and compared locally. Authentication UI and the connected OAuth/session checks also remain open.
+
+### Website Directory and nested website records
+
+- Ported the Website Directory filters, inspector, table, pagination, share URL, and spreadsheet export. The nested records include hosting details, themes, plugins, and historical speed scores. The date filter uses the shared compact date control. The list preserves the legacy request mapping, which omits the URL sort column from the API request.
+- Chromium verified filtering, switching between inspector and table, navigation to the nested record, all four direct showcase URLs, graph rendering, and no horizontal page overflow on the details view at 390 px. The actual spreadsheet upload payload matched the legacy app for the same Harbor filter and date range.
+- Both apps passed lint, strict type checking, and static generation. Nuxt 4 formatting and all 14 legacy Jest tests passed. Connected API behavior and full visual parity remain open.
+
+Phase 4 remains open for client records and nested forms, location and user administration, VPN, profile, authentication UI, and the final parity pass.

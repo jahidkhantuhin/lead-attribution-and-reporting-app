@@ -37,6 +37,10 @@ export default defineNuxtConfig({
         '/reports/statistics',
         '/data-mining',
         '/search',
+        '/site-records',
+        ...(showcaseMode
+          ? [1, 2, 3, 4].map((id) => '/site-records/' + id)
+          : []),
         '/404',
       ],
     },
