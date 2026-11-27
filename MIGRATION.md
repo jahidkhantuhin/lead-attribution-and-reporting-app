@@ -51,7 +51,7 @@ Vuetify declares Vue 3.5 compatibility. The Nuxt-specific Vuetify module's lates
 | Hook installed via local `core.hooksPath=.githooks`. No prepare script or other tracked hooks. Hook is tracked as mode 100644 | Preserve the plain hook, make it executable and document a safe install path in the automation phase. No pre-commit or commit-msg commands exist to replay. |
 | `.eslintrc.js`, `stylelint.config.js`, `.prettierrc`, `.editorconfig` and build-integrated Stylelint | Carry forward JS/Vue, formatting, and CSS rules and file coverage. Existing JS lint targets JS/Vue. Add TS lint coverage without reducing existing coverage. |
 | `jest.config.js`, `.babelrc`, `test/secondsToHHMMSS.spec.js` | Preserve all four cases. Jest defaults to Vue component/page coverage collection, while CI and hook explicitly disable coverage for their test run. There is no threshold. Preserve an equivalent coverage mode and keep the faster gate. |
-| `tsconfig.json` enables strict and noEmit. No standalone typecheck script | Fix discovery diagnostic separately before treating it as a green baseline. Add Nuxt/Vue-aware strict typecheck without reducing strictness. |
+| `tsconfig.json` enables strict and noEmit. No standalone typecheck script | Replay the installed compiler directly for the baseline. Add Nuxt/Vue-aware strict typecheck without reducing strictness. |
 
 No Husky, lint-staged, commitlint, Lefthook, simple-git-hooks, Dependabot, Renovate, PR template, CODEOWNERS, Docker, Compose, nginx, Netlify, Vercel, Firebase, or other host-specific deployment files were found among tracked paths. Current deployment contract is static `dist/` and an external API. The production host and GitHub rules are outside the repository.
 
@@ -321,7 +321,7 @@ Each entry names the legacy file to review. Checked items will be recorded in th
 | Standalone typecheck | Installed TypeScript 4.2.3, invoked with `tsc --noEmit`, exited 2 with TS2688. `tsconfig.json` lists `vue-toastification/nuxt` as an ambient type library, but the frozen install does not provide it. No other type failures can be ruled out until this is resolved and the compiler reruns. |
 | Static build | `SHOWCASE_MODE=true NODE_OPTIONS=--openssl-legacy-provider ./node_modules/.bin/nuxt-ts generate` passed. Nuxt compiled the client, emitted the demo into `dist/`, and created the client fallback. Existing warnings covered Browserslist freshness, CSS alignment compatibility, and asset size. |
 
-**Open gate blocker.** Phase 0 permits only this document to change. Resolve the stale type-library reference and any subsequent compiler diagnostics in a separately approved baseline repair with strictness preserved, then rerun the full gate before migration implementation. GitHub configuration and external API behavior were outside the local baseline.
+**Discovery blocker.** The initial documentation-only checkpoint recorded the stale type-library reference for a separately approved baseline repair. GitHub configuration and external API behavior were outside the local baseline.
 
 ### Generated showcase paths
 
@@ -384,3 +384,18 @@ Each entry names the legacy file to review. Checked items will be recorded in th
 - `/users/4/edit`
 - `/users/add`
 - `/vpn-setup`
+
+### Approved baseline repair
+
+Removed the unused `vue-toastification/nuxt` ambient type entry from `tsconfig.json`. No dependency or source file imports that type library. The strictness settings are preserved.
+
+| Gate | Result on Windows, Node 26.13.0 |
+| --- | --- |
+| `npm ci --legacy-peer-deps --ignore-scripts` | Passed. npm reported the same 237 dependency audit findings. |
+| `tsc --noEmit` | Passed with locked TypeScript 4.2.3. |
+| `npm run lint:js` and `npm run lint:style` | Both passed. |
+| `npm test -- --runInBand --coverage=false` | All four Jest tests passed. |
+| Hook and CI command replay | Passed. Replayed the exact lint and Jest commands with aggregate exit handling. The hosted workflow was not run. |
+| Showcase static generation | Passed. All 57 paths match the discovery list. The `200.html` fallback is present. |
+
+Phase 1 awaits approval. The next checkpoint will cover characterization tests and a route-by-route smoke checklist.

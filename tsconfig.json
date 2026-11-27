@@ -31,7 +31,6 @@
       "nuxt-i18n", 
       "@nuxtjs/auth-next",
       // "@nuxtjs/auth",
-      "vue-toastification/nuxt",
       // "vue-social-auth/nuxt"
     ]
   },
