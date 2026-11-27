@@ -51,7 +51,9 @@ function apply(preset: string) {
       ? 'this_week'
       : preset === 'Last week'
         ? 'last_week'
-        : 'last_month'
+        : preset === 'This month'
+          ? 'this_month'
+          : 'last_month'
   const range = getReportRange(period, now)
   dates.value = [range.date_start, range.date_end]
 }

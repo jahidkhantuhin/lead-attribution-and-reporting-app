@@ -15,7 +15,7 @@ const showcaseMode = env.SHOWCASE_MODE !== 'false'
 
 export default defineNuxtConfig({
   ssr: false,
-  css: ['~/assets/workspace.css'],
+  css: ['~/assets/workspace.css', '~/assets/lead-report.css'],
   vite: { plugins: [vuetify({ autoImport: true })] },
   nitro: {
     prerender: {
@@ -23,6 +23,8 @@ export default defineNuxtConfig({
         '/',
         '/reports',
         '/reports/payment-report',
+        '/reports/client-overview',
+        '/reports/lead-details-report',
         '/reports/kpi',
         '/reports/statistics',
         '/data-mining',

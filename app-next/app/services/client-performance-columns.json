@@ -1,0 +1,1744 @@
+{
+  "standard": [
+    {
+      "text": "Client",
+      "value": "location.name",
+      "width": "200px",
+      "sortable": true,
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Account manager",
+      "value": "location.account_manager",
+      "width": "100px",
+      "sortable": true,
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Links",
+      "value": "actions",
+      "displayInExcel": false,
+      "sortable": false,
+      "styles": {}
+    },
+    {
+      "text": "Total Leads",
+      "value": "total_leads",
+      "width": "50px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Total Trends",
+      "value": "total_trends",
+      "width": "50px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Calls",
+      "value": "total_calls",
+      "width": "20px",
+      "styles": {
+        "color": "",
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Forms",
+      "value": "total_forms",
+      "width": "20px",
+      "styles": {
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Chats",
+      "value": "total_chats",
+      "width": "20px",
+      "styles": {
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Aggregate Spend",
+      "value": "total_aggregate_cost",
+      "width": "50px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Total Budget",
+      "value": "total_budget",
+      "width": "50px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Predicted Spend",
+      "value": "predicted_spend",
+      "width": "50px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "% of Budget Spent",
+      "value": "percentageOf_budget_spent",
+      "width": "50px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "CPL",
+      "value": "total_cpl",
+      "width": "20px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Adwords Leads",
+      "value": "total_adwords_leads",
+      "width": "50px",
+      "styles": {
+        "width": "13px"
+      }
+    },
+    {
+      "text": "Adwords Spend",
+      "value": "total_adwords_cost",
+      "width": "50px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Adwords Budget",
+      "value": "location.adwords_budget",
+      "width": "50px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Days live- adwords",
+      "value": "adwords_days_live",
+      "width": "70px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Adwords CPL",
+      "value": "adword_cpl",
+      "width": "50px",
+      "styles": {
+        "width": "13px"
+      }
+    },
+    {
+      "text": "Facebook Leads",
+      "value": "total_facebook_leads",
+      "width": "50px",
+      "styles": {
+        "width": "13px"
+      }
+    },
+    {
+      "text": "Facebook Spend",
+      "value": "total_facebook_cost",
+      "width": "50px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Facebook Budget",
+      "value": "location.facebook_budget",
+      "width": "50px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Days live- facebook",
+      "value": "fb_days_live",
+      "width": "70px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Facebook CPL",
+      "value": "facebook_cpl",
+      "width": "50px",
+      "styles": {
+        "width": "13px"
+      }
+    },
+    {
+      "text": "G",
+      "value": "total_booked",
+      "width": "20px",
+      "styles": {
+        "color": "#4CAF50",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "R",
+      "value": "total_not_booked",
+      "width": "20px",
+      "styles": {
+        "color": "#F44336",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "O",
+      "value": "total_voice_mail_booking",
+      "width": "20px",
+      "styles": {
+        "color": "#FFA500",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Y",
+      "value": "total_missed",
+      "width": "20px",
+      "styles": {
+        "color": "#e0de1b",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "B",
+      "value": "total_irrelevant",
+      "width": "20px",
+      "styles": {
+        "color": "#2196F3",
+        "width": "5px"
+      }
+    }
+  ],
+  "comparison": [
+    {
+      "text": "Client",
+      "value": "client",
+      "width": "200px",
+      "sortable": true,
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Account manager",
+      "value": "account_manager",
+      "width": "150px",
+      "sortable": true,
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Links",
+      "value": "actions",
+      "displayInExcel": false,
+      "sortable": false,
+      "styles": {}
+    },
+    {
+      "text": "Ref. Total Leads",
+      "value": "ref_month_total_leads",
+      "width": "130px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Comp. Total Leads",
+      "value": "comp_month_total_leads",
+      "width": "130px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_leads",
+      "width": "130px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_leads",
+      "width": "130px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Ref. Calls",
+      "value": "ref_month_total_calls",
+      "width": "100px",
+      "styles": {
+        "color": "",
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Comp. Calls",
+      "value": "comp_month_total_calls",
+      "width": "100px",
+      "styles": {
+        "color": "",
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_calls",
+      "width": "100px",
+      "styles": {
+        "color": "",
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_calls",
+      "width": "100px",
+      "styles": {
+        "color": "",
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Ref. Forms",
+      "value": "ref_month_total_forms",
+      "width": "100px",
+      "styles": {
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Comp. Forms",
+      "value": "comp_month_total_forms",
+      "width": "100px",
+      "styles": {
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_forms",
+      "width": "100px",
+      "styles": {
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_forms",
+      "width": "100px",
+      "styles": {
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Ref. Chats",
+      "value": "ref_month_total_chats",
+      "width": "100px",
+      "styles": {
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Comp. Chats",
+      "value": "comp_month_total_chats",
+      "width": "100px",
+      "styles": {
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_chats",
+      "width": "100px",
+      "styles": {
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_chats",
+      "width": "100px",
+      "styles": {
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Ref. Aggregate Spend",
+      "value": "ref_month_total_aggregate_cost",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Comp. Aggregate Spend",
+      "value": "comp_month_total_aggregate_cost",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_aggregate_cost",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_aggregate_cost",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Ref. Total Budget",
+      "value": "ref_month_total_budget",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Comp. Total Budget",
+      "value": "comp_month_total_budget",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_budget",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_budget",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Ref. % of Budget Spent",
+      "value": "ref_month_percentageOf_budget_spent",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Comp. % of Budget Spent",
+      "value": "comp_month_percentageOf_budget_spent",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_percentageOf_budget_spent",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Ref. CPL",
+      "value": "ref_month_total_cpl",
+      "width": "80px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Comp. CPL",
+      "value": "comp_month_total_cpl",
+      "width": "80px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_cpl",
+      "width": "80px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_cpl",
+      "width": "80px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Ref. Adwords Leads",
+      "value": "ref_month_total_adwords_leads",
+      "width": "150px",
+      "styles": {
+        "width": "13px"
+      }
+    },
+    {
+      "text": "Comp. Adwords Leads",
+      "value": "comp_month_total_adwords_leads",
+      "width": "150px",
+      "styles": {
+        "width": "13px"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_adwords_leads",
+      "width": "150px",
+      "styles": {
+        "width": "13px"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_adwords_leads",
+      "width": "150px",
+      "styles": {
+        "width": "13px"
+      }
+    },
+    {
+      "text": "Ref. Adwords Spend",
+      "value": "ref_month_total_adwords_cost",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Comp. Adwords Spend",
+      "value": "comp_month_total_adwords_cost",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_adwords_cost",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_adwords_cost",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Ref. Adwords Budget",
+      "value": "ref_month_adwords_budget",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Comp. Adwords Budget",
+      "value": "comp_month_adwords_budget",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_adwords_budget",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_adwords_budget",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Ref. days live- adwords",
+      "value": "ref_month_adwords_days_live",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Comp. days live- adwords",
+      "value": "comp_month_adwords_days_live",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_adwords_days_live",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_adwords_days_live",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Ref. Adwords CPL",
+      "value": "ref_month_adword_cpl",
+      "width": "150px",
+      "styles": {
+        "width": "13px"
+      }
+    },
+    {
+      "text": "Comp. Adwords CPL",
+      "value": "comp_month_adword_cpl",
+      "width": "150px",
+      "styles": {
+        "width": "13px"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_adword_cpl",
+      "width": "150px",
+      "styles": {
+        "width": "13px"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_adword_cpl",
+      "width": "150px",
+      "styles": {
+        "width": "13px"
+      }
+    },
+    {
+      "text": "Ref. Facebook Leads",
+      "value": "ref_month_total_facebook_leads",
+      "width": "150px",
+      "styles": {
+        "width": "13px"
+      }
+    },
+    {
+      "text": "Comp. Facebook Leads",
+      "value": "comp_month_total_facebook_leads",
+      "width": "150px",
+      "styles": {
+        "width": "13px"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_facebook_leads",
+      "width": "150px",
+      "styles": {
+        "width": "13px"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_facebook_leads",
+      "width": "150px",
+      "styles": {
+        "width": "13px"
+      }
+    },
+    {
+      "text": "Ref. Facebook Spend",
+      "value": "ref_month_total_facebook_cost",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Comp. Facebook Spend",
+      "value": "comp_month_total_facebook_cost",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_facebook_cost",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_facebook_cost",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Ref. Facebook Budget",
+      "value": "ref_month_facebook_budget",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Comp. Facebook Budget",
+      "value": "comp_month_facebook_budget",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_facebook_budget",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_facebook_budget",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Ref. days live- facebook",
+      "value": "ref_month_facebook_days_live",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Comp. days live- facebook",
+      "value": "comp_month_facebook_days_live",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_facebook_days_live",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_facebook_days_live",
+      "width": "150px",
+      "styles": {
+        "width": "13px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Ref. Facebook CPL",
+      "value": "ref_month_facebook_cpl",
+      "width": "150px",
+      "styles": {
+        "width": "13px"
+      }
+    },
+    {
+      "text": "Comp. Facebook CPL",
+      "value": "comp_month_facebook_cpl",
+      "width": "150px",
+      "styles": {
+        "width": "13px"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_facebook_cpl",
+      "width": "150px",
+      "styles": {
+        "width": "13px"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_facebook_cpl",
+      "width": "150px",
+      "styles": {
+        "width": "13px"
+      }
+    },
+    {
+      "text": "Ref. G",
+      "value": "ref_month_total_booked",
+      "width": "70px",
+      "styles": {
+        "color": "#4CAF50",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Comp. G",
+      "value": "comp_month_total_booked",
+      "width": "70px",
+      "styles": {
+        "color": "#4CAF50",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_booked",
+      "width": "70px",
+      "styles": {
+        "color": "#4CAF50",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_booked",
+      "width": "70px",
+      "styles": {
+        "color": "#4CAF50",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Ref. R",
+      "value": "ref_month_total_not_booked",
+      "width": "70px",
+      "styles": {
+        "color": "#F44336",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Comp. R",
+      "value": "comp_month_total_not_booked",
+      "width": "70px",
+      "styles": {
+        "color": "#F44336",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_not_booked",
+      "width": "70px",
+      "styles": {
+        "color": "#F44336",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_not_booked",
+      "width": "70px",
+      "styles": {
+        "color": "#F44336",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Ref. O",
+      "value": "ref_month_total_voice_mail_booking",
+      "width": "70px",
+      "styles": {
+        "color": "#FFA500",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Comp. O",
+      "value": "comp_month_total_voice_mail_booking",
+      "width": "70px",
+      "styles": {
+        "color": "#FFA500",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_voice_mail_booking",
+      "width": "70px",
+      "styles": {
+        "color": "#FFA500",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_voice_mail_booking",
+      "width": "70px",
+      "styles": {
+        "color": "#FFA500",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Ref. Y",
+      "value": "ref_month_total_missed",
+      "width": "70px",
+      "styles": {
+        "color": "#e0de1b",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Comp. Y",
+      "value": "comp_month_total_missed",
+      "width": "70px",
+      "styles": {
+        "color": "#e0de1b",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_missed",
+      "width": "70px",
+      "styles": {
+        "color": "#e0de1b",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_missed",
+      "width": "70px",
+      "styles": {
+        "color": "#e0de1b",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Ref. B",
+      "value": "ref_month_total_irrelevant",
+      "width": "70px",
+      "styles": {
+        "color": "#2196F3",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Comp. B",
+      "value": "comp_month_total_irrelevant",
+      "width": "70px",
+      "styles": {
+        "color": "#2196F3",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_irrelevant",
+      "width": "70px",
+      "styles": {
+        "color": "#2196F3",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_irrelevant",
+      "width": "70px",
+      "styles": {
+        "color": "#2196F3",
+        "width": "5px"
+      }
+    }
+  ],
+  "organic": [
+    {
+      "text": "Client",
+      "value": "location.name",
+      "width": "200px",
+      "sortable": true,
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Account manager",
+      "value": "location.account_manager",
+      "width": "100px",
+      "sortable": true,
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Links",
+      "value": "actions",
+      "displayInExcel": false,
+      "sortable": false,
+      "styles": {}
+    },
+    {
+      "text": "Total Leads",
+      "value": "total_leads",
+      "width": "130px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Calls",
+      "value": "total_calls",
+      "width": "100px",
+      "styles": {
+        "color": "",
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Forms",
+      "value": "total_forms",
+      "width": "100px",
+      "styles": {
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Chats",
+      "value": "total_chats",
+      "width": "100px",
+      "styles": {
+        "width": "8px"
+      }
+    },
+    {
+      "text": "CPL",
+      "value": "total_cpl",
+      "width": "80px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Monthly Fee",
+      "value": "location.monthly_fee",
+      "width": "80px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "G",
+      "value": "total_booked",
+      "width": "70px",
+      "styles": {
+        "color": "#4CAF50",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "R",
+      "value": "total_not_booked",
+      "width": "70px",
+      "styles": {
+        "color": "#F44336",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "O",
+      "value": "total_voice_mail_booking",
+      "width": "70px",
+      "styles": {
+        "color": "#FFA500",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Y",
+      "value": "total_missed",
+      "width": "70px",
+      "styles": {
+        "color": "#e0de1b",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "B",
+      "value": "total_irrelevant",
+      "width": "70px",
+      "styles": {
+        "color": "#2196F3",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "",
+      "value": "location.",
+      "width": "80px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "",
+      "value": "",
+      "width": "70px",
+      "styles": {
+        "color": "#4CAF50",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "",
+      "value": "",
+      "width": "70px",
+      "styles": {
+        "color": "#F44336",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "",
+      "value": "",
+      "width": "70px",
+      "styles": {
+        "color": "#FFA500",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "",
+      "value": "",
+      "width": "70px",
+      "styles": {
+        "color": "#e0de1b",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "",
+      "value": "",
+      "width": "70px",
+      "styles": {
+        "color": "#2196F3",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "",
+      "value": "",
+      "width": "70px",
+      "styles": {
+        "color": "#2196F3",
+        "width": "5px"
+      }
+    }
+  ],
+  "organicComparison": [
+    {
+      "text": "Client",
+      "value": "client",
+      "width": "200px",
+      "sortable": true,
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Account manager",
+      "value": "account_manager",
+      "width": "150px",
+      "sortable": true,
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Links",
+      "value": "actions",
+      "displayInExcel": false,
+      "sortable": false,
+      "styles": {}
+    },
+    {
+      "text": "Ref. Total Leads",
+      "value": "ref_month_total_leads",
+      "width": "130px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Comp. Total Leads",
+      "value": "comp_month_total_leads",
+      "width": "130px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_leads",
+      "width": "130px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_leads",
+      "width": "130px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Ref. Calls",
+      "value": "ref_month_total_calls",
+      "width": "100px",
+      "styles": {
+        "color": "",
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Comp. Calls",
+      "value": "comp_month_total_calls",
+      "width": "100px",
+      "styles": {
+        "color": "",
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_calls",
+      "width": "100px",
+      "styles": {
+        "color": "",
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_calls",
+      "width": "100px",
+      "styles": {
+        "color": "",
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Ref. Forms",
+      "value": "ref_month_total_forms",
+      "width": "100px",
+      "styles": {
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Comp. Forms",
+      "value": "comp_month_total_forms",
+      "width": "100px",
+      "styles": {
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_forms",
+      "width": "100px",
+      "styles": {
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_forms",
+      "width": "100px",
+      "styles": {
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Ref. Chats",
+      "value": "ref_month_total_chats",
+      "width": "100px",
+      "styles": {
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Comp. Chats",
+      "value": "comp_month_total_chats",
+      "width": "100px",
+      "styles": {
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_chats",
+      "width": "100px",
+      "styles": {
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_chats",
+      "width": "100px",
+      "styles": {
+        "width": "8px"
+      }
+    },
+    {
+      "text": "Ref. CPL",
+      "value": "ref_month_total_cpl",
+      "width": "80px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Comp. CPL",
+      "value": "comp_month_total_cpl",
+      "width": "80px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_cpl",
+      "width": "80px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_cpl",
+      "width": "80px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Ref. Monthly Fee",
+      "value": "ref_month_monthly_fee",
+      "width": "80px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Comp. Monthly Fee",
+      "value": "comp_month_monthly_fee",
+      "width": "80px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_monthly_fee",
+      "width": "80px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_monthly_fee",
+      "width": "80px",
+      "styles": {
+        "width": "12px",
+        "textAlign": "left",
+        "align": "left"
+      }
+    },
+    {
+      "text": "Ref. G",
+      "value": "ref_month_total_booked",
+      "width": "70px",
+      "styles": {
+        "color": "#4CAF50",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Comp. G",
+      "value": "comp_month_total_booked",
+      "width": "70px",
+      "styles": {
+        "color": "#4CAF50",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_booked",
+      "width": "70px",
+      "styles": {
+        "color": "#4CAF50",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_booked",
+      "width": "70px",
+      "styles": {
+        "color": "#4CAF50",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Ref. R",
+      "value": "ref_month_total_not_booked",
+      "width": "70px",
+      "styles": {
+        "color": "#F44336",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Comp. R",
+      "value": "comp_month_total_not_booked",
+      "width": "70px",
+      "styles": {
+        "color": "#F44336",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_not_booked",
+      "width": "70px",
+      "styles": {
+        "color": "#F44336",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_not_booked",
+      "width": "70px",
+      "styles": {
+        "color": "#F44336",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Ref. O",
+      "value": "ref_month_total_voice_mail_booking",
+      "width": "70px",
+      "styles": {
+        "color": "#FFA500",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Comp. O",
+      "value": "comp_month_total_voice_mail_booking",
+      "width": "70px",
+      "styles": {
+        "color": "#FFA500",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_voice_mail_booking",
+      "width": "70px",
+      "styles": {
+        "color": "#FFA500",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_voice_mail_booking",
+      "width": "70px",
+      "styles": {
+        "color": "#FFA500",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Ref. Y",
+      "value": "ref_month_total_missed",
+      "width": "70px",
+      "styles": {
+        "color": "#e0de1b",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Comp. Y",
+      "value": "comp_month_total_missed",
+      "width": "70px",
+      "styles": {
+        "color": "#e0de1b",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_missed",
+      "width": "70px",
+      "styles": {
+        "color": "#e0de1b",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_missed",
+      "width": "70px",
+      "styles": {
+        "color": "#e0de1b",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Ref. B",
+      "value": "ref_month_total_irrelevant",
+      "width": "70px",
+      "styles": {
+        "color": "#2196F3",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Comp. B",
+      "value": "comp_month_total_irrelevant",
+      "width": "70px",
+      "styles": {
+        "color": "#2196F3",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Change",
+      "value": "diff_of_total_irrelevant",
+      "width": "70px",
+      "styles": {
+        "color": "#2196F3",
+        "width": "5px"
+      }
+    },
+    {
+      "text": "Change (%)",
+      "value": "percentage_diff_of_total_irrelevant",
+      "width": "70px",
+      "styles": {
+        "color": "#2196F3",
+        "width": "5px"
+      }
+    }
+  ]
+}
