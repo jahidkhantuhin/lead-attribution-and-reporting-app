@@ -1,3 +1,5 @@
+import vuetify from 'vite-plugin-vuetify'
+
 const env = process.env
 
 const legacyApiUrls = {
@@ -13,10 +15,14 @@ const showcaseMode = env.SHOWCASE_MODE !== 'false'
 
 export default defineNuxtConfig({
   ssr: false,
+  css: ['~/assets/workspace.css'],
+  vite: { plugins: [vuetify({ autoImport: true })] },
+  nitro: { prerender: { routes: ['/', '/reports', '/search', '/404'] } },
   modules: ['@nuxt/eslint', '@pinia/nuxt'],
   app: {
     head: {
-      title: 'LeadLens',
+      titleTemplate: '%s - LeadLens',
+      link: [{ rel: 'icon', href: '/favicon.png' }],
       htmlAttrs: { lang: 'en' },
     },
   },

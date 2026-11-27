@@ -502,3 +502,16 @@ Phase 3 will port the Axios client and showcase adapter, authentication boundary
 References are [Axios adapters](https://axios.rest/pages/advanced/adapters), [Pinia for Nuxt](https://pinia.vuejs.org/ssr/nuxt.html), and [Laravel Sanctum](https://laravel.com/docs/12.x/sanctum).
 
 Phase 4 will port the shell and route groups against the checked-in smoke checklist, starting with the dashboard and reports.
+
+## Phase 4 — UI port in progress
+
+### Shell and dashboard route group
+
+- Added the Vuetify 4 plugin and theme, local MDI and favicon assets, Nuxt layout, navigation drawer, breadcrumbs, app bar, and reusable report cards and chart wrapper. The theme control uses the legacy `PUT /meta/dark_mode` request and boolean `meta_value` payload.
+- Ported the dashboard lead totals, chart and four reporting periods. The Reporting Hub keeps the legacy report and directory cards. Search keeps its legacy placeholder. Added the direct `/404` page and Nuxt error view.
+- The nested manifest and lockfile now include Vuetify 4.3.5, Vite plugin 2.1.3, ApexCharts 8.9.2 and Vue ApexCharts 1.11.3. Confirm the applicable ApexCharts commercial or redistribution terms before commercial deployment.
+- Legacy lint, TypeScript, all 14 Jest tests, and static generation passed. The existing hook and CI lint/test commands were replayed locally. The Nuxt 4 lint, formatting, TypeScript and static generation passed. The new output includes `/`, `/reports`, `/search`, and `/404`, plus the static fallback files.
+- Chromium comparison matched the legacy dashboard metrics for Last month and the Reporting Hub card titles. The check also covered chart rendering, the desktop drawer width, the mobile drawer and viewport width, and direct Search and 404 navigation. It does not establish visual parity for every layout or browser.
+- Open gaps include report detail destinations, directory and administration routes, authentication pages, and shell behavior that needs those pages. Links to unported routes remain visible for navigation parity and currently lead to an error in the nested app. The legacy app continues to serve them. Hosted CI still runs only the legacy checks. The new build reports asset-size and dependency warnings.
+
+Next route group covers the report details, starting with Scorer Payments and Location KPIs. Preserve exports, report permissions, direct filtered links and each report's legacy response contract before proceeding to the directory and authentication groups.
