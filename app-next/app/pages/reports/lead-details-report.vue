@@ -6,6 +6,13 @@ import {
   type DetailKey,
   type LeadReport,
 } from '~/services/lead-attribution'
+import {
+  leadColumns,
+  recordingLink,
+  tableLeadRecord,
+  workbookCell,
+} from '~/services/lead-attribution-table'
+import { buildLeadWorkbook } from '~/services/lead-workbook'
 import { dayRange, demoDays, filterId } from '~/services/report-filters'
 import { formatReportRange } from '~/services/report-period'
 import type { Envelope, RecordSummary } from '~/types/api'
@@ -26,7 +33,14 @@ const router = useRouter()
 const session = useSessionStore()
 const { public: config } = useRuntimeConfig()
 const { $api, $services } = useNuxtApp()
-const { notice, copy } = useReportExport()
+const {
+  open,
+  loading: exporting,
+  url,
+  notice,
+  exportReport,
+  copy,
+} = useReportExport()
 const clients = ref<RecordSummary[]>([])
 const locations = ref<RecordSummary[]>([])
 const clientId = ref<number | null>(null)
@@ -69,18 +83,16 @@ const range = computed(() =>
 const dateText = (value?: string) =>
   value ? new Date(value).toLocaleString('en-US') : '—'
 const views: Array<{ title: string; value: DetailKey | 'all' }> = [
-  { title: 'All', value: 'all' },
-  { title: 'All calls', value: 'calls' },
-  { title: 'Google Ads calls', value: 'adwords_calls' },
-  { title: 'Facebook calls', value: 'facebook_calls' },
-  { title: 'Organic calls', value: 'seo_calls' },
-  { title: 'All chats', value: 'chats' },
-  { title: 'Google Ads chats', value: 'adwords_chats' },
-  { title: 'Facebook chats', value: 'facebook_chats' },
-  { title: 'Organic chats', value: 'seo_chats' },
-  { title: 'Web forms', value: 'emails' },
-  { title: 'Facebook forms', value: 'facebook_leads' },
-  { title: 'Organic forms', value: 'seo_emails' },
+  { title: 'All leads', value: 'all' },
+  { title: 'Calls · Google Ads', value: 'adwords_calls' },
+  { title: 'Calls · Facebook', value: 'facebook_calls' },
+  { title: 'Calls · SEO', value: 'seo_calls' },
+  { title: 'Chats · Google Ads', value: 'adwords_chats' },
+  { title: 'Chats · Facebook', value: 'facebook_chats' },
+  { title: 'Chats · SEO', value: 'seo_chats' },
+  { title: 'Forms · Google Ads', value: 'emails' },
+  { title: 'Forms · Facebook', value: 'facebook_leads' },
+  { title: 'Forms · SEO', value: 'seo_emails' },
 ]
 const headers = [
   { title: 'Type', key: 'kind' },
@@ -95,6 +107,32 @@ const headers = [
 ]
 const stampSlot = 'item.timestamp'
 const actionsSlot = 'item.actions'
+const sourceColumns = computed(() => leadColumns(view.value))
+const sourceHeaders = computed(() => [
+  ...sourceColumns.value.map(({ text, width, sortable }, index) => ({
+    title: text,
+    key: 'column_' + index,
+    minWidth: width,
+    sortable,
+  })),
+  { title: 'Details', key: 'actions', sortable: false },
+])
+const sourceRows = computed(() =>
+  rows.value.map((row) => {
+    const record = tableLeadRecord(row, view.value)
+    const cells = sourceColumns.value.map((column, index) => {
+      const value = workbookCell(column, record, config.recordingPlayer)
+      return [
+        'column_' + index,
+        typeof value === 'number' || typeof value === 'string' ? value : '',
+      ] as const
+    })
+    return { key: row.key, record: row, ...Object.fromEntries(cells) }
+  }),
+)
+const recording = computed(() =>
+  recordingLink(expanded.value?.call_url, config.recordingPlayer),
+)
 let locationRequest = 0
 
 async function loadLocations() {
@@ -143,6 +181,7 @@ async function fetchReport(sync = true) {
     if (!data.data || !Array.isArray(data.data.locations))
       throw new Error('Lead locations missing')
     report.value = data.data
+    url.value = ''
   } catch {
     report.value = undefined
     failed.value = true
@@ -152,6 +191,14 @@ async function fetchReport(sync = true) {
 }
 
 const copyCurrent = () => copy(window.location.href)
+function upload() {
+  if (!report.value) return
+  const user = session.authenticatedUser
+  const author = [user?.first_name, user?.last_name].filter(Boolean).join(' ')
+  return exportReport(
+    buildLeadWorkbook(report.value, author, config.recordingPlayer),
+  )
+}
 function inspect(row: ReturnType<typeof leadRows>[number]) {
   expanded.value = row
   openDetail.value = true
@@ -287,6 +334,15 @@ onMounted(async () => {
             @click="fetchReport(false)"
             >Reload</v-btn
           >
+          <v-btn
+            size="small"
+            color="primary"
+            prepend-icon="mdi-google-drive"
+            :loading="exporting"
+            @click="upload"
+          >
+            {{ url ? 'View export' : 'Export to Drive' }}
+          </v-btn>
         </div>
       </header>
       <section class="lead-report-sections">
@@ -347,6 +403,7 @@ onMounted(async () => {
                 </div>
               </div>
               <v-data-table
+                v-if="view === 'all'"
                 :headers="headers"
                 :items="rows"
                 :search="view === 'all' ? search : ''"
@@ -360,6 +417,21 @@ onMounted(async () => {
                     >View details</v-btn
                   ></template
                 >
+              </v-data-table>
+              <v-data-table
+                v-else
+                :headers="sourceHeaders"
+                :items="sourceRows"
+                item-value="key"
+              >
+                <template #[actionsSlot]="{ item }">
+                  <v-btn
+                    size="small"
+                    variant="outlined"
+                    @click="inspect(item.record)"
+                    >View details</v-btn
+                  >
+                </template>
               </v-data-table>
             </div>
           </v-tabs-window-item>
@@ -401,7 +473,14 @@ onMounted(async () => {
           <pre v-if="expanded.chat" class="lead-transcript">{{
             expanded.chat
           }}</pre>
-          <audio v-if="expanded.call_url" :src="expanded.call_url" controls />
+          <v-btn
+            v-if="recording"
+            :href="recording"
+            target="_blank"
+            rel="noopener"
+            prepend-icon="mdi-play"
+            >Play recording</v-btn
+          >
         </v-card-text>
         <v-card-actions
           ><v-spacer /><v-btn @click="openDetail = false"
@@ -410,6 +489,12 @@ onMounted(async () => {
         >
       </v-card>
     </v-dialog>
+    <ReportsExportDialog
+      v-model="open"
+      :loading="exporting"
+      :url="url"
+      @copy="copy"
+    />
     <v-snackbar
       :model-value="Boolean(notice)"
       @update:model-value="notice = ''"

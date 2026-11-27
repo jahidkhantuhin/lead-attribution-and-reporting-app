@@ -19,6 +19,7 @@
     "@pinia/nuxt": "1.0.3",
     "apexcharts": "8.9.2",
     "axios": "1.21.1",
+    "moment": "2.31.0",
     "nuxt": "4.7.0",
     "pinia": "4.1.0",
     "vite-plugin-vuetify": "2.1.3",

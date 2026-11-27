@@ -1,0 +1,1284 @@
+{
+  "all": [
+    {
+      "text": "Local Date",
+      "value": "timestamp",
+      "width": "80px",
+      "styles": {},
+      "format": "datetime"
+    },
+    {
+      "text": "Type",
+      "value": "type",
+      "width": "80px",
+      "styles": {
+        "width": "5px"
+      },
+      "format": "capitalize"
+    },
+    {
+      "text": "Lead name",
+      "value": "name",
+      "width": "200px",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Lead Email",
+      "value": "email",
+      "width": "200px",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Location",
+      "value": "location_name",
+      "width": "220px",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Procedure",
+      "value": "procedure",
+      "width": "120px",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Lead Phone",
+      "value": "phone",
+      "width": "100px",
+      "styles": {
+        "width": "20px"
+      },
+      "format": "phone"
+    }
+  ],
+  "calls": [
+    {
+      "text": "Lead date",
+      "value": "call_start",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Lead name",
+      "value": "caller_name",
+      "width": "250px",
+      "styles": {
+        "width": "22px"
+      }
+    },
+    {
+      "text": "Lead source",
+      "value": "other_details.lead_source",
+      "width": "250px",
+      "styles": {
+        "width": "10px"
+      },
+      "format": "capitalize"
+    },
+    {
+      "text": "Location",
+      "value": "location_name",
+      "width": "250px",
+      "styles": {
+        "width": "23px"
+      }
+    },
+    {
+      "text": "Caller Number",
+      "value": "caller_number",
+      "width": "200px",
+      "styles": {
+        "width": "20px"
+      },
+      "format": "phone:caller_number"
+    },
+    {
+      "text": "Marketing Number",
+      "value": "marketing_number",
+      "width": "220px",
+      "styles": {
+        "width": "20px"
+      },
+      "format": "phone:other_details.marketing_number"
+    },
+    {
+      "text": "Caller Name",
+      "value": "caller_name",
+      "width": "220px",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Answering Number",
+      "value": "answering_number",
+      "width": "220px",
+      "styles": {
+        "width": "20px"
+      },
+      "format": "phone:other_details.answering_number"
+    },
+    {
+      "text": "Day",
+      "value": "day",
+      "width": "120px",
+      "styles": {
+        "width": "10px"
+      },
+      "format": "weekday"
+    },
+    {
+      "text": "Patient Name",
+      "value": "score.person_name",
+      "width": "200px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.person_name"
+    },
+    {
+      "text": "Procedure",
+      "value": "score.procedure.name",
+      "width": "200px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.procedure.name"
+    },
+    {
+      "text": "Disposition",
+      "value": "score.booked_appointment",
+      "width": "150px",
+      "styles": {
+        "width": "10px"
+      },
+      "format": "capitalize:score.booked_appointment"
+    },
+    {
+      "text": "Duration",
+      "value": "call_duration",
+      "width": "180px",
+      "styles": {
+        "width": "10px"
+      }
+    },
+    {
+      "text": "Comment",
+      "value": "score.comment",
+      "width": "250px",
+      "styles": {
+        "width": "50px"
+      },
+      "format": "field:score.comment"
+    },
+    {
+      "text": "URL",
+      "value": "call_url",
+      "width": "250px",
+      "styles": {
+        "width": "85px"
+      },
+      "format": "audio"
+    },
+    {
+      "text": "Rule",
+      "value": "other_details.rule",
+      "width": "250px",
+      "displayInExcel": false,
+      "styles": {},
+      "format": "field:other_details.rule"
+    }
+  ],
+  "adwords_calls": [
+    {
+      "text": "Lead date",
+      "value": "call_start",
+      "width": "80px",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Lead name",
+      "value": "caller_name",
+      "width": "250px",
+      "styles": {
+        "width": "22px"
+      }
+    },
+    {
+      "text": "Lead source",
+      "value": "other_details.lead_source",
+      "width": "120px",
+      "styles": {
+        "width": "10px"
+      },
+      "format": "capitalize"
+    },
+    {
+      "text": "Location",
+      "value": "location_name",
+      "width": "250px",
+      "styles": {
+        "width": "23px"
+      }
+    },
+    {
+      "text": "Caller Number",
+      "value": "caller_number",
+      "width": "170px",
+      "styles": {
+        "width": "20px"
+      },
+      "format": "phone:caller_number"
+    },
+    {
+      "text": "Marketing Number",
+      "value": "marketing_number",
+      "width": "170px",
+      "styles": {
+        "width": "20px"
+      },
+      "format": "phone:other_details.marketing_number"
+    },
+    {
+      "text": "Caller Name",
+      "value": "caller_name",
+      "width": "220px",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Answering Number",
+      "value": "answering_number",
+      "width": "170px",
+      "styles": {
+        "width": "20px"
+      },
+      "format": "phone:other_details.answering_number"
+    },
+    {
+      "text": "Day",
+      "value": "day",
+      "width": "120px",
+      "styles": {
+        "width": "10px"
+      },
+      "format": "shortWeekday"
+    },
+    {
+      "text": "Patient`s Name",
+      "value": "score.person_name",
+      "width": "80px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.person_name"
+    },
+    {
+      "text": "Who Answered",
+      "value": "score.who_answered",
+      "width": "80px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.who_answered"
+    },
+    {
+      "text": "Procedure",
+      "value": "score.procedure.name",
+      "width": "80px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.procedure.name"
+    },
+    {
+      "text": "Appt Booked",
+      "value": "score.booked_appointment",
+      "width": "80px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.booked_appointment"
+    },
+    {
+      "text": "Consult Offered",
+      "value": "score.consult_offered",
+      "width": "80px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.consult_offered"
+    },
+    {
+      "text": "Handler Pitch",
+      "value": "score.handler_pitch",
+      "width": "80px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.handler_pitch"
+    },
+    {
+      "text": "Identify Office",
+      "value": "score.identify_office",
+      "width": "80px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.identify_office"
+    },
+    {
+      "text": "Recipient Name",
+      "value": "score.recipient_name",
+      "width": "80px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.recipient_name"
+    },
+    {
+      "text": "Appt Date",
+      "value": "score.appt_date",
+      "width": "80px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.appt_date"
+    },
+    {
+      "text": "Appt Time",
+      "value": "score.appt_time",
+      "width": "80px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.appt_time"
+    },
+    {
+      "text": "Call Status",
+      "value": "call_status",
+      "width": "80px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.call_status"
+    },
+    {
+      "text": "Disposition",
+      "value": "score.booked_appointment",
+      "width": "150px",
+      "styles": {
+        "width": "10px"
+      },
+      "format": "capitalize:score.booked_appointment"
+    },
+    {
+      "text": "Duration",
+      "value": "call_duration",
+      "width": "180px",
+      "styles": {
+        "width": "10px"
+      }
+    },
+    {
+      "text": "Comment",
+      "value": "score.comment",
+      "width": "250px",
+      "styles": {
+        "width": "50px"
+      },
+      "format": "field:score.comment"
+    },
+    {
+      "text": "CS Name",
+      "value": "cs_name",
+      "width": "200px",
+      "styles": {
+        "width": "13px"
+      }
+    },
+    {
+      "text": "URL",
+      "value": "call_url",
+      "width": "250px",
+      "styles": {
+        "width": "85px"
+      },
+      "format": "audio"
+    }
+  ],
+  "facebook_calls": [
+    {
+      "text": "Lead date",
+      "value": "call_start",
+      "width": "80px",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Lead name",
+      "value": "caller_name",
+      "width": "250px",
+      "styles": {
+        "width": "22px"
+      }
+    },
+    {
+      "text": "Lead source",
+      "value": "other_details.lead_source",
+      "width": "120px",
+      "styles": {
+        "width": "10px"
+      },
+      "format": "capitalize"
+    },
+    {
+      "text": "Location",
+      "value": "location_name",
+      "width": "250px",
+      "styles": {
+        "width": "23px"
+      }
+    },
+    {
+      "text": "Caller Number",
+      "value": "caller_number",
+      "width": "170px",
+      "styles": {
+        "width": "20px"
+      },
+      "format": "phone:caller_number"
+    },
+    {
+      "text": "Marketing Number",
+      "value": "marketing_number",
+      "width": "170px",
+      "styles": {
+        "width": "20px"
+      },
+      "format": "phone:other_details.marketing_number"
+    },
+    {
+      "text": "Caller Name",
+      "value": "caller_name",
+      "width": "220px",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Answering Number",
+      "value": "answering_number",
+      "width": "220px",
+      "styles": {
+        "width": "20px"
+      },
+      "format": "phone:other_details.answering_number"
+    },
+    {
+      "text": "Day",
+      "value": "day",
+      "width": "120px",
+      "styles": {
+        "width": "10px"
+      },
+      "format": "weekday"
+    },
+    {
+      "text": "Patient`s Name",
+      "value": "score.person_name",
+      "width": "80px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.person_name"
+    },
+    {
+      "text": "Who Answered",
+      "value": "score.who_answered",
+      "width": "80px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.who_answered"
+    },
+    {
+      "text": "Procedure",
+      "value": "score.procedure.name",
+      "width": "80px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.procedure.name"
+    },
+    {
+      "text": "Appt Booked",
+      "value": "score.booked_appointment",
+      "width": "200px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.booked_appointment"
+    },
+    {
+      "text": "Consult Offered",
+      "value": "score.consult_offered",
+      "width": "80px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.consult_offered"
+    },
+    {
+      "text": "Handler Pitch",
+      "value": "score.handler_pitch",
+      "width": "80px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.handler_pitch"
+    },
+    {
+      "text": "Identify Office",
+      "value": "score.identify_office",
+      "width": "80px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.identify_office"
+    },
+    {
+      "text": "Recipient Name",
+      "value": "score.recipient_name",
+      "width": "80px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.recipient_name"
+    },
+    {
+      "text": "Appt Date",
+      "value": "score.appt_date",
+      "width": "80px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.appt_date"
+    },
+    {
+      "text": "Appt Time",
+      "value": "score.appt_time",
+      "width": "80px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.appt_time"
+    },
+    {
+      "text": "Call Status",
+      "value": "call_status",
+      "width": "80px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.call_status"
+    },
+    {
+      "text": "Disposition",
+      "value": "score.booked_appointment",
+      "width": "150px",
+      "styles": {
+        "width": "10px"
+      },
+      "format": "capitalize:score.booked_appointment"
+    },
+    {
+      "text": "Duration",
+      "value": "call_duration",
+      "width": "180px",
+      "styles": {
+        "width": "10px"
+      }
+    },
+    {
+      "text": "Comment",
+      "value": "score.comment",
+      "width": "250px",
+      "styles": {
+        "width": "50px"
+      },
+      "format": "field:score.comment"
+    },
+    {
+      "text": "URL",
+      "value": "call_url",
+      "width": "250px",
+      "styles": {
+        "width": "85px"
+      },
+      "format": "audio"
+    }
+  ],
+  "seo_calls": [
+    {
+      "text": "Lead date",
+      "value": "call_start",
+      "width": "80px",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Lead name",
+      "value": "caller_name",
+      "width": "250px",
+      "styles": {
+        "width": "22px"
+      }
+    },
+    {
+      "text": "Lead source",
+      "value": "other_details.lead_source",
+      "width": "120px",
+      "styles": {
+        "width": "10px"
+      },
+      "format": "capitalize"
+    },
+    {
+      "text": "Location",
+      "value": "location_name",
+      "width": "250px",
+      "styles": {
+        "width": "23px"
+      }
+    },
+    {
+      "text": "Caller Number",
+      "value": "caller_number",
+      "width": "170px",
+      "styles": {
+        "width": "20px"
+      },
+      "format": "phone:caller_number"
+    },
+    {
+      "text": "Marketing Number",
+      "value": "marketing_number",
+      "width": "170px",
+      "styles": {
+        "width": "20px"
+      },
+      "format": "phone:other_details.marketing_number"
+    },
+    {
+      "text": "Caller Name",
+      "value": "caller_name",
+      "width": "220px",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Answering Number",
+      "value": "answering_number",
+      "width": "220px",
+      "styles": {
+        "width": "20px"
+      },
+      "format": "phone:other_details.answering_number"
+    },
+    {
+      "text": "Day",
+      "value": "day",
+      "width": "120px",
+      "styles": {
+        "width": "10px"
+      },
+      "format": "weekday"
+    },
+    {
+      "text": "Patient`s Name",
+      "value": "score.person_name",
+      "width": "200px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.person_name"
+    },
+    {
+      "text": "Who Answered",
+      "value": "score.who_answered",
+      "width": "200px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.who_answered"
+    },
+    {
+      "text": "Procedure",
+      "value": "score.procedure.name",
+      "width": "200px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "field:score.procedure.name"
+    },
+    {
+      "text": "Disposition",
+      "value": "score.booked_appointment",
+      "width": "150px",
+      "styles": {
+        "width": "10px"
+      },
+      "format": "capitalize:score.booked_appointment"
+    },
+    {
+      "text": "Duration",
+      "value": "call_duration",
+      "width": "180px",
+      "styles": {
+        "width": "10px"
+      }
+    },
+    {
+      "text": "Comment",
+      "value": "score.comment",
+      "width": "250px",
+      "styles": {
+        "width": "50px"
+      },
+      "format": "field:score.comment"
+    },
+    {
+      "text": "URL",
+      "value": "call_url",
+      "width": "250px",
+      "styles": {
+        "width": "85px"
+      },
+      "format": "audio"
+    }
+  ],
+  "chats": [
+    {
+      "text": "Lead date",
+      "value": "chat_date",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Lead name",
+      "value": "lead.name",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Lead Email",
+      "value": "lead.email",
+      "styles": {
+        "width": "25px"
+      }
+    },
+    {
+      "text": "Lead Source",
+      "value": "lead.lead_source",
+      "width": "250px",
+      "styles": {
+        "width": "10px"
+      },
+      "format": "capitalize"
+    },
+    {
+      "text": "Lead Phone",
+      "value": "lead.phone",
+      "width": "200px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "phone"
+    },
+    {
+      "text": "Location",
+      "value": "location_name",
+      "width": "250px",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Keywords",
+      "value": "keywords",
+      "styles": {
+        "width": "17px"
+      }
+    },
+    {
+      "text": "Referrer",
+      "value": "referrer",
+      "sortable": false,
+      "styles": {
+        "width": "50px"
+      }
+    },
+    {
+      "text": "Website",
+      "value": "website",
+      "styles": {
+        "width": "17px"
+      }
+    },
+    {
+      "text": "Chat",
+      "value": "chat",
+      "sortable": false,
+      "styles": {}
+    }
+  ],
+  "adwords_chats": [
+    {
+      "text": "Lead date",
+      "value": "chat_date",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Lead name",
+      "value": "lead.name",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Lead Email",
+      "value": "lead.email",
+      "styles": {
+        "width": "25px"
+      }
+    },
+    {
+      "text": "Lead Source",
+      "value": "lead.lead_source",
+      "width": "120px",
+      "styles": {
+        "width": "10px"
+      },
+      "format": "capitalize"
+    },
+    {
+      "text": "Lead Phone",
+      "value": "lead.phone",
+      "width": "170px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "phone"
+    },
+    {
+      "text": "Location",
+      "value": "location_name",
+      "width": "250px",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Keywords",
+      "value": "keywords",
+      "styles": {
+        "width": "17px"
+      }
+    },
+    {
+      "text": "Referrer",
+      "value": "referrer",
+      "sortable": false,
+      "styles": {
+        "width": "50px"
+      }
+    },
+    {
+      "text": "Website",
+      "value": "website",
+      "styles": {
+        "width": "17px"
+      }
+    },
+    {
+      "text": "Chat",
+      "value": "chat",
+      "sortable": false,
+      "styles": {}
+    }
+  ],
+  "facebook_chats": [
+    {
+      "text": "Lead date",
+      "value": "chat_date",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Lead name",
+      "value": "lead.name",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Lead Email",
+      "value": "lead.email",
+      "styles": {
+        "width": "25px"
+      }
+    },
+    {
+      "text": "Lead Source",
+      "value": "lead.lead_source",
+      "width": "120px",
+      "styles": {
+        "width": "10px"
+      },
+      "format": "capitalize"
+    },
+    {
+      "text": "Lead Phone",
+      "value": "lead.phone",
+      "width": "170px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "phone"
+    },
+    {
+      "text": "Location",
+      "value": "location_name",
+      "width": "250px",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Keywords",
+      "value": "keywords",
+      "styles": {
+        "width": "17px"
+      }
+    },
+    {
+      "text": "Referrer",
+      "value": "referrer",
+      "sortable": false,
+      "styles": {
+        "width": "50px"
+      }
+    },
+    {
+      "text": "Website",
+      "value": "website",
+      "styles": {
+        "width": "17px"
+      }
+    },
+    {
+      "text": "Chat",
+      "value": "chat",
+      "sortable": false,
+      "styles": {}
+    }
+  ],
+  "seo_chats": [
+    {
+      "text": "Lead date",
+      "value": "chat_date",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Lead name",
+      "value": "lead.name",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Lead Email",
+      "value": "lead.email",
+      "styles": {
+        "width": "25px"
+      }
+    },
+    {
+      "text": "Lead Source",
+      "value": "lead.lead_source",
+      "width": "120px",
+      "styles": {
+        "width": "10px"
+      },
+      "format": "capitalize"
+    },
+    {
+      "text": "Lead Phone",
+      "value": "lead.phone",
+      "width": "170px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "phone"
+    },
+    {
+      "text": "Location",
+      "value": "location_name",
+      "width": "250px",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Keywords",
+      "value": "keywords",
+      "styles": {
+        "width": "17px"
+      }
+    },
+    {
+      "text": "Referrer",
+      "value": "referrer",
+      "sortable": false,
+      "styles": {
+        "width": "50px"
+      }
+    },
+    {
+      "text": "Website",
+      "value": "website",
+      "styles": {
+        "width": "17px"
+      }
+    },
+    {
+      "text": "Chat",
+      "value": "chat",
+      "sortable": false,
+      "styles": {}
+    }
+  ],
+  "emails": [
+    {
+      "text": "Lead date",
+      "value": "date",
+      "width": "80px",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Lead name",
+      "value": "lead.name",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Lead phone",
+      "value": "lead.phone",
+      "width": "170px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "phone"
+    },
+    {
+      "text": "Lead email",
+      "value": "lead.email",
+      "width": "270px",
+      "styles": {
+        "width": "17px"
+      }
+    },
+    {
+      "text": "Location",
+      "value": "location_name",
+      "width": "250px",
+      "displayInExcel": false,
+      "styles": {
+        "width": "23px"
+      }
+    },
+    {
+      "text": "Procedure",
+      "value": "lead.procedure",
+      "width": "220px",
+      "styles": {
+        "width": "14px"
+      }
+    },
+    {
+      "text": "Website",
+      "value": "lead.page_visited",
+      "width": "150px",
+      "styles": {
+        "width": "40px"
+      }
+    },
+    {
+      "text": "Lead Message",
+      "value": "lead.message",
+      "sortable": false,
+      "styles": {
+        "width": "40px"
+      }
+    }
+  ],
+  "facebook_leads": [
+    {
+      "text": "Lead date",
+      "value": "date",
+      "width": "80px",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Lead name",
+      "value": "lead.name",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Lead phone",
+      "value": "lead.phone",
+      "width": "170px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "phone"
+    },
+    {
+      "text": "Lead email",
+      "value": "lead.email",
+      "width": "270px",
+      "styles": {
+        "width": "17px"
+      }
+    },
+    {
+      "text": "Location",
+      "value": "location_name",
+      "width": "250px",
+      "displayInExcel": false,
+      "styles": {
+        "width": "23px"
+      }
+    },
+    {
+      "text": "Procedure",
+      "value": "lead.procedure",
+      "width": "220px",
+      "styles": {
+        "width": "14px"
+      }
+    },
+    {
+      "text": "Website",
+      "value": "lead.page_visited",
+      "width": "150px",
+      "styles": {
+        "width": "40px"
+      }
+    },
+    {
+      "text": "Lead Message",
+      "value": "lead.message",
+      "sortable": false,
+      "styles": {
+        "width": "40px"
+      }
+    }
+  ],
+  "seo_emails": [
+    {
+      "text": "Lead date",
+      "value": "date",
+      "width": "80px",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Lead name",
+      "value": "lead.name",
+      "styles": {
+        "width": "20px"
+      }
+    },
+    {
+      "text": "Lead phone",
+      "value": "lead.phone",
+      "width": "170px",
+      "styles": {
+        "width": "13px"
+      },
+      "format": "phone"
+    },
+    {
+      "text": "Lead email",
+      "value": "lead.email",
+      "width": "270px",
+      "styles": {
+        "width": "17px"
+      }
+    },
+    {
+      "text": "Location",
+      "value": "location_name",
+      "width": "250px",
+      "displayInExcel": false,
+      "styles": {
+        "width": "23px"
+      }
+    },
+    {
+      "text": "Procedure",
+      "value": "lead.procedure",
+      "width": "220px",
+      "styles": {
+        "width": "14px"
+      }
+    },
+    {
+      "text": "Website",
+      "value": "lead.page_visited",
+      "width": "150px",
+      "styles": {
+        "width": "40px"
+      }
+    },
+    {
+      "text": "Lead Message",
+      "value": "lead.message",
+      "sortable": false,
+      "styles": {
+        "width": "40px"
+      }
+    }
+  ]
+}

@@ -530,3 +530,11 @@ Next route group covers the report details, starting with Scorer Payments and Lo
 - Nuxt 4 ESLint, formatting, typecheck and static generation passed. Chromium verified the seeded Client Performance row count, comparison table and showcase export, Lead Attribution metrics and tabs, its detail dialog, and width containment at 390 px. Legacy ESLint, Stylelint, strict typecheck, all 14 Jest tests, and static generation passed. The exact legacy hook and CI checks passed in the local replay. No dependency manifests changed.
 
 Phase 4 stays open for attribution workbook and source-detail parity, the directory and administration route groups, auth UI, and a full smoke pass. The hosted workflow and connected API have not been exercised.
+
+### Lead Attribution workbook and source table follow-through
+
+- Added the workbook upload action to Lead Attribution. The typed builder carries forward the 12 legacy worksheets and their original headings, row layouts, and formats. The source activity selector now uses the matching call, chat, or form columns and retains record inspection. Added the same Moment version as the legacy lockfile for workbook date formatting.
+- Captured the actual `POST /reports/upload` request body from each app in a loopback browser session with the same two seeded locations and date range. The complete payload matched structurally, including name, sheet order, headings, styles, row order, and cell values. Chromium also verified keyboard source selection, the Google Ads scorer column, and opening a record. The showcase adapter returned the expected export link. Connected Drive writes and playback remain unverified.
+- Both apps passed lint, strict typecheck, and static generation. The legacy gate replay passed all 14 Jest tests. The Nuxt 4 Prettier check passed.
+
+The directory and administration routes are the next Phase 4 group. Their filters, inspectors, nested forms, and spreadsheet exports still need to be ported and compared locally. Authentication UI and the connected OAuth/session checks also remain open.

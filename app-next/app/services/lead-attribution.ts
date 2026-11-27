@@ -58,6 +58,7 @@ export interface LeadRecord {
     booked_appointment?: string
     procedure?: { name: string }
     comment?: string
+    scorer?: { first_name?: string; last_name?: string }
   }
   campaign?: { name?: string; timezone?: string }
   other_details?: { lead_source?: string }
@@ -101,6 +102,9 @@ const blankSource = () => ({
   calls: blankCount(),
   chats: blankCount(),
   forms: blankCount(),
+  clicks: 0,
+  impressions: 0,
+  cpl: 0,
   call_summary: {
     booked: 0,
     not_booked: 0,
@@ -160,11 +164,16 @@ export function buildLeadReport(leadReport: LeadReport) {
     }
     for (const key of paid) {
       const source = location.details?.am?.[key]
+      for (const metric of ['clicks', 'impressions', 'cpl'] as const)
+        sources[key][metric] += number(source?.[metric])
       for (const countKey of ['calls', 'chats', 'forms'] as const)
         addCount(sources[key][countKey], source?.[countKey])
       for (const outcome of outcomeKeys)
         sources[key].call_summary[outcome] += number(
-          source?.call_summary?.[outcome],
+          (key === 'facebook' && outcome === 'unscored'
+            ? location.details?.am?.adwords
+            : source
+          )?.call_summary?.[outcome],
         )
     }
     for (const key of detailKeys) {
@@ -183,7 +192,8 @@ export function leadRows(
   details: ReturnType<typeof buildLeadReport>['details'],
   key: DetailKey | 'all',
 ) {
-  const groups: DetailKey[] = key === 'all' ? [...summaryKeys] : [key]
+  const groups: DetailKey[] =
+    key === 'all' ? ['calls', 'emails', 'chats', 'facebook_leads'] : [key]
   return groups
     .flatMap((group) =>
       (details[group] ?? []).map((record, index) => {
@@ -207,18 +217,23 @@ export function leadRows(
               : record.date,
           phone: call
             ? record.caller_number
-            : (record.lead?.phone ?? record.lead?.phone_number),
+            : group === 'facebook_leads'
+              ? record.lead?.phone_number
+              : record.lead?.phone,
           email: call ? '' : record.lead?.email,
           source: record.other_details?.lead_source ?? record.lead?.lead_source,
           procedure: call
             ? record.score?.procedure?.name
-            : (record.procedure ?? record.lead?.procedure),
+            : group === 'emails'
+              ? record.lead?.procedure
+              : record.procedure,
         }
       }),
     )
     .sort(
       (a, b) =>
-        (Date.parse(b.timestamp || '') || 0) -
-        (Date.parse(a.timestamp || '') || 0),
+        (Date.parse(a.timestamp || '') || 0) -
+        (Date.parse(b.timestamp || '') || 0),
     )
+    .reverse()
 }

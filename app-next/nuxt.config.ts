@@ -12,6 +12,14 @@ const selectedApiUrl = Object.entries(legacyApiUrls).find(
   ([environment]) => environment === env.NODE_ENV,
 )?.[1]
 const showcaseMode = env.SHOWCASE_MODE !== 'false'
+const recordPlayers = {
+  development: 'http://localhost:3000/player',
+  staging: 'https://ca-dev.wm4d.com/player',
+  production: 'https://ca.wm4d.com/player',
+}
+const recordingPlayer = Object.entries(recordPlayers).find(
+  ([environment]) => environment === env.NODE_ENV,
+)?.[1]
 
 export default defineNuxtConfig({
   ssr: false,
@@ -44,6 +52,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       showcaseMode,
+      recordingPlayer: showcaseMode ? '' : (recordingPlayer ?? ''),
       apiBaseUrl: showcaseMode
         ? 'https://showcase.example.test'
         : (selectedApiUrl ?? ''),
