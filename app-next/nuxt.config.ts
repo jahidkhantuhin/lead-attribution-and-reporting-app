@@ -13,7 +13,7 @@ const showcaseMode = env.SHOWCASE_MODE !== 'false'
 
 export default defineNuxtConfig({
   ssr: false,
-  modules: ['@nuxt/eslint'],
+  modules: ['@nuxt/eslint', '@pinia/nuxt'],
   app: {
     head: {
       title: 'LeadLens',

@@ -479,3 +479,26 @@ The tracked workflow and hook remain unchanged. Their current commands still pas
 References for the scaffold are [Nuxt runtime configuration](https://nuxt.com/docs/4.x/guide/going-further/runtime-config), [Nuxt static deployment](https://nuxt.com/docs/4.x/getting-started/deployment), and [Nuxt ESLint](https://eslint.nuxt.com/packages/module).
 
 Phase 3 will port the Axios client and showcase adapter, authentication boundary, and Vuex state to Pinia. Connected session semantics still require contract confirmation.
+
+## Phase 3 — Foundation port
+
+- Installed Axios 1.21.1, Pinia 4.1.0, and `@pinia/nuxt` 1.0.3 in the nested app. The legacy dependencies and routes remain intact.
+- Added the Nuxt client plugin, shared Axios transport, and typed service contracts for client, location, staff, site, user and KPI calls. Methods, paths, query keys, and request bodies match their legacy service equivalents. The real in-memory showcase routes, fixtures, mutations, and report payloads are ported to the Axios 1 adapter.
+- Ported shell heading and breadcrumbs, user CRUD and loading state, and session/roles/permissions to Pinia. The UI will bind to those stores during Phase 4. The app initializes the synthetic session and keeps it available after showcase logout, matching the legacy demo.
+- Added a client-side Sanctum boundary with the locally observed CSRF bootstrap, login, user lookup, logout and protected-route redirect behavior. Nuxt Auth's legacy cookie provider uses those endpoints. The Axios client scopes authentication material to the configured API origin. Expired requests redirect with the current path, while a quiet `/user?noswal` lookup leaves the redirect to the guard. This avoids duplicate redirects on startup. UI notifications and login/recovery views are part of the route port.
+
+### Open questions
+
+- The available checkout contains multiple Google integration paths, including Auth Next's configured `/social-login` exchange and the callback page's `/social-login-direct`. Confirm which exchange is authoritative and confirm provider state checking, credentials, and token lifecycle. The Google flow is deferred, and no refresh endpoint was assumed.
+- Confirm connected Sanctum cookie domain, CORS, CSRF behavior and session expiry/renewal using an authorized test backend. Local checks use a mocked transport and cannot establish the server's behavior. The live backend remains the authority for authentication and authorization.
+- Bind error presentation and user CRUD controls during the UI port. Phase 2's proposed CI and pre-push expansion still applies before integrating ported routes.
+
+### Phase 3 verification
+
+- Legacy ESLint, Stylelint, locked TypeScript and all 14 Jest cases passed. The exact pre-push and CI lint/test commands passed with their aggregate exit handling. Static generation completed all 57 showcase routes and the fallback.
+- The updated scaffold lockfile passed `npm ci --prefer-offline`. npm reported nine moderate findings and the existing esbuild postinstall policy warning. Nuxt 4 ESLint, Prettier, strict typecheck and static generation passed. The generated homepage initialized the plugin and Pinia in Chromium without a page error.
+- A local parity replay compared seven exact legacy/ported showcase responses, plus the unknown-record response and mutation isolation. A mocked connected replay checked the Sanctum sequence, request payload, cross-origin credential handling, `401` redirect signal, and Pinia state. The committed legacy suites remain the automated regression gate. The test runner switch remains in Phase 5.
+
+References are [Axios adapters](https://axios.rest/pages/advanced/adapters), [Pinia for Nuxt](https://pinia.vuejs.org/ssr/nuxt.html), and [Laravel Sanctum](https://laravel.com/docs/12.x/sanctum).
+
+Phase 4 will port the shell and route groups against the checked-in smoke checklist, starting with the dashboard and reports.
