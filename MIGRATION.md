@@ -455,3 +455,27 @@ For connected mode, use a separately authorized test backend to check sign-in, C
 The Phase 0 frozen install was reused. The dependency manifests and lockfiles are unchanged. On Windows with Node 26.13.0, TypeScript, both linters, and all 14 Jest cases passed. The exact lint and test commands used by the hook and CI passed when replayed with the same aggregate exit handling. Static generation produced all 57 expected routes and the client fallback. The checklist is available for manual comparison during the port. Connected authentication and the hosted GitHub Actions run were outside this verification.
 
 Phase 2 will scaffold the Nuxt 4 app in `app-next/`. The legacy app will remain runnable for comparison, and the checkpoint will identify what is needed for automation to check both roots.
+
+## Phase 2 — Side-by-side scaffold
+
+Added the Nuxt 4.7.0 and Vue 3.5.46 scaffold under `app-next/` with its own npm manifest and lockfile, strict TypeScript 6.0.3, Nuxt ESLint flat config, Prettier, and a single landing page. Static generation produces `app-next/.output/public/`. The scaffold README documents the commands and port for local comparison.
+
+The scaffold maps the original `SHOWCASE_MODE` and three `BASE_URL_*` inputs to the public showcase flag and selected API URL. The config loader was checked with fixture URLs for development, staging, and production, plus the default showcase mode. These inputs are applied when building static output. There are no auth or API client calls in the scaffold.
+
+The root `tsconfig.json` excludes `app-next/` so the legacy compiler owns only the legacy sources. The root ESLint config ignores the nested app because the Nuxt 2 rules were picking up the Vue 3 templates. The nested app has its own lint check. The root ignore file now covers Nitro and Nuxt output. No legacy routes or application code changed.
+
+| Verification | Result on Windows, Node 26.13.0 |
+| --- | --- |
+| Legacy lint, typecheck, Jest | Passed both linters, TypeScript, and all 14 Jest cases. Replayed the current pre-push and CI lint/test commands with aggregate exit handling. Reused the unchanged legacy frozen install. |
+| Legacy static generation | Passed. Output has 57 routes and the client fallback. The generated dashboard mounted in Chromium. |
+| Scaffold install | `npm install` and then `npm ci --prefer-offline` passed. npm reported nine moderate findings and blocked the esbuild postinstall under npm 12 lifecycle policy. Nuxt prepare and the build succeeded with that policy. |
+| Scaffold checks | ESLint, Prettier, and Nuxt typecheck passed. The scaffold has no business logic tests yet. |
+| Scaffold static generation | Passed. The landing page rendered in Chromium from a loopback static host with no JavaScript page errors. The build emitted dependency warnings about Vite's CSS sourcemap option and a Nitro cache-driver import. |
+
+### Automation follow-up
+
+The tracked workflow and hook remain unchanged. Their current commands still pass for the legacy root, but they do not enforce the scaffold checks. Before either app starts absorbing ported routes, add a second install and nested lint, format, typecheck, and generate steps to the existing `quality` job. Retain the job name and existing legacy steps. Use a Node 22 patch at or above 22.22.3 for the scaffold and include the nested lockfile in npm caching. Extend the existing hook to run scaffold checks when the nested project is present and document its separate dependency install. Scope legacy Stylelint and Jest to their own app when nested styles and tests are introduced.
+
+References for the scaffold are [Nuxt runtime configuration](https://nuxt.com/docs/4.x/guide/going-further/runtime-config), [Nuxt static deployment](https://nuxt.com/docs/4.x/getting-started/deployment), and [Nuxt ESLint](https://eslint.nuxt.com/packages/module).
+
+Phase 3 will port the Axios client and showcase adapter, authentication boundary, and Vuex state to Pinia. Connected session semantics still require contract confirmation.

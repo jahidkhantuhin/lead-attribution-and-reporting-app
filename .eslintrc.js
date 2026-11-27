@@ -1,5 +1,6 @@
 module.exports = {
   root: true,
+  ignorePatterns: ['/app-next/**'],
   env: {
     browser: true,
     node: true,

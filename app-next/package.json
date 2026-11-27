@@ -1,0 +1,28 @@
+{
+  "name": "leadlens-next",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "^22.22.3 || ^24.15.0 || >=26.0.0"
+  },
+  "scripts": {
+    "dev": "nuxt dev",
+    "prepare": "nuxt prepare",
+    "lint": "eslint .",
+    "format:check": "prettier --check .",
+    "typecheck": "nuxt typecheck",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "nuxt": "4.7.0",
+    "vue": "3.5.46"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "1.17.0",
+    "eslint": "10.16.0",
+    "prettier": "3.10.1",
+    "typescript": "6.0.3",
+    "vue-tsc": "3.3.14"
+  }
+}
