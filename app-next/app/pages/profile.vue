@@ -23,7 +23,30 @@ const busy = ref(false)
 const error = ref('')
 const notice = ref('')
 const file = ref<File>()
-const preview = ref('')
+const cropImage = shallowRef<HTMLImageElement>()
+const cropCanvas = ref<HTMLCanvasElement>()
+const zoom = ref(1)
+const horizontal = ref(50)
+const vertical = ref(50)
+const outputSize = 320
+
+function resetCrop() {
+  zoom.value = 1
+  horizontal.value = 50
+  vertical.value = 50
+}
+
+watchPostEffect(() => {
+  const image = cropImage.value
+  const context = cropCanvas.value?.getContext('2d')
+  if (!image || !context) return
+  const size = Math.min(image.naturalWidth, image.naturalHeight) / zoom.value
+  const x = ((image.naturalWidth - size) * horizontal.value) / 100
+  const y = ((image.naturalHeight - size) * vertical.value) / 100
+  context.fillStyle = 'white'
+  context.fillRect(0, 0, outputSize, outputSize)
+  context.drawImage(image, x, y, size, size, 0, 0, outputSize, outputSize)
+})
 const fields = reactive({
   first: '',
   last: '',
@@ -59,8 +82,9 @@ function open(kind: 'edit' | 'photo') {
   dialog.value = kind
 }
 
-watch(file, (next, _old, cleanup) => {
-  preview.value = ''
+watch(file, async (next, _old, cleanup) => {
+  cropImage.value = undefined
+  resetCrop()
   error.value = ''
   if (!next) return
   if (
@@ -71,8 +95,19 @@ watch(file, (next, _old, cleanup) => {
     return
   }
   const url = URL.createObjectURL(next)
-  preview.value = url
-  cleanup(() => URL.revokeObjectURL(url))
+  let active = true
+  cleanup(() => {
+    active = false
+    URL.revokeObjectURL(url)
+  })
+  try {
+    const image = new Image()
+    image.src = url
+    await image.decode()
+    if (active) cropImage.value = image
+  } catch {
+    if (active) error.value = 'Could not read this image. Choose another file.'
+  }
 })
 watch(dialog, (value) => {
   if (value) return
@@ -111,31 +146,11 @@ async function saveProfile() {
 }
 
 async function savePhoto() {
-  if (!allowed.value || !preview.value || busy.value) return
+  const canvas = cropCanvas.value
+  if (!allowed.value || !cropImage.value || !canvas || busy.value) return
   busy.value = true
   error.value = ''
   try {
-    const image = new Image()
-    image.src = preview.value
-    await image.decode()
-    const size = Math.min(image.naturalWidth, image.naturalHeight)
-    const canvas = document.createElement('canvas')
-    canvas.width = canvas.height = 320
-    const context = canvas.getContext('2d')
-    if (!context || !size) throw new Error('Image unavailable')
-    context.fillStyle = 'white'
-    context.fillRect(0, 0, 320, 320)
-    context.drawImage(
-      image,
-      (image.naturalWidth - size) / 2,
-      (image.naturalHeight - size) / 2,
-      size,
-      size,
-      0,
-      0,
-      320,
-      320,
-    )
     await $api.put('/meta/profile_picture', {
       meta_name: 'profile_picture',
       meta_value: canvas.toDataURL('image/jpeg', 0.8),
@@ -308,15 +323,51 @@ async function savePhoto() {
               :disabled="busy"
               density="compact"
             />
-            <v-img
-              v-if="preview"
-              :src="preview"
-              alt="Square crop preview"
-              cover
-              aspect-ratio="1"
-              width="180"
-              class="mx-auto mb-4 rounded"
-            />
+            <div v-if="cropImage" class="crop-editor mb-4">
+              <canvas
+                ref="cropCanvas"
+                :width="outputSize"
+                :height="outputSize"
+                role="img"
+                aria-label="Square crop preview"
+                class="crop-preview rounded"
+              />
+              <div>
+                <v-slider
+                  v-model="zoom"
+                  label="Zoom"
+                  name="Zoom"
+                  :min="1"
+                  :max="3"
+                  :step="0.05"
+                  :disabled="busy"
+                  hide-details
+                />
+                <v-slider
+                  v-model="horizontal"
+                  label="Horizontal position"
+                  name="Horizontal position"
+                  :min="0"
+                  :max="100"
+                  :step="1"
+                  :disabled="busy"
+                  hide-details
+                />
+                <v-slider
+                  v-model="vertical"
+                  label="Vertical position"
+                  name="Vertical position"
+                  :min="0"
+                  :max="100"
+                  :step="1"
+                  :disabled="busy"
+                  hide-details
+                />
+                <v-btn variant="text" :disabled="busy" @click="resetCrop"
+                  >Reset crop</v-btn
+                >
+              </div>
+            </div>
             <v-alert v-if="error" type="error" variant="tonal" class="mb-3">{{
               error
             }}</v-alert>
@@ -326,7 +377,7 @@ async function savePhoto() {
               >
               <v-btn
                 color="primary"
-                :disabled="!preview"
+                :disabled="!cropImage"
                 :loading="busy"
                 @click="savePhoto"
                 >Save photo</v-btn
@@ -340,6 +391,18 @@ async function savePhoto() {
 </template>
 
 <style scoped>
+.crop-editor {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: 1rem;
+  align-items: center;
+}
+.crop-preview {
+  display: block;
+  width: min(100%, 12rem);
+  height: auto;
+  margin-inline: auto;
+}
 .profile-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));

@@ -634,3 +634,8 @@ Phase 4 remains open for client records and nested forms, location and user admi
 - Removed the fixed 200-record cutoff by traversing the existing paginated client and unassigned-location endpoints. A preselected location still loads directly by ID. Stale requests stop fetching further pages when the form context changes.
 - Verified 225 synthetic records across three pages, three pagination metadata variants, stale request handling, and repeated page protection. Chromium verified the general and preselected forms, assignment, queue refresh, and mobile layout. Nuxt 4 lint, formatting, type checking, and static generation passed.
 - The form still loads all options before local search. Connected behavior and performance with larger directories remain unverified.
+
+### Adjustable profile photo crop
+
+- Added labeled, keyboard-accessible zoom and position controls with a center reset. The preview and saved JPEG use the same canvas, and choosing another file discards the prior crop.
+- Chromium verified keyboard adjustments, reset, matching preview and saved pixels with a synthetic image, and width containment at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed. Connected photo writes remain unverified.
