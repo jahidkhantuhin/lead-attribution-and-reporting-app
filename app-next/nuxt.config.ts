@@ -38,6 +38,7 @@ export default defineNuxtConfig({
         '/data-mining',
         '/search',
         '/site-records',
+        '/all-locations',
         '/client-records',
         '/client-records/add',
         ...(showcaseMode

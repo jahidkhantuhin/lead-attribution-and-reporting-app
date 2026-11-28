@@ -575,3 +575,9 @@ Phase 4 remains open for client records and nested forms, location and user admi
 - Added tracking numbers and their sources, activity comments, and a before-and-after comparison to nested location records. Location facts now include the Apex Chat, Facebook, and Google Ads IDs. Activity values come from the existing location response.
 - Chromium verified the seeded tracking row, activity comment and changed values, empty history, staff navigation, and width containment at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed.
 - Showcase verification used seeded history. Connected-mode history and the effect of saving an edit on that history remain unverified. Phase 4 still includes location administration, VPN, users, profile, and auth UI.
+
+### Active Locations directory
+
+- Ported the Active Locations route with the legacy name, limit, and page request parameters and create report scope. The directory has an inspector, table, URL-backed search, and links to assigned location records.
+- Chromium verified direct name filtering, the table and inspector, a nested detail link, the unassigned state, clearing search, and width containment at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed.
+- The assignment action remains pending with the Location Setup Queue. Legacy table sort UI and connected-mode verification also remain open.

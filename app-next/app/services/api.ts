@@ -1,5 +1,5 @@
 import type { AxiosInstance } from 'axios'
-import type { ClientRecord } from './client-records'
+import type { ClientRecord, DirectoryEntry } from './client-records'
 import type { SiteDay, SiteRecord } from './site-records'
 import type {
   Envelope,
@@ -33,6 +33,7 @@ export function createServices(api: AxiosInstance) {
       remove: (id: RecordId) => remove(`/clients/${id}`),
     },
     locations: {
+      list: (filters?: Fields) => list<DirectoryEntry>('/locations', filters),
       byId: (id: RecordId) => get<RecordSummary>(`/locations/${id}`),
       byClient: (id: RecordId) =>
         list<RecordSummary>(`/clients/${id}/locations`),
