@@ -19,17 +19,19 @@ const end = computed({
 
 const calendar = ref(false)
 const draft = ref<Date[]>([])
+const calendarTitle = useId()
 const calendarRange = computed(() => {
   const ordered = draft.value.map((value) => reportDate(value)).sort()
-  return ordered.length >= 2 ? [ordered[0]!, ordered[ordered.length - 1]!] : []
+  const first = ordered[0]
+  return first ? [first, ordered.at(-1) ?? first] : []
 })
 
-function openCalendar() {
+function prepareCalendar(open: boolean) {
+  if (!open) return
   draft.value = dates.value
     .filter(Boolean)
     .map((value) => new Date(value + 'T00:00:00'))
     .filter((value) => Number.isFinite(value.getTime()))
-  calendar.value = true
 }
 
 function applyCalendar() {
@@ -100,21 +102,22 @@ function apply(preset: string) {
       variant="outlined"
       hide-details
     />
-    <v-btn
-      icon="mdi-calendar"
-      aria-label="Open date range calendar"
-      variant="text"
-      @click="openCalendar"
-    />
     <v-dialog
       v-model="calendar"
       max-width="354"
-      aria-labelledby="report-calendar-title"
+      :aria-labelledby="calendarTitle"
+      @update:model-value="prepareCalendar"
     >
+      <template #activator="{ props: activator }">
+        <v-btn
+          v-bind="activator"
+          icon="mdi-calendar"
+          aria-label="Open date range calendar"
+          variant="text"
+        />
+      </template>
       <v-card>
-        <v-card-title id="report-calendar-title"
-          >Select a date range</v-card-title
-        >
+        <v-card-title :id="calendarTitle">Select a date range</v-card-title>
         <v-date-picker
           v-model="draft"
           multiple="range"

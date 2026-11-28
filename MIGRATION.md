@@ -644,3 +644,8 @@ Phase 4 remains open for client records and nested forms, location and user admi
 
 - Added a shared calendar dialog alongside the existing date fields and presets. The dialog opens on the current range and stages edits until Apply dates is selected. Single-day input remains available through the date fields.
 - Chromium verified initialization from a complete Payment Report URL, cancel, apply, and layout at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed. Calendar interaction on other routes and connected report behavior were not part of this browser check.
+
+### Shared calendar keyboard and single-day selection
+
+- Linked dialog focus to the calendar button and gave each instance a unique accessible title ID. A single calendar day now sets both date endpoints to that day.
+- Chromium verified Escape cancellation, focus return, keyboard reopening, single-day selection, and layout at 390 px on all five reports using the calendar and on Website Directory. Nuxt 4 lint, formatting, strict type checking, and static generation passed.
