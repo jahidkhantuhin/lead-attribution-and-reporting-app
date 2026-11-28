@@ -40,6 +40,7 @@ export default defineNuxtConfig({
         '/site-records',
         '/all-locations',
         '/vpn-setup',
+        '/users',
         '/location-settings',
         '/location-settings/add',
         '/client-records',

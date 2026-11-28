@@ -593,3 +593,9 @@ Phase 4 remains open for client records and nested forms, location and user admi
 - Ported the activity log, URL-backed pagination, website search, 72- and 96-hour access requests, IPv4 validation, and super-admin removal confirmation. The public-IP lookup uses the legacy provider with credentials disabled. Showcase requests use synthetic IP and site data through the adapter.
 - Chromium verified the direct URL, public-IP fixture, invalid IPv4 feedback, website and duration selection, creation and removal, cancellation, and width containment at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed.
 - Connected public-IP detection, VPN restrictions, and access changes remain unverified. Phase 4 still includes team members, profile, auth UI, and parity checks.
+
+### Team Members directory
+
+- Ported the team directory with URL-backed search, role and status filters, sorting, pagination, and a confirmation flow for removing members. The directory requires the view users scope. Removal follows the legacy admin-role restriction and explicitly excludes super-admin targets.
+- Chromium verified the direct filtered URL, descending name order, role filtering, the protected super-admin row, removal and cancellation with synthetic data, and width containment at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed.
+- Team member add and edit routes, profile, auth UI, and connected-mode permission and deletion checks remain open.
