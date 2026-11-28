@@ -623,3 +623,8 @@ Phase 4 remains open for client records and nested forms, location and user admi
 - Added a generation check that fails when a declared page is missing from Nitro's output. This caught a gap where local Windows write errors could leave pages missing despite a successful exit.
 - Chromium opened all 57 generated page URLs at desktop and 390 px widths. All 56 legacy generated page URLs were present, alongside the explicit Nuxt 4 /404 route. The modern build and legacy lint, TypeScript, and 14 Jest tests passed after switching the auth layout to a viewport unit supported by the legacy Stylelint gate.
 - This pass verified route availability and basic rendering. Connected backend and detailed interaction and visual parity remain open.
+
+### Active Locations table sorting
+
+- Added keyboard-accessible sort controls for Location, ID, Status, and Source. The sort column and direction stay in the URL and apply to the current page of results. The locations request retains the legacy name, limit, and page parameters.
+- Chromium verified descending ID order from a direct URL, toggling direction by keyboard, retaining the search filter, the accessible sort state, and layout at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed.

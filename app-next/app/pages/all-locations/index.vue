@@ -22,12 +22,46 @@ const search = ref<string | null>('')
 const limit = ref(20)
 const page = ref(1)
 const table = ref(false)
+const sortColumns = [
+  { key: 'name', label: 'Location' },
+  { key: 'id', label: 'ID' },
+  { key: 'status', label: 'Status' },
+  { key: 'source', label: 'Source' },
+] as const
+type SortKey = (typeof sortColumns)[number]['key']
+const sortKey = computed(
+  () => sortColumns.find(({ key }) => key === route.query.sort_by)?.key,
+)
+const descending = computed(() => route.query.sorting === 'desc')
+const collator = new Intl.Collator('en', { numeric: true, sensitivity: 'base' })
 const rows = ref<DirectoryEntry[]>([])
 const selectedId = ref<RecordId>()
 const total = ref(0)
 const busy = ref(false)
 const failed = ref(false)
 let pending = 0
+const tableRows = computed(() => {
+  const key = sortKey.value
+  if (!key) return rows.value
+  return [...rows.value].sort(
+    (a, b) =>
+      collator.compare(String(a[key] ?? ''), String(b[key] ?? '')) *
+      (descending.value ? -1 : 1),
+  )
+})
+function sortBy(key: SortKey) {
+  return router.replace({
+    query: {
+      ...route.query,
+      sort_by: key,
+      sorting: sortKey.value === key && !descending.value ? 'desc' : 'asc',
+    },
+  })
+}
+function ariaSort(key: SortKey) {
+  if (sortKey.value !== key) return undefined
+  return descending.value ? 'descending' : 'ascending'
+}
 const selected = computed(
   () => rows.value.find((row) => row.id === selectedId.value) ?? rows.value[0],
 )
@@ -68,19 +102,19 @@ function changeLimit(value: number) {
   return apply()
 }
 watch(
-  [() => route.query, allowed],
-  async ([query, canView]) => {
+  [applied, () => route.query.itemsPerPage, () => route.query.page, allowed],
+  async ([name, itemsPerPage, currentPage, canView]) => {
     const request = ++pending
     if (!canView) return
-    search.value = applied.value
-    const size = Number(query.itemsPerPage)
+    search.value = name
+    const size = Number(itemsPerPage)
     limit.value = [20, 50, 100, 500].includes(size) ? size : 20
-    page.value = Math.max(1, Math.floor(Number(query.page)) || 1)
+    page.value = Math.max(1, Math.floor(Number(currentPage)) || 1)
     busy.value = true
     failed.value = false
     try {
       const { data } = await $services.locations.list({
-        name: applied.value || undefined,
+        name: name || undefined,
         limit: limit.value,
         page: page.value,
       })
@@ -141,15 +175,31 @@ watch(
     <v-table v-else-if="table" density="compact">
       <thead>
         <tr>
-          <th scope="col">Location</th>
-          <th scope="col">ID</th>
-          <th scope="col">Status</th>
-          <th scope="col">Source</th>
+          <th
+            v-for="column in sortColumns"
+            :key="column.key"
+            scope="col"
+            :aria-sort="ariaSort(column.key)"
+          >
+            <v-btn
+              size="small"
+              variant="text"
+              class="px-1 text-none"
+              @click="sortBy(column.key)"
+            >
+              {{ column.label }}
+              <v-icon
+                v-if="sortKey === column.key"
+                end
+                :icon="descending ? 'mdi-arrow-down' : 'mdi-arrow-up'"
+              />
+            </v-btn>
+          </th>
           <th scope="col">Created</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="row in rows" :key="row.id">
+        <tr v-for="row in tableRows" :key="row.id">
           <td>{{ row.name }}</td>
           <td>{{ row.id }}</td>
           <td>
