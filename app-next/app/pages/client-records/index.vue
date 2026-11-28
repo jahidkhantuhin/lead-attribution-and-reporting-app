@@ -147,6 +147,7 @@ onMounted(async () => {
       <h2 class="text-h6">
         {{ total }} {{ total === 1 ? 'client' : 'clients' }}
       </h2>
+      <v-btn to="/client-records/add" color="primary">Add client</v-btn>
       <v-btn variant="outlined" @click="table = !table">{{
         table ? 'View inspector' : 'View table'
       }}</v-btn>

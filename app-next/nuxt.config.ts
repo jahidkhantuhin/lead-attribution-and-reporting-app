@@ -39,14 +39,21 @@ export default defineNuxtConfig({
         '/search',
         '/site-records',
         '/client-records',
+        '/client-records/add',
         ...(showcaseMode
           ? [
               ...[1, 2, 3].flatMap((id) => [
                 '/client-records/' + id,
+                '/client-records/' + id + '/edit',
+                '/client-records/' + id + '/locations/add',
+                '/client-records/' + id + '/locations/' + id + '/edit',
+                '/client-records/' + id + '/staff/add',
+                '/client-records/' + id + '/staff/' + id + '/edit',
                 '/client-records/' + id + '/locations/' + id,
                 '/client-records/' + id + '/staff/' + id,
               ]),
               '/client-records/1/locations/4',
+              '/client-records/1/locations/4/edit',
             ]
           : []),
         ...(showcaseMode

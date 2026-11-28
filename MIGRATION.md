@@ -552,3 +552,9 @@ Phase 4 remains open for client records and nested forms, location and user admi
 - Ported the directory with filterable inspector and table views, URL-backed pagination, and shared record facts. Client details link to their staff and locations. The Nuxt 4 static build emits direct URLs for all seeded read-only client, location, and staff records.
 - Chromium verified a filtered directory, the inspector and table switch, navigation to Cedar West at 390 px without horizontal overflow, and nine additional direct record URLs. Nuxt 4 lint, formatting, strict type checking, and static generation passed. Legacy ESLint, Stylelint, TypeScript, and all 14 Jest tests passed.
 - Pending parity work includes client, staff, and location forms and mutations, location activity and tracking details, and directory sorting and account-manager controls. Connected mode remains unverified for these routes.
+
+### Client, location, and staff forms
+
+- Ported all six add and edit route types with a shared form, typed field definitions, validation, and the existing Axios services. The directory and detail pages link to these forms. The static showcase build includes the add routes and all seeded edit routes.
+- Chromium verified direct access to all six route types, required-field feedback, keyboard selection of an account manager, client and staff creation, and saving a location edit with a change comment. Nuxt 4 lint, formatting, strict type checking, and static generation passed.
+- The location edit form keeps the legacy required comment in the form itself. Client status changes, deletion, advanced location details, directory controls, and connected writes still need parity work.

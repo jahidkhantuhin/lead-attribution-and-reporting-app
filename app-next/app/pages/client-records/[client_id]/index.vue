@@ -37,6 +37,9 @@ watchEffect(() =>
     <v-card flat class="pa-4">
       <div class="d-flex flex-wrap align-center ga-3 mb-4">
         <h2 class="text-h5">{{ client.name }}</h2>
+        <v-btn :to="'/client-records/' + id + '/edit'" variant="outlined"
+          >Edit client</v-btn
+        >
         <v-chip v-if="client.status" size="small" variant="tonal">{{
           client.status.replaceAll('_', ' ')
         }}</v-chip>
@@ -57,7 +60,16 @@ watchEffect(() =>
       flat
       class="pa-4"
     >
-      <h2 class="text-h6 text-capitalize mb-2">{{ section }}</h2>
+      <div
+        class="d-flex align-center justify-space-between flex-wrap ga-2 mb-2"
+      >
+        <h2 class="text-h6 text-capitalize">{{ section }}</h2>
+        <v-btn
+          :to="'/client-records/' + id + '/' + section + '/add'"
+          variant="tonal"
+          >{{ section === 'staff' ? 'Add staff' : 'Add location' }}</v-btn
+        >
+      </div>
       <v-list v-if="client[section]?.length" density="compact">
         <v-list-item
           v-for="entry in client[section]"

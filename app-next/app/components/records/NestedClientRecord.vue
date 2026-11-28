@@ -67,6 +67,13 @@ const fields = computed(() => {
   <v-card v-else-if="entry" flat class="pa-4">
     <h2 class="text-h5 mb-4">{{ entry.name }}</h2>
     <RecordsRecordFacts :fields="fields" />
+    <v-btn
+      :to="route.path + '/edit'"
+      color="primary"
+      variant="tonal"
+      class="mt-4 me-2"
+      >Edit record</v-btn
+    >
     <v-btn :to="clientUrl" variant="outlined" class="mt-4"
       >Back to client</v-btn
     >

@@ -125,6 +125,7 @@ export function createShowcaseApi() {
   })
   const client = (row: Row) => ({
     ...row,
+    name: row.name || [row.first_name, row.last_name].filter(Boolean).join(' '),
     account_manager: manager(row),
     num_of_locations: data.locations.filter(
       (item) => String(item.client_id) === String(row.id),
