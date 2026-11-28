@@ -39,6 +39,8 @@ export default defineNuxtConfig({
         '/search',
         '/site-records',
         '/all-locations',
+        '/location-settings',
+        '/location-settings/add',
         '/client-records',
         '/client-records/add',
         ...(showcaseMode

@@ -581,3 +581,9 @@ Phase 4 remains open for client records and nested forms, location and user admi
 - Ported the Active Locations route with the legacy name, limit, and page request parameters and create report scope. The directory has an inspector, table, URL-backed search, and links to assigned location records.
 - Chromium verified direct name filtering, the table and inspector, a nested detail link, the unassigned state, clearing search, and width containment at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed.
 - The assignment action remains pending with the Location Setup Queue. Legacy table sort UI and connected-mode verification also remain open.
+
+### Location Setup Queue
+
+- Ported the unassigned location queue, URL-backed sorting and pagination, client creation confirmation, and assignment to an existing client. Active Locations links to a preselected assignment form for unassigned records.
+- Chromium verified the direct queue URL, the Active Locations handoff, assignment, client creation and cancellation, queue refresh, and width containment at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed.
+- The assignment form loads up to 200 clients and 200 unassigned locations for local selection. Connected-mode writes and legacy search parity for larger directories remain open.

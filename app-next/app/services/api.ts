@@ -42,7 +42,7 @@ export function createServices(api: AxiosInstance) {
         put<RecordSummary>(`/locations/${body.id}`, body),
       remove: (id: RecordId) => remove(`/locations/${id}`),
       missingClients: (filters?: Fields) =>
-        list<RecordSummary>('/locations/missing-clients', filters),
+        list<DirectoryEntry>('/locations/missing-clients', filters),
       assignClient: (body: Fields) =>
         post<RecordSummary>('locations/client', body),
       createClient: (id: RecordId) =>

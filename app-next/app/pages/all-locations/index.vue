@@ -194,7 +194,17 @@ watch(
           class="mt-4"
           >Open full location record</v-btn
         >
-        <p v-else class="mt-4">This location has no assigned client.</p>
+        <v-btn
+          v-else
+          :to="{
+            path: '/location-settings/add',
+            query: { id: selected.id, name: selected.name },
+          }"
+          variant="tonal"
+          color="primary"
+          class="mt-4"
+          >Assign to client</v-btn
+        >
       </v-sheet>
     </div>
     <div class="d-flex flex-wrap align-center justify-space-between ga-3 mt-4">
