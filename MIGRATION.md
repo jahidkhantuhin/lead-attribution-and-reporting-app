@@ -649,3 +649,8 @@ Phase 4 remains open for client records and nested forms, location and user admi
 
 - Linked dialog focus to the calendar button and gave each instance a unique accessible title ID. A single calendar day now sets both date endpoints to that day.
 - Chromium verified Escape cancellation, focus return, keyboard reopening, single-day selection, and layout at 390 px on all five reports using the calendar and on Website Directory. Nuxt 4 lint, formatting, strict type checking, and static generation passed.
+
+### Client inspector related records
+
+- Restored staff and location links in the Client Directory inspector. Details use the existing client endpoint, and a response for a previous selection cannot overwrite the current inspector.
+- Chromium verified seeded staff and location links, switching clients, navigation to a nested location, and layout at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed. Connected inspector responses remain unverified.

@@ -33,6 +33,30 @@ const page = ref(1)
 const total = ref(0)
 const table = ref(false)
 const selected = ref<ClientRecord>()
+const detail = ref<ClientRecord>()
+const detailPending = ref(false)
+const detailFailed = ref(false)
+watch(
+  [() => selected.value?.id, table],
+  async ([id, tableView], _previous, cleanup) => {
+    detail.value = undefined
+    detailFailed.value = false
+    detailPending.value = id != null && !tableView
+    if (id == null || tableView) return
+    let active = true
+    cleanup(() => {
+      active = false
+    })
+    try {
+      const { data } = await $services.clients.byId(id)
+      if (active) detail.value = data.data
+    } catch {
+      if (active) detailFailed.value = true
+    } finally {
+      if (active) detailPending.value = false
+    }
+  },
+)
 const busy = ref(false)
 const failed = ref(false)
 let pending = 0
@@ -259,6 +283,38 @@ onMounted(async () => {
             { label: 'Locations', value: selected.num_of_locations },
           ]"
         />
+        <v-progress-linear
+          v-if="detailPending"
+          indeterminate
+          class="mt-4"
+          aria-label="Loading client details"
+        />
+        <p v-else-if="detailFailed" class="mt-4" role="status">
+          Additional client details are unavailable.
+        </p>
+        <template v-else-if="detail">
+          <div
+            v-for="section in ['locations', 'staff'] as const"
+            :key="section"
+            class="mt-4"
+          >
+            <h4 class="text-subtitle-2 text-capitalize">{{ section }}</h4>
+            <div
+              v-if="detail[section]?.length"
+              class="d-flex flex-wrap ga-2 mt-2"
+            >
+              <v-chip
+                v-for="entry in detail[section]"
+                :key="entry.id"
+                :to="clientUrl(detail) + '/' + section + '/' + entry.id"
+                variant="outlined"
+              >
+                {{ entry.name || entry.id }}
+              </v-chip>
+            </div>
+            <p v-else class="text-body-2">No {{ section }} linked.</p>
+          </div>
+        </template>
         <v-btn
           :to="clientUrl(selected)"
           color="primary"
