@@ -9,6 +9,7 @@ import type {
   RecordId,
   RecordSummary,
   UserRecord,
+  VpnEntry,
 } from '../types/api'
 
 export function createServices(api: AxiosInstance) {
@@ -47,6 +48,17 @@ export function createServices(api: AxiosInstance) {
         post<RecordSummary>('locations/client', body),
       createClient: (id: RecordId) =>
         put<RecordSummary>(`/locations/${id}/client`, null),
+    },
+    vpn: {
+      list: (filters?: Fields) => list<VpnEntry>('/vpn-access', filters),
+      request: (body: Fields) => post<VpnEntry>('/vpn-access', body),
+      remove: (id: RecordId) => remove(`/vpn-access/${id}`),
+      publicIp: () =>
+        api.get<{ ip?: string }>('', {
+          baseURL: 'https://api.ipify.org/?format=json',
+          withCredentials: false,
+          withXSRFToken: false,
+        }),
     },
     staff: {
       byId: (id: RecordId) => get<RecordSummary>(`/staff/${id}`),

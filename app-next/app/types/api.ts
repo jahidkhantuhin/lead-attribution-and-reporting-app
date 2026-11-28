@@ -55,3 +55,14 @@ export interface KpiReport extends DateRange {
   locations: RecordSummary[]
   summary: KpiSummary
 }
+
+export interface VpnEntry extends RecordSummary {
+  ip?: string
+  expiry_date?: string
+  site?: { url?: string } | null
+  user?: {
+    first_name?: string
+    last_name?: string
+    status?: number | string
+  } | null
+}

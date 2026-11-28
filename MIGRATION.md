@@ -587,3 +587,9 @@ Phase 4 remains open for client records and nested forms, location and user admi
 - Ported the unassigned location queue, URL-backed sorting and pagination, client creation confirmation, and assignment to an existing client. Active Locations links to a preselected assignment form for unassigned records.
 - Chromium verified the direct queue URL, the Active Locations handoff, assignment, client creation and cancellation, queue refresh, and width containment at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed.
 - The assignment form loads up to 200 clients and 200 unassigned locations for local selection. Connected-mode writes and legacy search parity for larger directories remain open.
+
+### VPN Access
+
+- Ported the activity log, URL-backed pagination, website search, 72- and 96-hour access requests, IPv4 validation, and super-admin removal confirmation. The public-IP lookup uses the legacy provider with credentials disabled. Showcase requests use synthetic IP and site data through the adapter.
+- Chromium verified the direct URL, public-IP fixture, invalid IPv4 feedback, website and duration selection, creation and removal, cancellation, and width containment at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed.
+- Connected public-IP detection, VPN restrictions, and access changes remain unverified. Phase 4 still includes team members, profile, auth UI, and parity checks.

@@ -298,13 +298,17 @@ export function createShowcaseApi() {
     }
     if (collection) {
       if (method === 'post') {
-        if (resource === 'vpn-access')
+        if (resource === 'vpn-access') {
+          const site = data.sites.find((item) => item.url === body.url)
+          const hours = Number(body.number_of_hours)
+          if (!site || ![72, 96].includes(hours)) return undefined
           return create(resource, {
-            ip: '192.0.2.42',
+            ip: body.ip,
             user: session(),
-            site: find('sites', body.site_id) || data.sites[0],
-            expiry_date: date(3),
+            site,
+            expiry_date: new Date(Date.now() + hours * 3600_000).toISOString(),
           })
+        }
         return create(resource, body)
       }
       if (id && !row) return undefined
