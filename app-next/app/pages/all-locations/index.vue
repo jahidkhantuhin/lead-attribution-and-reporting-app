@@ -65,6 +65,33 @@ function ariaSort(key: SortKey) {
 const selected = computed(
   () => rows.value.find((row) => row.id === selectedId.value) ?? rows.value[0],
 )
+const detail = ref<DirectoryEntry>()
+const detailLoading = ref(false)
+const detailFailed = ref(false)
+watch(
+  [() => selected.value?.id, table, allowed],
+  async ([id, tableView, canView], _, cleanup) => {
+    detail.value = undefined
+    detailLoading.value = id != null && !tableView && canView
+    detailFailed.value = false
+    if (id == null || tableView || !canView) return
+    let active = true
+    cleanup(() => {
+      active = false
+    })
+    try {
+      const { data } = await $services.locations.byId(id)
+      if (active) detail.value = data.data
+    } catch {
+      if (active) detailFailed.value = true
+    } finally {
+      if (active) detailLoading.value = false
+    }
+  },
+)
+const inspected = computed(
+  () => selected.value && { ...selected.value, ...detail.value },
+)
 const pageCount = computed(() =>
   Math.max(1, Math.ceil(total.value / limit.value)),
 )
@@ -77,8 +104,61 @@ function dateLabel(value: unknown) {
   const timestamp = typeof value === 'string' ? Date.parse(value) : NaN
   return Number.isFinite(timestamp) ? formatDate.format(timestamp) : '—'
 }
+function fieldText(value: unknown) {
+  return typeof value === 'string' || typeof value === 'number'
+    ? String(value)
+    : ''
+}
+function relatedName(value: unknown) {
+  if (typeof value === 'string') return value
+  if (!value || typeof value !== 'object') return ''
+  if ('name' in value && typeof value.name === 'string') return value.name
+  if ('fullname' in value && typeof value.fullname === 'string')
+    return value.fullname
+  return [
+    'first_name' in value && fieldText(value.first_name),
+    'last_name' in value && fieldText(value.last_name),
+  ]
+    .filter(Boolean)
+    .join(' ')
+}
+const inspectorFields = computed(() => {
+  const row = inspected.value
+  if (!row) return []
+  return [
+    { label: 'Location ID', value: row.id },
+    { label: 'Status', value: row.status && statusLabel(row.status) },
+    {
+      label: 'Client',
+      value: relatedName(row.client) || (!recordUrl(row) ? 'Unassigned' : ''),
+    },
+    { label: 'Account manager', value: relatedName(row.account_manager) },
+    {
+      label: 'Reporting email',
+      value: fieldText(row.reporting_mail) || row.email,
+    },
+    { label: 'Phone', value: row.phone_number },
+    {
+      label: 'Address',
+      value: [row.address, row.city, row.state, row.zipcode || row.zip]
+        .map(fieldText)
+        .filter(Boolean)
+        .join(', '),
+    },
+    { label: 'Website', value: row.website },
+    { label: 'Source', value: fieldText(row.source) },
+    {
+      label: 'Last updated',
+      value: row.updated_at ? dateLabel(row.updated_at) : '',
+    },
+  ].filter(({ value }) => value !== '' && value != null)
+})
 function recordUrl(row: DirectoryEntry) {
-  const id = row.client_id
+  const owner = row.client
+  const id =
+    owner && typeof owner === 'object' && 'id' in owner
+      ? (owner.id ?? row.client_id)
+      : row.client_id
   return typeof id === 'number' || (typeof id === 'string' && id)
     ? '/client-records/' + id + '/locations/' + row.id
     : undefined
@@ -223,32 +303,31 @@ watch(
           @click="selectedId = row.id"
         />
       </v-list>
-      <v-sheet v-if="selected" border rounded class="pa-4">
-        <h3 class="text-h6 mb-3">{{ selected.name }}</h3>
-        <RecordsRecordFacts
-          :fields="[
-            { label: 'Location ID', value: selected.id },
-            {
-              label: 'Status',
-              value: selected.status && statusLabel(selected.status),
-            },
-            { label: 'Website', value: selected.website },
-            { label: 'Phone', value: selected.phone_number },
-          ]"
+      <v-sheet v-if="inspected" border rounded class="pa-4">
+        <h3 class="text-h6 mb-3">{{ inspected.name }}</h3>
+        <v-progress-linear
+          v-if="detailLoading"
+          indeterminate
+          aria-label="Loading location details"
+          class="mb-3"
         />
+        <p v-else-if="detailFailed" role="status" class="mb-3">
+          Additional location details are unavailable.
+        </p>
+        <RecordsRecordFacts :fields="inspectorFields" />
         <v-btn
-          v-if="recordUrl(selected)"
-          :to="recordUrl(selected)"
+          v-if="recordUrl(inspected)"
+          :to="recordUrl(inspected)"
           variant="tonal"
           color="primary"
           class="mt-4"
           >Open full location record</v-btn
         >
         <v-btn
-          v-else
+          v-else-if="!detailLoading && !detailFailed"
           :to="{
             path: '/location-settings/add',
-            query: { id: selected.id, name: selected.name },
+            query: { id: inspected.id, name: inspected.name },
           }"
           variant="tonal"
           color="primary"

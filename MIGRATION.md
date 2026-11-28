@@ -654,3 +654,8 @@ Phase 4 remains open for client records and nested forms, location and user admi
 
 - Restored staff and location links in the Client Directory inspector. Details use the existing client endpoint, and a response for a previous selection cannot overwrite the current inspector.
 - Chromium verified seeded staff and location links, switching clients, navigation to a nested location, and layout at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed. Connected inspector responses remain unverified.
+
+### Active Locations inspector details
+
+- Restored client, account manager, reporting email, address, source, and last-updated details using the existing location detail endpoint. The inspector keeps its list data if the detail request fails and waits for a confirmed unassigned record before offering assignment.
+- Chromium verified seeded address and reporting email, switching records, the nested location link, the assignment handoff, and width containment at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed. Connected responses remain unverified.
