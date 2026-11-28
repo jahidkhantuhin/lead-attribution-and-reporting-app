@@ -628,3 +628,9 @@ Phase 4 remains open for client records and nested forms, location and user admi
 
 - Added keyboard-accessible sort controls for Location, ID, Status, and Source. The sort column and direction stay in the URL and apply to the current page of results. The locations request retains the legacy name, limit, and page parameters.
 - Chromium verified descending ID order from a direct URL, toggling direction by keyboard, retaining the search filter, the accessible sort state, and layout at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed.
+
+### Location assignment pagination
+
+- Removed the fixed 200-record cutoff by traversing the existing paginated client and unassigned-location endpoints. A preselected location still loads directly by ID. Stale requests stop fetching further pages when the form context changes.
+- Verified 225 synthetic records across three pages, three pagination metadata variants, stale request handling, and repeated page protection. Chromium verified the general and preselected forms, assignment, queue refresh, and mobile layout. Nuxt 4 lint, formatting, type checking, and static generation passed.
+- The form still loads all options before local search. Connected behavior and performance with larger directories remain unverified.

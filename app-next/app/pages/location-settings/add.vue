@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { pageNames } from '~/constants'
+import { loadAssignmentOptions } from '~/services/assignment-options'
 import type { RecordId } from '~/types/api'
 
 definePageMeta({ middleware: 'is-authenticated' })
@@ -29,6 +30,10 @@ const unavailable = ref(false)
 const error = ref('')
 let pending = 0
 
+onScopeDispose(() => {
+  pending++
+})
+
 watch(
   [() => route.query.id, allowed],
   async ([id, canView]) => {
@@ -39,16 +44,30 @@ watch(
     error.value = ''
     selected.value = []
     try {
+      const active = () => ticket === pending && allowed.value
       const [clientResult, locationResult] = await Promise.all([
-        $services.clients.list({ limit: 200, sort_by: 'name:asc' }),
-        id && typeof id === 'string'
+        loadAssignmentOptions(
+          async (page, limit) =>
+            (await $services.clients.list({ page, limit, sort_by: 'name:asc' }))
+              .data.data,
+          active,
+        ),
+        typeof id === 'string' && id
           ? $services.locations.byId(id).then(({ data }) => data.data)
-          : $services.locations
-              .missingClients({ limit: 200 })
-              .then(({ data }) => data.data.result),
+          : loadAssignmentOptions(
+              async (page, limit) =>
+                (
+                  await $services.locations.missingClients({
+                    page,
+                    limit,
+                    sort_by: 'id:asc',
+                  })
+                ).data.data,
+              active,
+            ),
       ])
-      if (ticket !== pending) return
-      clients.value = clientResult.data.data.result.map(({ id, name }) => ({
+      if (!active()) return
+      clients.value = clientResult.map(({ id, name }) => ({
         title: name || String(id),
         value: id,
       }))
