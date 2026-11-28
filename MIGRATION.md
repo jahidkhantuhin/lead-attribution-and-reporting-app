@@ -558,3 +558,8 @@ Phase 4 remains open for client records and nested forms, location and user admi
 - Ported all six add and edit route types with a shared form, typed field definitions, validation, and the existing Axios services. The directory and detail pages link to these forms. The static showcase build includes the add routes and all seeded edit routes.
 - Chromium verified direct access to all six route types, required-field feedback, keyboard selection of an account manager, client and staff creation, and saving a location edit with a change comment. Nuxt 4 lint, formatting, strict type checking, and static generation passed.
 - The location edit form keeps the legacy required comment in the form itself. Client status changes, deletion, advanced location details, directory controls, and connected writes still need parity work.
+
+### Client Directory filters and sorting
+
+- Added account-manager filtering and explicit sort controls to the directory, available in both views. The URL keeps the legacy query keys, and the showcase adapter translates the directory account-manager filter to the seeded record field.
+- Chromium verified manager filtering from a direct URL and the keyboard, descending name order, clearing back to ascending defaults, and width containment at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed. Connected filtering and sorting remain unverified.

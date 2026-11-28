@@ -343,7 +343,13 @@ export function createShowcaseApi() {
         return row
       }
       if (resource === 'clients')
-        return row ? client(row) : page(data.clients.map(client), query)
+        return row
+          ? client(row)
+          : page(data.clients.map(client), {
+              ...query,
+              account_manager_id:
+                query.account_manager ?? query.account_manager_id,
+            })
       if (resource === 'locations')
         return row ? location(row) : page(data.locations.map(location), query)
       if (resource === 'staff' && row)

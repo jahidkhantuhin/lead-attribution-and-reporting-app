@@ -19,6 +19,15 @@ const results = ref<ClientRecord[]>([])
 const statuses = ref<Record<string, string>>({})
 const name = ref<string | null>('')
 const status = ref<string | null>(null)
+const manager = ref<string | null>(null)
+const managers = ref<{ title: string; value: string }[]>([])
+const sortBy = ref('name')
+const sorting = ref('asc')
+const sortColumns = [
+  { title: 'Client name', value: 'name' },
+  { title: 'Status', value: 'status' },
+  { title: 'Account manager', value: 'account_manager_id' },
+]
 const itemsPerPage = ref(20)
 const page = ref(1)
 const total = ref(0)
@@ -48,6 +57,9 @@ function manageName(client: ClientRecord) {
 function clearFilters() {
   name.value = ''
   status.value = null
+  manager.value = null
+  sortBy.value = 'name'
+  sorting.value = 'asc'
   return apply()
 }
 
@@ -62,6 +74,9 @@ function apply(nextPage = 1) {
       ...route.query,
       name: name.value?.trim() || undefined,
       status: status.value || undefined,
+      account_manager: manager.value || undefined,
+      sort_by: sortBy.value,
+      sorting: sorting.value,
       itemsPerPage: String(itemsPerPage.value),
       page: String(nextPage),
     },
@@ -77,20 +92,20 @@ watch(
     const limit = Number(query.itemsPerPage)
     itemsPerPage.value = [20, 50, 100, 500].includes(limit) ? limit : 20
     page.value = Math.max(1, Math.floor(Number(query.page)) || 1)
-    const sortBy = typeof query.sort_by === 'string' ? query.sort_by : 'name'
-    const sorting = query.sorting === 'desc' ? 'desc' : 'asc'
+    manager.value =
+      typeof query.account_manager === 'string' ? query.account_manager : null
+    sortBy.value =
+      sortColumns.find(({ value }) => value === query.sort_by)?.value ?? 'name'
+    sorting.value = query.sorting === 'desc' ? 'desc' : 'asc'
     busy.value = true
     failed.value = false
     try {
       const { data } = await $services.clients.list({
         name: name.value || undefined,
         status: status.value || undefined,
-        account_manager:
-          typeof query.account_manager === 'string'
-            ? query.account_manager
-            : undefined,
-        sort_by: sortBy + ':' + sorting,
-        sorting,
+        account_manager: manager.value || undefined,
+        sort_by: sortBy.value + ':' + sorting.value,
+        sorting: sorting.value,
         page: page.value,
         limit: itemsPerPage.value,
       })
@@ -114,10 +129,21 @@ watch(
 )
 
 onMounted(async () => {
-  try {
-    statuses.value = (await $services.clients.statuses()).data.data
-  } catch {
-    statuses.value = {}
+  const [statusResponse, managerResponse] = await Promise.allSettled([
+    $services.clients.statuses(),
+    $services.users.list({
+      role: 'account manager',
+      sort_by: 'first_name:asc',
+      limit: 200,
+    }),
+  ])
+  if (statusResponse.status === 'fulfilled')
+    statuses.value = statusResponse.value.data.data
+  if (managerResponse.status === 'fulfilled') {
+    managers.value = managerResponse.value.data.data.result.map((user) => ({
+      title: [user.first_name, user.last_name].filter(Boolean).join(' '),
+      value: String(user.id),
+    }))
   }
 })
 </script>
@@ -140,8 +166,35 @@ onMounted(async () => {
         hide-details
         clearable
       />
-      <v-btn type="submit" color="primary">Apply filters</v-btn>
-      <v-btn variant="text" @click="clearFilters">Clear filters</v-btn>
+      <v-select
+        v-model="manager"
+        :items="managers"
+        label="Account manager"
+        density="compact"
+        hide-details
+        clearable
+      />
+      <v-select
+        v-model="sortBy"
+        :items="sortColumns"
+        label="Sort by"
+        density="compact"
+        hide-details
+      />
+      <v-select
+        v-model="sorting"
+        :items="[
+          { title: 'Ascending', value: 'asc' },
+          { title: 'Descending', value: 'desc' },
+        ]"
+        label="Sort order"
+        density="compact"
+        hide-details
+      />
+      <div class="d-flex flex-wrap ga-2">
+        <v-btn type="submit" color="primary">Apply filters</v-btn>
+        <v-btn variant="text" @click="clearFilters">Clear filters</v-btn>
+      </div>
     </v-form>
     <div class="d-flex flex-wrap align-center justify-space-between ga-3 my-4">
       <h2 class="text-h6">
@@ -245,7 +298,7 @@ onMounted(async () => {
 }
 @media (min-width: 800px) {
   .directory-filters {
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto auto;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     align-items: center;
   }
   .directory-inspector {
