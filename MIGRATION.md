@@ -674,3 +674,8 @@ Phase 4 remains open for client records and nested forms, location and user admi
 
 - Restored the parent client name and link on the staff and location forms. The forms verify the parent through the existing client endpoint before accepting submissions and use the returned client ID for writes.
 - Chromium verified that both add forms show the right client, reject a missing parent, and save synthetic records under the correct account. Nuxt 4 lint, formatting, strict type checking, and static generation passed. Connected writes remain unverified.
+
+### Showcase location edit history
+
+- Location edits now append an in-memory activity entry with the actor, comment, timestamp, and changed fields. The adapter and history view share the same field allowlist.
+- Chromium verified old and new values after a save, retention of the seeded history, and reset on a full reload. Nuxt 4 lint, formatting, strict type checking, and static generation passed. Connected history generation remains unverified.

@@ -1,25 +1,8 @@
 <script setup lang="ts">
+import { locationActivityFields } from '~/services/location-activity'
 import type { Fields } from '~/types/api'
 
 const props = defineProps<{ record: Fields }>()
-const trackedFields = {
-  name: 'Name',
-  client_status: 'Status',
-  status: 'Status',
-  address: 'Address',
-  city: 'City',
-  state: 'State',
-  zipcode: 'ZIP code',
-  zip: 'ZIP code',
-  website: 'Website',
-  reporting_mail: 'Reporting email',
-  adwords_budget: 'Google Ads budget',
-  facebook_budget: 'Facebook budget',
-  monthly_fee: 'Monthly fee',
-  apexchat_id: 'Apex Chat ID',
-  facebook_id: 'Facebook ID',
-  adwords_id: 'Google Ads ID',
-}
 function isRecord(value: unknown): value is Fields {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
@@ -43,7 +26,7 @@ const history = computed(() =>
     const user = isRecord(event.user) ? event.user : {}
     const timestamp =
       typeof after.updated_at === 'string' ? Date.parse(after.updated_at) : NaN
-    const fields = Object.entries(trackedFields)
+    const fields = Object.entries(locationActivityFields)
       .filter(([key]) => key in before || key in after)
       .map(([key, label]) => {
         const previous = display(before[key])

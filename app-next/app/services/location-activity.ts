@@ -1,0 +1,18 @@
+export const locationActivityFields = {
+  name: 'Name',
+  client_status: 'Status',
+  status: 'Status',
+  address: 'Address',
+  city: 'City',
+  state: 'State',
+  zipcode: 'ZIP code',
+  zip: 'ZIP code',
+  website: 'Website',
+  reporting_mail: 'Reporting email',
+  adwords_budget: 'Google Ads budget',
+  facebook_budget: 'Facebook budget',
+  monthly_fee: 'Monthly fee',
+  apexchat_id: 'Apex Chat ID',
+  facebook_id: 'Facebook ID',
+  adwords_id: 'Google Ads ID',
+}

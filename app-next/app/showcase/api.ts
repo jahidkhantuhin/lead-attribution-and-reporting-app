@@ -1,4 +1,5 @@
 import { AxiosError, type AxiosAdapter } from 'axios'
+import { locationActivityFields } from '../services/location-activity'
 import { date, roles, scopes, seed } from './fixtures'
 import {
   kpi,
@@ -338,10 +339,38 @@ export function createShowcaseApi() {
             old_password,
             ...fields
           } = body
-          Object.assign(row, fields, {
-            id: row.id,
-            updated_at: new Date().toISOString(),
-          })
+          const updatedAt = new Date().toISOString()
+          if (resource === 'locations') {
+            const { comment } = fields
+            delete fields.comment
+            const changes = Object.keys(locationActivityFields).filter(
+              (key) =>
+                key in fields &&
+                String(fields[key] ?? '') !== String(row[key] ?? ''),
+            )
+            if (
+              changes.length ||
+              (typeof comment === 'string' && comment.trim())
+            ) {
+              const values = (source: Row) =>
+                Object.fromEntries(
+                  changes.map((key) => [key, source[key] ?? null]),
+                )
+              row.location_activity_logs = [
+                {
+                  old_data: values(row),
+                  new_data: { ...values(fields), updated_at: updatedAt },
+                  user: {
+                    first_name: active.first_name,
+                    last_name: active.last_name,
+                  },
+                  comment: typeof comment === 'string' ? comment.trim() : '',
+                },
+                ...rows(row.location_activity_logs),
+              ]
+            }
+          }
+          Object.assign(row, fields, { id: row.id, updated_at: updatedAt })
           if (resource === 'users') {
             row.fullname = row.first_name + ' ' + row.last_name
             if (row.id !== 1)
