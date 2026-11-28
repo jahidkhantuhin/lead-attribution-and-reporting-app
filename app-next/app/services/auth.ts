@@ -21,6 +21,20 @@ export function createAuthService(
 
   return {
     fetchUser,
+    async requestPasswordReset(email: string) {
+      if (showcaseSession) return
+      await api.get('/sanctum/csrf-cookie', { headers: sanctumHeaders })
+      await api.post('/password-reset', { email }, { headers: sanctumHeaders })
+    },
+    async resetPassword(body: {
+      email: string
+      token: string
+      password: string
+      password_confirmation: string
+    }) {
+      if (showcaseSession) return
+      await api.post('reset', body, { headers: sanctumHeaders })
+    },
     async login(credentials: { email: string; password: string }) {
       if (!showcaseSession) {
         await api.get('/sanctum/csrf-cookie', { headers: sanctumHeaders })

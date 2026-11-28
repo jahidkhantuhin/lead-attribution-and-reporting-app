@@ -611,3 +611,9 @@ Phase 4 remains open for client records and nested forms, location and user admi
 - Ported account details, permissions, name editing with current-password validation, optional password changes, and profile photo uploads through the existing user and metadata endpoints. The photo editor previews an automatic square center crop, with adjustable cropping still pending.
 - Chromium verified the seeded identity and permissions, saving a display-name edit, uploading a generated photo, and width containment at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed.
 - Connected writes and real password enforcement remain unverified. Authentication screens and the broader parity pass are still open.
+
+### Authentication screens
+
+- Ported sign-in, password recovery, password reset, and the social callback screen. Recovery and reset reuse the legacy endpoints in connected mode. Showcase flows use the synthetic session and send no email. Sign-in accepts internal redirect targets and falls back to the appropriate home page for unsafe or auth-only targets.
+- Chromium verified recovery, the missing-token state, reset, internal sign-in redirects, rejection of an external redirect, and width containment at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed.
+- Connected Google OAuth stays unavailable pending backend contract verification. Connected login, recovery and reset requests remain unverified. The Phase 4 parity pass remains open.

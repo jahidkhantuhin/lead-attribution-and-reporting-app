@@ -42,6 +42,9 @@ export default defineNuxtConfig({
         '/vpn-setup',
         '/users',
         '/profile',
+        '/login',
+        '/reset-password',
+        '/social-login',
         '/users/add',
         ...(showcaseMode
           ? [1, 2, 3, 4].map((id) => '/users/' + id + '/edit')
