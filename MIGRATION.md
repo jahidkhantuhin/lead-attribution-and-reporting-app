@@ -617,3 +617,9 @@ Phase 4 remains open for client records and nested forms, location and user admi
 - Ported sign-in, password recovery, password reset, and the social callback screen. Recovery and reset reuse the legacy endpoints in connected mode. Showcase flows use the synthetic session and send no email. Sign-in accepts internal redirect targets and falls back to the appropriate home page for unsafe or auth-only targets.
 - Chromium verified recovery, the missing-token state, reset, internal sign-in redirects, rejection of an external redirect, and width containment at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed.
 - Connected Google OAuth stays unavailable pending backend contract verification. Connected login, recovery and reset requests remain unverified. The Phase 4 parity pass remains open.
+
+### Static route parity
+
+- Added a generation check that fails when a declared page is missing from Nitro's output. This caught a gap where local Windows write errors could leave pages missing despite a successful exit.
+- Chromium opened all 57 generated page URLs at desktop and 390 px widths. All 56 legacy generated page URLs were present, alongside the explicit Nuxt 4 /404 route. The modern build and legacy lint, TypeScript, and 14 Jest tests passed after switching the auth layout to a viewport unit supported by the legacy Stylelint gate.
+- This pass verified route availability and basic rendering. Connected backend and detailed interaction and visual parity remain open.

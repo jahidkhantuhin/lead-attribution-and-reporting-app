@@ -201,7 +201,7 @@ async function submit() {
 <style scoped>
 .auth-shell {
   display: grid;
-  min-height: 100dvh;
+  min-height: 100vh;
   place-items: center;
   padding: 1rem;
   background: rgb(var(--v-theme-background));

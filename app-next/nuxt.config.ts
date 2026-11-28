@@ -21,59 +21,67 @@ const recordingPlayer = Object.entries(recordPlayers).find(
   ([environment]) => environment === env.NODE_ENV,
 )?.[1]
 
+const showcaseRoutes = [
+  '/',
+  '/reports',
+  '/reports/payment-report',
+  '/reports/client-overview',
+  '/reports/lead-details-report',
+  '/reports/kpi',
+  '/reports/statistics',
+  '/data-mining',
+  '/search',
+  '/site-records',
+  '/all-locations',
+  '/vpn-setup',
+  '/users',
+  '/profile',
+  '/login',
+  '/reset-password',
+  '/social-login',
+  '/users/add',
+  ...(showcaseMode ? [1, 2, 3, 4].map((id) => '/users/' + id + '/edit') : []),
+  '/location-settings',
+  '/location-settings/add',
+  '/client-records',
+  '/client-records/add',
+  ...(showcaseMode
+    ? [
+        ...[1, 2, 3].flatMap((id) => [
+          '/client-records/' + id,
+          '/client-records/' + id + '/edit',
+          '/client-records/' + id + '/locations/add',
+          '/client-records/' + id + '/locations/' + id + '/edit',
+          '/client-records/' + id + '/staff/add',
+          '/client-records/' + id + '/staff/' + id + '/edit',
+          '/client-records/' + id + '/locations/' + id,
+          '/client-records/' + id + '/staff/' + id,
+        ]),
+        '/client-records/1/locations/4',
+        '/client-records/1/locations/4/edit',
+      ]
+    : []),
+  ...(showcaseMode ? [1, 2, 3, 4].map((id) => '/site-records/' + id) : []),
+  '/404',
+]
+
 export default defineNuxtConfig({
   ssr: false,
   css: ['~/assets/workspace.css', '~/assets/lead-report.css'],
   vite: { plugins: [vuetify({ autoImport: true })] },
   nitro: {
+    hooks: {
+      'prerender:done'({ prerenderedRoutes }) {
+        const generated = new Set(prerenderedRoutes.map(({ route }) => route))
+        const missing = showcaseRoutes.filter((route) => !generated.has(route))
+        if (missing.length)
+          throw new Error('Missing prerendered pages: ' + missing.join(', '))
+      },
+    },
     prerender: {
-      routes: [
-        '/',
-        '/reports',
-        '/reports/payment-report',
-        '/reports/client-overview',
-        '/reports/lead-details-report',
-        '/reports/kpi',
-        '/reports/statistics',
-        '/data-mining',
-        '/search',
-        '/site-records',
-        '/all-locations',
-        '/vpn-setup',
-        '/users',
-        '/profile',
-        '/login',
-        '/reset-password',
-        '/social-login',
-        '/users/add',
-        ...(showcaseMode
-          ? [1, 2, 3, 4].map((id) => '/users/' + id + '/edit')
-          : []),
-        '/location-settings',
-        '/location-settings/add',
-        '/client-records',
-        '/client-records/add',
-        ...(showcaseMode
-          ? [
-              ...[1, 2, 3].flatMap((id) => [
-                '/client-records/' + id,
-                '/client-records/' + id + '/edit',
-                '/client-records/' + id + '/locations/add',
-                '/client-records/' + id + '/locations/' + id + '/edit',
-                '/client-records/' + id + '/staff/add',
-                '/client-records/' + id + '/staff/' + id + '/edit',
-                '/client-records/' + id + '/locations/' + id,
-                '/client-records/' + id + '/staff/' + id,
-              ]),
-              '/client-records/1/locations/4',
-              '/client-records/1/locations/4/edit',
-            ]
-          : []),
-        ...(showcaseMode
-          ? [1, 2, 3, 4].map((id) => '/site-records/' + id)
-          : []),
-        '/404',
-      ],
+      routes: showcaseRoutes,
+      concurrency: 1,
+      failOnError: true,
     },
   },
   modules: ['@nuxt/eslint', '@pinia/nuxt'],
