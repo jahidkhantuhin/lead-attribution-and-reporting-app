@@ -150,8 +150,13 @@ export function createShowcaseApi() {
       Math.max(0, ...rows.map((row) => Number(row.id))) + 1
     nextIds[collection] = id + 1
     const now = new Date().toISOString()
-    const { password, password_confirmation, current_password, ...fields } =
-      input
+    const {
+      password,
+      password_confirmation,
+      current_password,
+      old_password,
+      ...fields
+    } = input
     const row = { created_at: now, updated_at: now, ...fields, id }
     rows.push(row)
     return row
@@ -330,6 +335,7 @@ export function createShowcaseApi() {
             password,
             password_confirmation,
             current_password,
+            old_password,
             ...fields
           } = body
           Object.assign(row, fields, {

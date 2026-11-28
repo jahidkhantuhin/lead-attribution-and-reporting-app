@@ -599,3 +599,9 @@ Phase 4 remains open for client records and nested forms, location and user admi
 - Ported the team directory with URL-backed search, role and status filters, sorting, pagination, and a confirmation flow for removing members. The directory requires the view users scope. Removal follows the legacy admin-role restriction and explicitly excludes super-admin targets.
 - Chromium verified the direct filtered URL, descending name order, role filtering, the protected super-admin row, removal and cancellation with synthetic data, and width containment at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed.
 - Team member add and edit routes, profile, auth UI, and connected-mode permission and deletion checks remain open.
+
+### Team member add and edit
+
+- Ported both routes using one responsive form with scope checks, role selection, the legacy pay-rate condition, password validation, and password-change confirmation. Super-admin role assignment is excluded and super-admin editing is limited to self. The showcase adapter drops the old password from stored fixture data.
+- Chromium verified all four seeded edit URLs, the self-edit current-password field, a mismatch error, synthetic creation and editing, confirmation and cancellation, and width containment at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed.
+- Connected role assignment, pay-rate writes, and password changes remain unverified. Profile and auth UI remain open in Phase 4.

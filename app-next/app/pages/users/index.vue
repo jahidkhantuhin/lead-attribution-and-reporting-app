@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { pageNames } from '~/constants'
+import { canManageMember, memberRoles as roles } from '~/services/team-member'
 import type { RecordId, UserRecord } from '~/types/api'
 
 definePageMeta({ middleware: 'is-authenticated' })
@@ -54,10 +55,13 @@ let latest = 0
 function fullName(user: UserRecord) {
   return [user.first_name, user.last_name].filter(Boolean).join(' ')
 }
-function roles(user: UserRecord) {
-  return typeof user.role === 'string'
-    ? [user.role]
-    : (user.role?.map(({ name }) => name) ?? [])
+function canEdit(user: UserRecord) {
+  return (
+    session.isAllowed('update user') &&
+    canManageMember(user, session.roles) &&
+    (!roles(user).includes('super admin') ||
+      String(user.id) === String(session.authenticatedUser?.id))
+  )
 }
 function statusLabel(value: unknown) {
   const key = String(value ?? '').toLowerCase()
@@ -222,6 +226,12 @@ async function remove() {
         <h2 class="text-h6">
           {{ total }} {{ total === 1 ? 'team member' : 'team members' }}
         </h2>
+        <v-btn
+          v-if="session.isAllowed('create user')"
+          to="/users/add"
+          color="primary"
+          >Add team member</v-btn
+        >
         <v-select
           :model-value="size"
           :items="sizes"
@@ -255,7 +265,15 @@ async function remove() {
             <th scope="col">Email</th>
             <th scope="col">Role</th>
             <th scope="col">Status</th>
-            <th v-if="session.isAllowed('delete user')" scope="col">Actions</th>
+            <th
+              v-if="
+                session.isAllowed('delete user') ||
+                session.isAllowed('update user')
+              "
+              scope="col"
+            >
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -283,7 +301,21 @@ async function remove() {
                 >{{ statusLabel(user.status) }}</v-chip
               >
             </td>
-            <td v-if="session.isAllowed('delete user')">
+            <td
+              v-if="
+                session.isAllowed('delete user') ||
+                session.isAllowed('update user')
+              "
+            >
+              <v-btn
+                v-if="canEdit(user)"
+                :to="'/users/' + user.id + '/edit'"
+                :aria-label="'Edit ' + fullName(user)"
+                size="small"
+                variant="tonal"
+                class="me-1"
+                >Edit</v-btn
+              >
               <v-btn
                 v-if="canDelete(user)"
                 :aria-label="'Remove ' + fullName(user)"

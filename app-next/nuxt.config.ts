@@ -41,6 +41,10 @@ export default defineNuxtConfig({
         '/all-locations',
         '/vpn-setup',
         '/users',
+        '/users/add',
+        ...(showcaseMode
+          ? [1, 2, 3, 4].map((id) => '/users/' + id + '/edit')
+          : []),
         '/location-settings',
         '/location-settings/add',
         '/client-records',
