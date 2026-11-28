@@ -32,6 +32,8 @@ export interface UserRecord extends RecordSummary {
 
 export interface SessionPayload {
   data?: UserRecord
+  email?: string
+  status?: string | number
   id?: RecordId
   first_name?: string
   last_name?: string

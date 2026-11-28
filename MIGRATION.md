@@ -605,3 +605,9 @@ Phase 4 remains open for client records and nested forms, location and user admi
 - Ported both routes using one responsive form with scope checks, role selection, the legacy pay-rate condition, password validation, and password-change confirmation. Super-admin role assignment is excluded and super-admin editing is limited to self. The showcase adapter drops the old password from stored fixture data.
 - Chromium verified all four seeded edit URLs, the self-edit current-password field, a mismatch error, synthetic creation and editing, confirmation and cancellation, and width containment at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed.
 - Connected role assignment, pay-rate writes, and password changes remain unverified. Profile and auth UI remain open in Phase 4.
+
+### Profile
+
+- Ported account details, permissions, name editing with current-password validation, optional password changes, and profile photo uploads through the existing user and metadata endpoints. The photo editor previews an automatic square center crop, with adjustable cropping still pending.
+- Chromium verified the seeded identity and permissions, saving a display-name edit, uploading a generated photo, and width containment at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed.
+- Connected writes and real password enforcement remain unverified. Authentication screens and the broader parity pass are still open.
