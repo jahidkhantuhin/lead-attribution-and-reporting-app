@@ -669,3 +669,8 @@ Phase 4 remains open for client records and nested forms, location and user admi
 
 - Built staff and location edit links from the route identifiers so trailing slashes do not produce malformed links. Detail and edit views reject a record when the API identifies a different parent client. The backend remains responsible for authorization.
 - Chromium verified trailing-slash navigation to both edit forms and mismatched-parent detail and edit views with synthetic data. Nuxt 4 lint, formatting, strict type checking, and static generation passed. Connected responses remain unverified.
+
+### Parent client on nested forms
+
+- Restored the parent client name and link on the staff and location forms. The forms verify the parent through the existing client endpoint before accepting submissions and use the returned client ID for writes.
+- Chromium verified that both add forms show the right client, reject a missing parent, and save synthetic records under the correct account. Nuxt 4 lint, formatting, strict type checking, and static generation passed. Connected writes remain unverified.

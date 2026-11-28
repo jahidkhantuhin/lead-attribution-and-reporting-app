@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { VSelect, VTextarea, VTextField } from 'vuetify/components'
 import { pageNames } from '~/constants'
-import { nestedRecordMatchesClient } from '~/services/client-records'
+import {
+  nestedRecordMatchesClient,
+  type ClientRecord,
+} from '~/services/client-records'
 import {
   recordFields,
   recordLabels,
@@ -43,6 +46,10 @@ const data = reactive<Fields>({})
 const options = reactive<
   Record<string, { title: string; value: string | number }[]>
 >({})
+const parent = ref<ClientRecord>()
+const parentName = computed(
+  () => parent.value?.name || (parent.value ? 'Client ' + parent.value.id : ''),
+)
 const loading = ref(true)
 const unavailable = ref(false)
 const saving = ref(false)
@@ -50,18 +57,22 @@ const error = ref('')
 const form = ref<{ validate: () => Promise<{ valid: boolean }> }>()
 
 useHead({ title })
-useWorkspaceStore().setPageHeading({
-  pageTitle: title,
-  breadcrumbs: [
-    { text: 'Dashboard', to: '/' },
-    { text: pageNames.clients, to: '/client-records' },
-    { text: title, to: '', disabled: true },
-  ],
-})
+const workspace = useWorkspaceStore()
+watchEffect(() =>
+  workspace.setPageHeading({
+    pageTitle: title,
+    breadcrumbs: [
+      { text: 'Dashboard', to: '/' },
+      { text: pageNames.clients, to: '/client-records' },
+      ...(parentName.value ? [{ text: parentName.value, to: clientUrl }] : []),
+      { text: title, to: '', disabled: true },
+    ],
+  }),
+)
 
 onMounted(async () => {
   try {
-    const [record, managers, statuses] = await Promise.all([
+    const [record, managers, statuses, owner] = await Promise.all([
       props.editing ? service.byId(id) : undefined,
       props.kind !== 'staff'
         ? $services.users.list({
@@ -71,7 +82,12 @@ onMounted(async () => {
           })
         : undefined,
       props.kind === 'locations' ? $services.clients.statuses() : undefined,
+      props.kind !== 'clients' ? $services.clients.byId(clientId) : undefined,
     ])
+    parent.value = owner?.data.data
+    if (props.kind !== 'clients' && String(parent.value?.id) !== clientId) {
+      throw new Error('Missing parent client')
+    }
     const existing = record?.data.data
     if (props.editing && !existing) throw new Error('Missing record')
     if (
@@ -133,7 +149,7 @@ async function save() {
   try {
     if (!(await form.value?.validate())?.valid) return
     const body = { ...data }
-    if (props.kind !== 'clients') body.client_id = Number(clientId)
+    if (parent.value) body.client_id = parent.value.id
     const response = props.editing
       ? await service.update({ ...body, id: Number(id) })
       : await service.create(body)
@@ -155,6 +171,9 @@ async function save() {
 <template>
   <v-card flat class="pa-4">
     <h2 class="text-h6 mb-4">{{ title }}</h2>
+    <p v-if="parentName && !unavailable" class="text-body-2 mb-4">
+      Client <NuxtLink :to="clientUrl">{{ parentName }}</NuxtLink>
+    </p>
     <v-progress-linear v-if="loading" indeterminate />
     <v-alert v-else-if="unavailable" type="error" variant="tonal"
       >Could not load this form.</v-alert
