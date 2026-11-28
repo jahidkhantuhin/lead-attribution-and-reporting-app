@@ -8,7 +8,7 @@ defineProps<{ error: NuxtError }>()
   <v-app class="workspace-app">
     <v-main>
       <v-container class="workspace-content">
-        <NotFound v-if="error.statusCode === 404" />
+        <NotFound v-if="error.statusCode === 404" recovering />
         <template v-else>
           <h1>An error occurred</h1>
           <v-btn @click="clearError({ redirect: '/' })">Home page</v-btn>

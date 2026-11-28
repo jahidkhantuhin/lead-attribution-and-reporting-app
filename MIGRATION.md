@@ -659,3 +659,8 @@ Phase 4 remains open for client records and nested forms, location and user admi
 
 - Restored client, account manager, reporting email, address, source, and last-updated details using the existing location detail endpoint. The inspector keeps its list data if the detail request fails and waits for a confirmed unassigned record before offering assignment.
 - Chromium verified seeded address and reporting email, switching records, the nested location link, the assignment handoff, and width containment at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed. Connected responses remain unverified.
+
+### 404 recovery
+
+- Updated the shared 404 view with a clear home action and heading semantics for both the standalone page and Nuxt error screen. The global error action clears Nuxt's error state before redirecting home.
+- Chromium verified recovery from /404, an unknown URL served by the generated static fallback with HTTP 404, and a simulated global Nuxt 404. Mobile width, Nuxt 4 lint, formatting, strict type checking, and static generation passed. Hosted fallback behavior remains dependent on the host configuration.

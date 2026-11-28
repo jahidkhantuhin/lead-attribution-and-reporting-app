@@ -1,15 +1,25 @@
+<script setup lang="ts">
+defineProps<{ recovering?: boolean }>()
+</script>
+
 <template>
-  <v-card height="400" color="transparent" flat>
-    <v-card-title class="text-h3 mt-5 font-weight-bold">
+  <v-card color="transparent" flat class="py-6">
+    <component :is="recovering ? 'h1' : 'h2'" class="text-h4 px-4">
       Page not found.
-    </v-card-title>
-    <v-card-text class="text-body-1 mt-2">
-      The page you are trying to get to never existed in this reality, or has
-      migrated to a parallel universe.
+    </component>
+    <v-card-text class="text-body-1">
+      The page may have moved or the address may be incorrect.
     </v-card-text>
-    <v-card-text class="text-body-1 mt-2">
-      Try going back to <NuxtLink to="/">home page</NuxtLink> and repeating your
-      action. Or, contact helpdesk for support.
-    </v-card-text>
+    <v-card-actions class="px-4">
+      <v-btn
+        v-if="recovering"
+        color="primary"
+        variant="tonal"
+        @click="clearError({ redirect: '/' })"
+      >
+        Home page
+      </v-btn>
+      <v-btn v-else to="/" color="primary" variant="tonal">Home page</v-btn>
+    </v-card-actions>
   </v-card>
 </template>
