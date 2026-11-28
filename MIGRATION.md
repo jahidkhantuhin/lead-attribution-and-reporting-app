@@ -664,3 +664,8 @@ Phase 4 remains open for client records and nested forms, location and user admi
 
 - Updated the shared 404 view with a clear home action and heading semantics for both the standalone page and Nuxt error screen. The global error action clears Nuxt's error state before redirecting home.
 - Chromium verified recovery from /404, an unknown URL served by the generated static fallback with HTTP 404, and a simulated global Nuxt 404. Mobile width, Nuxt 4 lint, formatting, strict type checking, and static generation passed. Hosted fallback behavior remains dependent on the host configuration.
+
+### Nested client record links
+
+- Built staff and location edit links from the route identifiers so trailing slashes do not produce malformed links. Detail and edit views reject a record when the API identifies a different parent client. The backend remains responsible for authorization.
+- Chromium verified trailing-slash navigation to both edit forms and mismatched-parent detail and edit views with synthetic data. Nuxt 4 lint, formatting, strict type checking, and static generation passed. Connected responses remain unverified.

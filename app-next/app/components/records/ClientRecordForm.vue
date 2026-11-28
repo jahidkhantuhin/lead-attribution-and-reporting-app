@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { VSelect, VTextarea, VTextField } from 'vuetify/components'
 import { pageNames } from '~/constants'
+import { nestedRecordMatchesClient } from '~/services/client-records'
 import {
   recordFields,
   recordLabels,
@@ -73,6 +74,13 @@ onMounted(async () => {
     ])
     const existing = record?.data.data
     if (props.editing && !existing) throw new Error('Missing record')
+    if (
+      existing &&
+      props.kind !== 'clients' &&
+      !nestedRecordMatchesClient(existing, clientId)
+    ) {
+      throw new Error('Record does not belong to this client')
+    }
     for (const field of fields) {
       const value = existing?.[field.key]
       data[field.key] =

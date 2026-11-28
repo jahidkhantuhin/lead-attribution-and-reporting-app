@@ -1,20 +1,39 @@
 <script setup lang="ts">
 import { pageNames } from '~/constants'
+import { nestedRecordMatchesClient } from '~/services/client-records'
 
 const props = defineProps<{ kind: 'locations' | 'staff' }>()
 const route = useRoute()
 const { $services } = useNuxtApp()
 const workspace = useWorkspaceStore()
 const id = computed(() => String(route.params.record_id))
-const clientUrl = computed(() => '/client-records/' + route.params.client_id)
+const clientId = computed(() => String(route.params.client_id))
+const clientUrl = computed(
+  () => '/client-records/' + encodeURIComponent(clientId.value),
+)
+const editUrl = computed(
+  () =>
+    clientUrl.value +
+    '/' +
+    props.kind +
+    '/' +
+    encodeURIComponent(id.value) +
+    '/edit',
+)
 const title = props.kind === 'staff' ? 'Staff Details' : 'Location Details'
 const {
   data: entry,
   error,
   status,
 } = await useAsyncData(
-  () => props.kind + '-record-' + id.value,
-  async () => (await $services[props.kind].byId(id.value)).data.data,
+  () => props.kind + '-record-' + clientId.value + '-' + id.value,
+  async () => {
+    const owner = clientId.value
+    const { data } = await $services[props.kind].byId(id.value)
+    if (!nestedRecordMatchesClient(data.data, owner))
+      throw new Error('Record does not belong to this client')
+    return data.data
+  },
   { server: false },
 )
 useHead({ title })
@@ -70,11 +89,7 @@ const fields = computed(() => {
   <v-card v-else-if="entry" flat class="pa-4">
     <h2 class="text-h5 mb-4">{{ entry.name }}</h2>
     <RecordsRecordFacts :fields="fields" />
-    <v-btn
-      :to="route.path + '/edit'"
-      color="primary"
-      variant="tonal"
-      class="mt-4 me-2"
+    <v-btn :to="editUrl" color="primary" variant="tonal" class="mt-4 me-2"
       >Edit record</v-btn
     >
     <v-btn :to="clientUrl" variant="outlined" class="mt-4"

@@ -22,3 +22,16 @@ export interface ClientRecord extends DirectoryEntry {
 export function statusLabel(status: string) {
   return status.replaceAll('_', ' ')
 }
+
+export function nestedRecordMatchesClient(
+  record: RecordSummary,
+  clientId: string,
+) {
+  const owner = record.client
+  const nestedId =
+    owner && typeof owner === 'object' && 'id' in owner ? owner.id : undefined
+  const ownerId = record.client_id ?? nestedId
+  return typeof ownerId === 'string' || typeof ownerId === 'number'
+    ? String(ownerId) === clientId
+    : record.client_id !== null
+}
