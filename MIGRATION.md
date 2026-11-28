@@ -679,3 +679,9 @@ Phase 4 remains open for client records and nested forms, location and user admi
 
 - Location edits now append an in-memory activity entry with the actor, comment, timestamp, and changed fields. The adapter and history view share the same field allowlist.
 - Chromium verified old and new values after a save, retention of the seeded history, and reset on a full reload. Nuxt 4 lint, formatting, strict type checking, and static generation passed. Connected history generation remains unverified.
+
+### Client Performance export parity and comparison budget
+
+- Corrected month-comparison budget usage to divide actual spend by one monthly budget and show the percentage-point change at legacy precision.
+- Captured actual spreadsheet request bodies from both local showcases. The standard export matched exactly for four seeded rows, and all 12 budget-usage comparison cells matched after the fix. Both organic modes had zero rows, so populated organic exports remain unverified.
+- The paid comparison still has 152 cell differences in this fixture, including numeric strings and missing channel metrics. Nuxt 4 lint, formatting, strict type checking, and static generation passed. Connected Drive exports remain unverified.

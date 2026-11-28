@@ -86,6 +86,13 @@ export function standardPerformance(row: PerformanceRow, dates: string[]) {
   }
 }
 
+function comparisonBudgetSpent(row: PerformanceRow, budget: string) {
+  const cost = number(row.total_aggregate_cost)
+  return cost && number(budget)
+    ? ((cost / number(budget)) * 100).toFixed(2)
+    : '0'
+}
+
 export function comparisonPerformance(
   reference: PerformanceRow,
   comparison: PerformanceRow,
@@ -131,6 +138,19 @@ export function comparisonPerformance(
     row['percentage_diff_of_' + key] =
       diff && b ? ((diff / b) * 100).toFixed(2) : '0'
   }
+  const referenceBudgetSpent = comparisonBudgetSpent(
+    reference,
+    ref.total_budget,
+  )
+  const comparisonBudgetUsed = comparisonBudgetSpent(
+    comparison,
+    comp.total_budget,
+  )
+  row.ref_month_percentageOf_budget_spent = referenceBudgetSpent
+  row.comp_month_percentageOf_budget_spent = comparisonBudgetUsed
+  row.diff_of_percentageOf_budget_spent = (
+    Number(referenceBudgetSpent) - Number(comparisonBudgetUsed)
+  ).toFixed(2)
   return row
 }
 
