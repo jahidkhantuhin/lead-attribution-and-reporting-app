@@ -93,6 +93,25 @@ function comparisonBudgetSpent(row: PerformanceRow, budget: string) {
     : '0'
 }
 
+const rawComparisonMetrics = new Set([
+  'total_leads',
+  'total_calls',
+  'total_forms',
+  'total_chats',
+  'total_adwords_leads',
+  'total_facebook_leads',
+  'total_booked',
+  'total_not_booked',
+  'total_voice_mail_booking',
+  'total_missed',
+  'total_irrelevant',
+  'adwords_days_live',
+  'facebook_days_live',
+  'adword_cpl',
+  'facebook_cpl',
+])
+const roundedChannelMetrics = new Set(['adword_cpl', 'facebook_cpl'])
+
 export function comparisonPerformance(
   reference: PerformanceRow,
   comparison: PerformanceRow,
@@ -122,16 +141,34 @@ export function comparisonPerformance(
     key === 'adwords_budget' ||
     key === 'facebook_budget'
       ? value.location[key]
-      : key === 'facebook_days_live'
-        ? value.fb_days_live
-        : (value as Fields)[key]
+      : (value as Fields)[key]
 
   for (const key of metrics) {
+    if (rawComparisonMetrics.has(key)) {
+      const fieldKey = key === 'facebook_days_live' ? 'fb_days_live' : key
+      const a = Number(reference[fieldKey])
+      const b = Number(comparison[fieldKey])
+      const format = (value: number) =>
+        roundedChannelMetrics.has(key) ? value.toFixed(0) : String(value)
+      const missingLeads =
+        key === 'total_leads' && (!reference[fieldKey] || !comparison[fieldKey])
+      const diff = missingLeads ? 0 : a - b
+      row['ref_month_' + key] =
+        key === 'total_leads' && !reference[fieldKey] ? 0 : format(a)
+      row['comp_month_' + key] =
+        key === 'total_leads' && !comparison[fieldKey] ? 0 : format(b)
+      row['diff_of_' + key] = missingLeads ? 0 : format(diff)
+      row['percentage_diff_of_' + key] =
+        Number(format(diff)) === 0 || Number(format(b)) === 0
+          ? '0'
+          : ((diff / b) * 100).toFixed(2)
+      continue
+    }
     const referenceValue = metricValue(ref, key)
     const comparisonValue = metricValue(comp, key)
     const a = number(referenceValue)
     const b = number(comparisonValue)
-    const diff = key === 'total_leads' && (!a || !b) ? 0 : a - b
+    const diff = a - b
     row['ref_month_' + key] = referenceValue ?? 0
     row['comp_month_' + key] = comparisonValue ?? 0
     row['diff_of_' + key] = String(diff)

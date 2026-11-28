@@ -685,3 +685,9 @@ Phase 4 remains open for client records and nested forms, location and user admi
 - Corrected month-comparison budget usage to divide actual spend by one monthly budget and show the percentage-point change at legacy precision.
 - Captured actual spreadsheet request bodies from both local showcases. The standard export matched exactly for four seeded rows, and all 12 budget-usage comparison cells matched after the fix. Both organic modes had zero rows, so populated organic exports remain unverified.
 - The paid comparison still has 152 cell differences in this fixture, including numeric strings and missing channel metrics. Nuxt 4 lint, formatting, strict type checking, and static generation passed. Connected Drive exports remain unverified.
+
+### Client Performance comparison cell parity
+
+- Matched legacy comparison formatting for lead counts, call outcomes, channel days live, and channel cost per lead. This preserves numeric strings, explicit zero values, and the legacy NaN text for unavailable metrics.
+- Captured both builds' actual spreadsheet request bodies. The standard and month-comparison exports matched exactly across all four seeded rows. Organic exports also matched for the empty fixture. Populated organic exports and connected Drive writes remain unverified.
+- Nuxt 4 lint, formatting, strict type checking, and static generation passed.
