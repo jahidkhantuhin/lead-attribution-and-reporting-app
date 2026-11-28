@@ -47,6 +47,9 @@ const fields = computed(() => {
           adwords_budget: 'Google Ads budget',
           facebook_budget: 'Facebook budget',
           monthly_fee: 'Monthly fee',
+          apexchat_id: 'Apex Chat ID',
+          facebook_id: 'Facebook ID',
+          adwords_id: 'Google Ads ID',
         }
   return Object.entries(labels).map(([key, label]) => {
     const value = entry.value?.[key]
@@ -77,5 +80,6 @@ const fields = computed(() => {
     <v-btn :to="clientUrl" variant="outlined" class="mt-4"
       >Back to client</v-btn
     >
+    <RecordsLocationActivity v-if="kind === 'locations'" :record="entry" />
   </v-card>
 </template>

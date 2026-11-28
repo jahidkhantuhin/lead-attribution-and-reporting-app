@@ -569,3 +569,9 @@ Phase 4 remains open for client records and nested forms, location and user admi
 - Restored the client form's Active and Inactive options through the existing client save request. Existing status values outside those two options are preserved in the selector. The legacy standalone status toggle handler has no UI binding.
 - Restored staff and location deletion on the client details page with a shared confirmation dialog, request feedback, and list refresh. Chromium verified an Inactive update, cancellation, both deletion endpoints using synthetic records, and page width at 390 px.
 - Nuxt 4 lint, formatting, strict type checking, and static generation passed. Connected writes and advanced location activity and tracking details remain open.
+
+### Location activity and tracking
+
+- Added tracking numbers and their sources, activity comments, and a before-and-after comparison to nested location records. Location facts now include the Apex Chat, Facebook, and Google Ads IDs. Activity values come from the existing location response.
+- Chromium verified the seeded tracking row, activity comment and changed values, empty history, staff navigation, and width containment at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed.
+- Showcase verification used seeded history. Connected-mode history and the effect of saving an edit on that history remain unverified. Phase 4 still includes location administration, VPN, users, profile, and auth UI.
