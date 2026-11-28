@@ -17,6 +17,27 @@ const end = computed({
   },
 })
 
+const calendar = ref(false)
+const draft = ref<Date[]>([])
+const calendarRange = computed(() => {
+  const ordered = draft.value.map((value) => reportDate(value)).sort()
+  return ordered.length >= 2 ? [ordered[0]!, ordered[ordered.length - 1]!] : []
+})
+
+function openCalendar() {
+  draft.value = dates.value
+    .filter(Boolean)
+    .map((value) => new Date(value + 'T00:00:00'))
+    .filter((value) => Number.isFinite(value.getTime()))
+  calendar.value = true
+}
+
+function applyCalendar() {
+  if (!calendarRange.value.length) return
+  dates.value = calendarRange.value
+  calendar.value = false
+}
+
 function apply(preset: string) {
   const now = new Date()
   if (preset === 'All available dates') {
@@ -79,6 +100,39 @@ function apply(preset: string) {
       variant="outlined"
       hide-details
     />
+    <v-btn
+      icon="mdi-calendar"
+      aria-label="Open date range calendar"
+      variant="text"
+      @click="openCalendar"
+    />
+    <v-dialog
+      v-model="calendar"
+      max-width="354"
+      aria-labelledby="report-calendar-title"
+    >
+      <v-card>
+        <v-card-title id="report-calendar-title"
+          >Select a date range</v-card-title
+        >
+        <v-date-picker
+          v-model="draft"
+          multiple="range"
+          hide-header
+          width="100%"
+        />
+        <v-card-actions class="flex-wrap">
+          <v-spacer />
+          <v-btn variant="text" @click="calendar = false">Cancel</v-btn>
+          <v-btn
+            color="primary"
+            :disabled="!calendarRange.length"
+            @click="applyCalendar"
+            >Apply dates</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-menu v-if="props.presets?.length">
       <template #activator="{ props: activator }">
         <v-btn

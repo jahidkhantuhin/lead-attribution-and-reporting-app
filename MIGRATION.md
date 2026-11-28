@@ -639,3 +639,8 @@ Phase 4 remains open for client records and nested forms, location and user admi
 
 - Added labeled, keyboard-accessible zoom and position controls with a center reset. The preview and saved JPEG use the same canvas, and choosing another file discards the prior crop.
 - Chromium verified keyboard adjustments, reset, matching preview and saved pixels with a synthetic image, and width containment at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed. Connected photo writes remain unverified.
+
+### Report date range calendar
+
+- Added a shared calendar dialog alongside the existing date fields and presets. The dialog opens on the current range and stages edits until Apply dates is selected. Single-day input remains available through the date fields.
+- Chromium verified initialization from a complete Payment Report URL, cancel, apply, and layout at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed. Calendar interaction on other routes and connected report behavior were not part of this browser check.
