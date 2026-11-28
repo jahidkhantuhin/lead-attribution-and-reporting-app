@@ -546,3 +546,9 @@ The directory and administration routes are the next Phase 4 group. Their filter
 - Both apps passed lint, strict type checking, and static generation. Nuxt 4 formatting and all 14 legacy Jest tests passed. Connected API behavior and full visual parity remain open.
 
 Phase 4 remains open for client records and nested forms, location and user administration, VPN, profile, authentication UI, and the final parity pass.
+
+### Client Directory and read-only records
+
+- Ported the directory with filterable inspector and table views, URL-backed pagination, and shared record facts. Client details link to their staff and locations. The Nuxt 4 static build emits direct URLs for all seeded read-only client, location, and staff records.
+- Chromium verified a filtered directory, the inspector and table switch, navigation to Cedar West at 390 px without horizontal overflow, and nine additional direct record URLs. Nuxt 4 lint, formatting, strict type checking, and static generation passed. Legacy ESLint, Stylelint, TypeScript, and all 14 Jest tests passed.
+- Pending parity work includes client, staff, and location forms and mutations, location activity and tracking details, and directory sorting and account-manager controls. Connected mode remains unverified for these routes.

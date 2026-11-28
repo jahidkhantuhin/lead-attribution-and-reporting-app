@@ -38,6 +38,17 @@ export default defineNuxtConfig({
         '/data-mining',
         '/search',
         '/site-records',
+        '/client-records',
+        ...(showcaseMode
+          ? [
+              ...[1, 2, 3].flatMap((id) => [
+                '/client-records/' + id,
+                '/client-records/' + id + '/locations/' + id,
+                '/client-records/' + id + '/staff/' + id,
+              ]),
+              '/client-records/1/locations/4',
+            ]
+          : []),
         ...(showcaseMode
           ? [1, 2, 3, 4].map((id) => '/site-records/' + id)
           : []),

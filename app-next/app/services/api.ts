@@ -1,4 +1,5 @@
 import type { AxiosInstance } from 'axios'
+import type { ClientRecord } from './client-records'
 import type { SiteDay, SiteRecord } from './site-records'
 import type {
   Envelope,
@@ -21,9 +22,9 @@ export function createServices(api: AxiosInstance) {
 
   return {
     clients: {
-      list: (filters?: Fields) => list<RecordSummary>('/clients', filters),
+      list: (filters?: Fields) => list<ClientRecord>('/clients', filters),
       statuses: () => get<Record<string, string>>('/statuses'),
-      byId: (id: RecordId) => get<RecordSummary>(`/clients/${id}`),
+      byId: (id: RecordId) => get<ClientRecord>(`/clients/${id}`),
       create: (body: Fields) => post<RecordSummary>('/clients', body),
       update: (body: Fields & { id: RecordId }) =>
         put<RecordSummary>(`clients/${body.id}`, body),
