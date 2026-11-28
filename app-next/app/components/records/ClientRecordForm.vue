@@ -91,9 +91,26 @@ onMounted(async () => {
         title: [user.first_name, user.last_name].filter(Boolean).join(' '),
         value: user.id,
       })) ?? []
-    options.status = Object.entries(statuses?.data.data ?? {}).map(
-      ([title, value]) => ({ title, value }),
-    )
+    options.status =
+      props.kind === 'clients'
+        ? [
+            { title: 'Active', value: 'active' },
+            { title: 'Inactive', value: 'inactive' },
+          ]
+        : Object.entries(statuses?.data.data ?? {}).map(([title, value]) => ({
+            title,
+            value,
+          }))
+    if (
+      props.kind === 'clients' &&
+      typeof data.status === 'string' &&
+      !options.status.some(({ value }) => value === data.status)
+    ) {
+      options.status.push({
+        title: data.status.replaceAll('_', ' '),
+        value: data.status,
+      })
+    }
   } catch {
     unavailable.value = true
   } finally {
@@ -148,7 +165,11 @@ async function save() {
             v-model="data[field.key]"
             :label="field.label + (field.required ? ' *' : '')"
             :items="options[field.key]"
-            :rules="[(value: unknown) => validateRecordField(field, value)]"
+            :rules="[
+              (value: unknown) =>
+                (props.kind === 'clients' && data.status === 'inactive') ||
+                validateRecordField(field, value),
+            ]"
             :aria-required="field.required || undefined"
             variant="outlined"
             density="compact"

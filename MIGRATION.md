@@ -563,3 +563,9 @@ Phase 4 remains open for client records and nested forms, location and user admi
 
 - Added account-manager filtering and explicit sort controls to the directory, available in both views. The URL keeps the legacy query keys, and the showcase adapter translates the directory account-manager filter to the seeded record field.
 - Chromium verified manager filtering from a direct URL and the keyboard, descending name order, clearing back to ascending defaults, and width containment at 390 px. Nuxt 4 lint, formatting, strict type checking, and static generation passed. Connected filtering and sorting remain unverified.
+
+### Client status and related record deletion
+
+- Restored the client form's Active and Inactive options through the existing client save request. Existing status values outside those two options are preserved in the selector. The legacy standalone status toggle handler has no UI binding.
+- Restored staff and location deletion on the client details page with a shared confirmation dialog, request feedback, and list refresh. Chromium verified an Inactive update, cancellation, both deletion endpoints using synthetic records, and page width at 390 px.
+- Nuxt 4 lint, formatting, strict type checking, and static generation passed. Connected writes and advanced location activity and tracking details remain open.

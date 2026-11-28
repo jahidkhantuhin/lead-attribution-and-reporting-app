@@ -27,6 +27,7 @@ export const recordFields: Record<RecordKind, Field[]> = {
     { key: 'phone_number', label: 'Phone', required: true },
     { key: 'personal_website', label: 'Website', type: 'url' },
     manager,
+    { key: 'status', label: 'Status', type: 'select' },
   ],
   locations: [
     { key: 'name', label: 'Name', required: true },
